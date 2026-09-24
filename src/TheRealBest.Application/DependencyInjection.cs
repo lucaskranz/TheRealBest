@@ -14,6 +14,9 @@ public static class DependencyInjection
         services.AddScoped<IGetSeasonRankingUseCase, GetSeasonRankingUseCase>();
         services.AddScoped<IGetPlayerProfileUseCase, GetPlayerProfileUseCase>();
         services.AddScoped<ISearchPlayersUseCase, SearchPlayersUseCase>();
+        services.AddScoped<IGetMatchAuditReceiptUseCase, GetMatchAuditReceiptUseCase>();
+        services.AddScoped<IGetMatchDetailUseCase, GetMatchDetailUseCase>();
+        services.AddScoped<IGetPagedMatchesUseCase, GetPagedMatchesUseCase>();
 
         return services;
     }

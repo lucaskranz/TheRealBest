@@ -1,4 +1,4 @@
-namespace TheRealBest.Infrastructure.Data.Repositories;
+﻿namespace TheRealBest.Infrastructure.Data.Repositories;
 
 using Microsoft.EntityFrameworkCore;
 using TheRealBest.Domain.Entities;
@@ -28,6 +28,8 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
             .Include(m => m.AwayTeam)
             .Include(m => m.PlayerStats)
                 .ThenInclude(ps => ps.Player)
+            .Include(m => m.PlayerStats)
+                .ThenInclude(ps => ps.Team)
             .Include(m => m.PerformanceScores)
             .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
 
@@ -51,6 +53,13 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
 
     public async Task<MatchPerformanceScore?> GetPerformanceScoreAsync(Guid matchId, Guid playerId, CancellationToken cancellationToken = default) =>
         await context.MatchPerformanceScores
+            .Include(s => s.Player)
+            .Include(s => s.Match)
+                .ThenInclude(m => m.Competition)
+            .Include(s => s.Match)
+                .ThenInclude(m => m.HomeTeam)
+            .Include(s => s.Match)
+                .ThenInclude(m => m.AwayTeam)
             .Include(s => s.MatchPlayerStats)
             .FirstOrDefaultAsync(s => s.MatchId == matchId && s.PlayerId == playerId, cancellationToken);
 
@@ -62,6 +71,44 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
             .Include(s => s.MatchPlayerStats)
             .Where(s => s.Match.Competition.SeasonYear == seasonYear)
             .ToListAsync(cancellationToken);
+
+    public async Task<(IReadOnlyList<Match> Items, int TotalCount)> GetPagedMatchesAsync(
+        int seasonYear,
+        Guid? competitionId,
+        Guid? teamId,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query = context.Matches
+            .Include(m => m.Competition)
+            .Include(m => m.HomeTeam)
+            .Include(m => m.AwayTeam)
+            .Include(m => m.PerformanceScores)
+            .Where(m => m.Competition.SeasonYear == seasonYear);
+
+        if (competitionId.HasValue)
+        {
+            query = query.Where(m => m.CompetitionId == competitionId.Value);
+        }
+
+        if (teamId.HasValue)
+        {
+            query = query.Where(m => m.HomeTeamId == teamId.Value || m.AwayTeamId == teamId.Value);
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var clampedPage = Math.Max(1, page);
+        var clampedPageSize = Math.Clamp(pageSize, 1, 100);
+
+        var items = await query
+            .OrderByDescending(m => m.MatchDate)
+            .Skip((clampedPage - 1) * clampedPageSize)
+            .Take(clampedPageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
 
     public async Task AddAsync(Match match, CancellationToken cancellationToken = default) =>
         await context.Matches.AddAsync(match, cancellationToken);
