@@ -1,0 +1,188 @@
+﻿# CONTEXT.md — The Real Best | Beyond The Ballon
+
+> **Este documento é a fonte de verdade do projeto. Todo agente de IA, desenvolvedor ou contribuidor DEVE ler este arquivo antes de realizar qualquer trabalho.**
+
+---
+
+## 1. O Que É Este Projeto
+
+**The Real Best** é uma plataforma web de ranking global de jogadores de futebol baseada exclusivamente em dados estatísticos jogo a jogo, eliminando o viés de fama, popularidade e política que distorce premiações tradicionais como a Bola de Ouro e o The Best da FIFA.
+
+**Slogan:** *Beyond The Ballon. Beyond The Hype. Pure Performance.*
+
+### Proposta de Valor
+- Ranking 100% auditável: qualquer usuário pode clicar em qualquer jogador e ver o extrato matemático de cada ponto ganho ou perdido.
+- Fórmulas posicionais justas: zagueiros, volantes, laterais, meias e atacantes são avaliados por métricas específicas de sua função tática.
+- Fator anti-junk time: gols em goleadas contra times fracos valem menos que decisões em jogos equilibrados contra rivais de elite.
+- Multilíngue: suporte completo para Português (BR), English e Español.
+
+### Cobertura
+- 5 principais ligas europeias (Premier League, La Liga, Serie A, Bundesliga, Ligue 1)
+- UEFA Champions League
+- Campeonatos de seleções (Copa do Mundo, Eurocopa, Copa América)
+
+---
+
+## 2. Stack Tecnológica
+
+| Camada | Tecnologia | Justificativa |
+|:---|:---|:---|
+| **Backend** | ASP.NET Core 8 (C#) | Clean Architecture, Background Workers para ingestão, performance |
+| **Frontend** | Next.js 14+ (React + TypeScript) | App Router, SSR para SEO, Server Components |
+| **Banco de Dados** | PostgreSQL | Queries analíticas, JSONB para extratos auditáveis, tabelas de tradução |
+| **Cache** | Redis | Cache de rankings (muda apenas após rodadas) |
+| **ORM** | Entity Framework Core 8 | Code First, Migrations, LINQ |
+| **i18n Frontend** | next-intl | Roteamento por locale, Server Components |
+| **i18n Backend** | IStringLocalizer + .resx + DB | Labels estáticos em .resx, conteúdo dinâmico em tabelas |
+| **Validação** | FluentValidation | Regras expressivas separadas dos controllers |
+| **HTTP Client** | Refit + Polly | Clients tipados para APIs externas, retry |
+| **Logging** | Serilog | Structured logging |
+| **Testes** | xUnit + FluentAssertions + Moq | Unitários, integração |
+| **Charts** | Recharts ou Nivo | Radar, line, bar charts |
+| **CSS** | Tailwind CSS 4 | Design system via tokens |
+| **Deploy** | Vercel (Front) + Railway/Render (Back+DB) | Gratuito para MVP |
+
+---
+
+## 3. Arquitetura do Backend (Clean Architecture)
+
+### Projetos na Solution
+`
+TheRealBest.sln
+├── src/
+│   ├── TheRealBest.Domain           # Entidades, Value Objects, Interfaces, Enums
+│   ├── TheRealBest.Application      # Use Cases, DTOs, Validators, Localization
+│   ├── TheRealBest.Infrastructure   # EF Core, Repositories, APIs externas, Cache, Translations
+│   ├── TheRealBest.Scoring          # Motor de pontuação isolado (Weights, Multipliers, Calculators)
+│   └── TheRealBest.API              # Controllers, Middleware, Background Services, Resources (.resx)
+├── tests/
+│   ├── TheRealBest.Domain.Tests
+│   ├── TheRealBest.Application.Tests
+│   ├── TheRealBest.Scoring.Tests
+│   └── TheRealBest.API.IntegrationTests
+└── docs/
+`
+
+### Regras de Dependência (Clean Architecture)
+- Domain → NENHUMA dependência externa
+- Application → depende apenas de Domain
+- Infrastructure → depende de Domain e Application
+- Scoring → depende apenas de Domain
+- API → depende de Application e Infrastructure (composição raiz)
+
+---
+
+## 4. Modelo de Dados (Tabelas Principais)
+
+| Tabela | Propósito |
+|:---|:---|
+| players | Cadastro de jogadores (nome, nacionalidade, posição primária, foto) |
+| 	eams | Clubes (nome, logo, país, ELO ranking) |
+| competitions | Torneios (nome, tier, multiplicador, temporada) |
+| matches | Partidas (times, placar, competição, data, fase) |
+| match_player_stats | Estatísticas brutas por jogador por partida (todas as métricas da API) |
+| match_performance_scores | MPS calculado com extrato JSONB auditável (action_breakdown, penalty_breakdown) |
+| season_rankings | FSS acumulado, rank geral, rank por posição, clutch index |
+| scoring_weights | Pesos configuráveis por posição e ação (versionados) |
+| competition_translations | Traduções de nomes de competições por locale |
+| ction_type_translations | Traduções de labels de ações por locale |
+
+---
+
+## 5. O Algoritmo de Pontuação (Fair Player Index)
+
+### Fórmula Central (MPS - Match Performance Score)
+`
+MPS = Clamp(0, 100, (Base + ΔAções × FatorMinutos) × MultContexto)
+`
+
+- **Base = 50.0** (nota neutra)
+- **ΔAções:** Soma de eventos positivos e negativos com pesos específicos por posição
+- **FatorMinutos:** Normalização (< 60min = M/90; 60-90min = 1.0; prorrogação = bônus)
+- **MultContexto = W_torneio × W_adversário × W_clutch**
+
+### Ranking da Temporada (FSS - Fair Season Score)
+`
+FSS = (Σ MPS_i × W_torneio_i) × FatorPresença
+FatorPresença = min(1.0, MinutosJogados / 2200)^0.5
+`
+
+> A especificação completa com todas as matrizes de peso por posição está em docs/fair_ranking_formula_specification.md
+
+---
+
+## 6. Internacionalização (i18n)
+
+| Locale | Idioma | URL Pattern | Status |
+|:---:|:---|:---|:---:|
+| pt-BR | Português (Brasil) | /pt-BR/* | **Padrão** |
+| en | English | /en/* | Suportado |
+| es | Español | /es/* | Suportado |
+
+- Frontend: 
+ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-Language
+- Backend: IStringLocalizer + .resx para labels, tabelas DB para conteúdo dinâmico
+- Nomes de jogadores e times NÃO são traduzidos
+
+---
+
+## 7. Fontes de Dados Externas
+
+| Fonte | Uso | Prioridade |
+|:---|:---|:---:|
+| **API-Football (RapidAPI)** | Estatísticas brutas por partida (85% das métricas) | Principal |
+| **FBref** | Dados avançados (xG, xA, Big Chances, SCA) | Enriquecimento |
+| **Sofascore** | Validação cruzada e dados complementares | Futuro |
+
+---
+
+## 8. Roadmap de Implementação por Etapas
+
+O projeto está dividido em **etapas atômicas** que podem ser executadas independentemente em conversas separadas com o agente de IA. Cada etapa produz um resultado funcional e commitável.
+
+### Status das Etapas
+
+| # | Etapa | Status | Descrição |
+|:---:|:---|:---:|:---|
+| 1A | Solution .NET + Estrutura Clean Architecture | ⬜ Pendente | Criar solution, projetos, referências |
+| 1B | Entidades de Domínio e Enums | ⬜ Pendente | Player, Team, Match, MatchPlayerStats, etc. |
+| 1C | Banco de Dados (EF Core + Migrations) | ⬜ Pendente | DbContext, Configurations, Migration inicial |
+| 1D | Frontend Next.js + i18n + Design System | ⬜ Pendente | Setup Next.js 14, next-intl, Tailwind, tokens |
+| 2A | Motor de Pontuação (Scoring Engine) | ⬜ Pendente | Weight matrices, calculators, multipliers |
+| 2B | Testes do Motor de Pontuação | ⬜ Pendente | Cenários reais (Rodri, Vinicius Jr, etc.) |
+| 3A | Client API-Football + Mapper | ⬜ Pendente | HttpClient tipado, modelos, mapeamento |
+| 3B | Background Workers de Ingestão | ⬜ Pendente | MatchDataIngestionService, pipeline |
+| 3C | Seeds com Dados Reais | ⬜ Pendente | Temporada 2023/24, jogadores emblemáticos |
+| 4A | Controllers REST (Ranking + Players) | ⬜ Pendente | Endpoints, DTOs, paginação, filtros |
+| 4B | Controllers REST (Audit + Matches) | ⬜ Pendente | Recibo auditável, detalhamento de partida |
+| 4C | Localização no Backend | ⬜ Pendente | Middleware, .resx, ActionLabelResolver |
+| 4D | Frontend: Leaderboard + Filtros | ⬜ Pendente | Página de ranking com filtros posicionais |
+| 4E | Frontend: Perfil do Jogador + Recibo | ⬜ Pendente | Player page, MatchReceipt, radar chart |
+| 4F | Frontend: Vs Ballon d'Or + Fórmula | ⬜ Pendente | Páginas comparativa e livro de regras |
+| 5A | Deploy Backend (Railway/Render) | ⬜ Pendente | Docker, CI/CD, variáveis de ambiente |
+| 5B | Deploy Frontend (Vercel) | ⬜ Pendente | Build, domínio, SEO multilíngue |
+
+### Como Usar Este Roadmap
+1. Ao iniciar uma nova conversa, o agente DEVE ler este CONTEXT.md
+2. Identificar a próxima etapa com status ⬜ Pendente
+3. Ao finalizar a etapa, atualizar o status para ✅ Concluída
+4. Commitar as alterações com mensagem descritiva
+
+---
+
+## 9. Convenções do Projeto
+
+### Commits
+- Formato: 	ipo(escopo): descrição
+- Tipos: eat, ix, docs, efactor, 	est, chore, style
+- Exemplos: eat(scoring): add weight matrix for center backs, eat(i18n): add Spanish translations
+
+### Branches
+- main — código estável e deployável
+- eature/etapa-XX-descricao — branch por etapa do roadmap
+- Merge via PR (ou direto em main durante o MVP)
+
+### Código
+- Backend: C# com nullable reference types habilitado, PascalCase
+- Frontend: TypeScript strict mode, camelCase para variáveis/funções, PascalCase para componentes
+- Todos os textos visíveis ao usuário DEVEM usar o sistema de tradução (nunca strings hardcoded)
