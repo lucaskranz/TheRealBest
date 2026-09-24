@@ -15,6 +15,9 @@ public class Competition : EntityBase
     private readonly List<Match> _matches = [];
     public virtual IReadOnlyCollection<Match> Matches => _matches.AsReadOnly();
 
+    private readonly List<CompetitionTranslation> _translations = [];
+    public virtual IReadOnlyCollection<CompetitionTranslation> Translations => _translations.AsReadOnly();
+
     protected Competition() { }
 
     public Competition(
