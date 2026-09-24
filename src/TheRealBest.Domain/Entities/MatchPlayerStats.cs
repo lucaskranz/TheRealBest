@@ -44,6 +44,7 @@ public class MatchPlayerStats : EntityBase
     public int PenaltiesCommitted { get; private set; }
     public int PenaltiesSaved { get; private set; }
     public int PenaltiesMissed { get; private set; }
+    public int PenaltiesScored { get; private set; }
     public bool CleanSheet { get; private set; }
     public decimal Xg { get; private set; }
     public decimal Xa { get; private set; }
@@ -86,7 +87,8 @@ public class MatchPlayerStats : EntityBase
         int bigChancesMissed,
         decimal xg,
         decimal xa,
-        int shotCreatingActions)
+        int shotCreatingActions,
+        int penaltiesScored = 0)
     {
         Goals = goals;
         Assists = assists;
@@ -98,6 +100,7 @@ public class MatchPlayerStats : EntityBase
         Xg = xg;
         Xa = xa;
         ShotCreatingActions = shotCreatingActions;
+        PenaltiesScored = penaltiesScored;
         MarkUpdated();
     }
 

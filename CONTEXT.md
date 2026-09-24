@@ -93,21 +93,22 @@ TheRealBest.sln
 
 ### Fórmula Central (MPS - Match Performance Score)
 `
-MPS = Clamp(0, 100, (Base + ΔAções × FatorMinutos) × MultContexto)
+MPS = Clamp(0, 100, Base + (ΔAções − LinhaDeBase_posição × FatorMinutos) × MultContexto)
 `
 
-- **Base = 50.0** (nota neutra)
+- **Base = 50.0** (nota neutra: uma atuação média vale 50 em qualquer posição e contexto)
 - **ΔAções:** Soma de eventos positivos e negativos com pesos específicos por posição
-- **FatorMinutos:** Normalização (< 60min = M/90; 60-90min = 1.0; prorrogação = bônus)
+- **LinhaDeBase_posição:** ΔAções esperado de uma atuação média na posição (provisório até a calibração da Etapa 3C)
+- **FatorMinutos:** Normalização (< 60min = M/90; 60-90min = 1.0; prorrogação = bônus), aplicada só às ações de volume
 - **MultContexto = W_torneio × W_adversário × W_clutch**
 
 ### Ranking da Temporada (FSS - Fair Season Score)
 `
-FSS = (Σ MPS_i × W_torneio_i) × FatorPresença
+FSS = (Σ MPS_i × W_torneio_i / Σ W_torneio_i) × FatorPresença
 FatorPresença = min(1.0, MinutosJogados / 2200)^0.5
 `
 
-> A especificação completa com todas as matrizes de peso por posição está em docs/fair_ranking_formula_specification.md
+> A especificação completa com todas as matrizes de peso por posição está em docs/fair_ranking_formula_specification.md. A seção 7 dela descreve o algoritmo implementado (v1).
 
 ---
 
@@ -148,8 +149,8 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 1B | Entidades de Domínio e Enums | ✅ Concluída | Player, Team, Match, MatchPlayerStats, etc. |
 | 1C | Banco de Dados (EF Core + Migrations) | ✅ Concluída | DbContext, Configurations, Migration inicial |
 | 1D | Frontend Next.js + i18n + Design System | ✅ Concluída | Setup Next.js 14, next-intl, Tailwind, tokens |
-| 2A | Motor de Pontuação (Scoring Engine) | ⬜ Pendente | Weight matrices, calculators, multipliers |
-| 2B | Testes do Motor de Pontuação | ⬜ Pendente | Cenários reais (Rodri, Vinicius Jr, etc.) |
+| 2A | Motor de Pontuação (Scoring Engine) | ✅ Concluída | Weight matrices, calculators, multipliers |
+| 2B | Testes do Motor de Pontuação | ✅ Concluída | Cenários reais (Rodri, Vinicius Jr, etc.) |
 | 3A | Client API-Football + Mapper | ⬜ Pendente | HttpClient tipado, modelos, mapeamento |
 | 3B | Background Workers de Ingestão | ⬜ Pendente | MatchDataIngestionService, pipeline |
 | 3C | Seeds com Dados Reais | ⬜ Pendente | Temporada 2023/24, jogadores emblemáticos |

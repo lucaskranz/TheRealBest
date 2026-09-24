@@ -9,7 +9,7 @@ public sealed record ContextMultiplier(
     decimal ClutchMultiplier
 )
 {
-    public decimal Combined => Math.Round(TournamentMultiplier * OpponentMultiplier * ClutchMultiplier, 4);
+    public decimal Combined => Math.Round(TournamentMultiplier * OpponentMultiplier * ClutchMultiplier, 4, MidpointRounding.AwayFromZero);
 
     public static ContextMultiplier Default => new(1.0m, 1.0m, 1.0m);
 }

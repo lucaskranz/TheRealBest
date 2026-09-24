@@ -18,6 +18,7 @@ public class MatchPerformanceScore : EntityBase
     public string ActionBreakdownJson { get; private set; } = "[]";
     public string PenaltyBreakdownJson { get; private set; } = "[]";
     public decimal SubtotalRaw { get; private set; }
+    public decimal PositionBaseline { get; private set; }
     public decimal TournamentMultiplier { get; private set; } = 1.0m;
     public decimal OpponentMultiplier { get; private set; } = 1.0m;
     public decimal ClutchMultiplier { get; private set; } = 1.0m;
@@ -26,6 +27,7 @@ public class MatchPerformanceScore : EntityBase
     public decimal FinalMps { get; private set; }
     public DateTime CalculatedAt { get; private set; }
     public int AlgorithmVersion { get; private set; } = 1;
+    public bool CountsTowardsSeason { get; private set; } = true;
 
     protected MatchPerformanceScore() { }
 
@@ -38,6 +40,7 @@ public class MatchPerformanceScore : EntityBase
         string actionBreakdownJson,
         string penaltyBreakdownJson,
         decimal subtotalRaw,
+        decimal positionBaseline,
         decimal tournamentMultiplier,
         decimal opponentMultiplier,
         decimal clutchMultiplier,
@@ -46,6 +49,7 @@ public class MatchPerformanceScore : EntityBase
         decimal finalMps,
         int algorithmVersion = 1,
         DateTime? calculatedAt = null,
+        bool countsTowardsSeason = true,
         Guid? id = null) : base(id ?? Guid.NewGuid())
     {
         MatchId = matchId;
@@ -56,6 +60,7 @@ public class MatchPerformanceScore : EntityBase
         ActionBreakdownJson = actionBreakdownJson;
         PenaltyBreakdownJson = penaltyBreakdownJson;
         SubtotalRaw = subtotalRaw;
+        PositionBaseline = positionBaseline;
         TournamentMultiplier = tournamentMultiplier;
         OpponentMultiplier = opponentMultiplier;
         ClutchMultiplier = clutchMultiplier;
@@ -63,6 +68,7 @@ public class MatchPerformanceScore : EntityBase
         MinutesFactor = minutesFactor;
         FinalMps = finalMps;
         AlgorithmVersion = algorithmVersion;
+        CountsTowardsSeason = countsTowardsSeason;
         CalculatedAt = calculatedAt ?? DateTime.UtcNow;
     }
 }

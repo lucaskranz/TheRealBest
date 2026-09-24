@@ -32,6 +32,7 @@ public class MatchPerformanceScoreConfiguration : EntityBaseConfiguration<MatchP
 
         builder.Property(s => s.BaseScore).HasPrecision(ScorePrecision, ScoreScale);
         builder.Property(s => s.SubtotalRaw).HasPrecision(ScorePrecision, ScoreScale);
+        builder.Property(s => s.PositionBaseline).HasPrecision(ScorePrecision, ScoreScale);
         builder.Property(s => s.TournamentMultiplier).HasPrecision(ScorePrecision, ScoreScale);
         builder.Property(s => s.OpponentMultiplier).HasPrecision(ScorePrecision, ScoreScale);
         builder.Property(s => s.ClutchMultiplier).HasPrecision(ScorePrecision, ScoreScale);

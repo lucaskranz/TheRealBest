@@ -17,6 +17,8 @@ O objetivo do **Fair Player Index (FPI)** é eliminar:
 
 A cada partida disputada, o jogador obtém uma nota de performance que varia de **0 a 100** (onde 50 representa uma partida regular/neutra):
 
+> **Implementação:** a fórmula em vigor (algoritmo v1) está na seção 7.1. Ela aplica o contexto só sobre o desempenho e desconta uma linha de base por posição.
+
 $$\text{MPS} = \text{Clamp}\Big(0, 100, \big(\text{Base} + \Delta\text{Ações} \times \text{FatorMinutos}\big) \times \text{MultContexto}\Big)$$
 
 Onde:
@@ -131,6 +133,8 @@ $$\text{FatorMinutos} = \begin{cases}
 
 Como consolidamos as 40 a 60 partidas de um ano em um ranking final incontestável?
 
+> **Implementação:** o FSS em vigor (algoritmo v1) é a média ponderada da seção 7.3.
+
 $$\text{FSS} = \Bigg(\sum_{i=1}^{N} \text{MPS}_i \times \mathbf{W}_{\text{torneio}, i}\Bigg) \times \text{FatorPresença}$$
 
 Onde:
@@ -141,8 +145,52 @@ Onde:
 
 ---
 
-## 7. Próxima Etapa: Validação Prática
+## 7. Decisões de Implementação (Algoritmo v1)
 
-Com essa modelagem fechada, podemos simular cenários reais:
-1. Comparar **Rodri vs Vinicius Jr vs Bellingham** na temporada 2023/24 e ver como a fórmula se comporta.
+Ao implementar e testar as fórmulas acima (Etapas 2A/2B), cinco pontos se mostraram inconsistentes com a própria filosofia da seção 1. **A versão implementada é a abaixo, e ela prevalece sobre as seções 2, 5 e 6 quando houver conflito.**
+
+### 7.1. Fórmula do MPS implementada
+
+$$\text{MPS} = \text{Clamp}\Big(0, 100, \text{Base} + \big(\Delta\text{Ações} - \text{LinhaDeBase}_{\text{posição}} \times \text{FatorMinutos}\big) \times \text{MultContexto}\Big)$$
+
+| # | Problema na fórmula original | Decisão v1 |
+| :--- | :--- | :--- |
+| 1 | `(Base + Δ) × MultContexto` multiplica também a base 50. Num mata-mata de Champions contra time top com placar apertado (×2.0), qualquer atuação neutra vira 100; numa goleada contra time fraco, cai para ~35. | O contexto multiplica **só o desempenho**. Uma atuação neutra vale 50 em qualquer jogo, e o contexto amplifica acertos e erros. |
+| 2 | Os pesos de ações de volume (recuperações, duelos, passes) somam Δ ≈ +50 para um volante **médio**, e o MPS satura em 100 para quase todo titular. Posições com mais volume (volantes, zagueiros) dominariam o ranking. | **Linha de base por posição**: desconta-se o Δ esperado de uma atuação média na posição, proporcional aos minutos. A atuação média vale 50 em qualquer posição. |
+| 3 | O FatorMinutos multiplicava todo o Δ: o gol decisivo de quem entrou aos 80' valeria 1/9 de um gol, e um vermelho no 1º minuto quase não pesaria. | O FatorMinutos incide **só sobre ações de volume**. Eventos pontuais (gols, assistências, cartões, erros, pênaltis, clean sheet, gols sofridos) valem integralmente. |
+| 4 | O W_clutch é definido lance a lance (placar e minuto de cada ação), mas a ingestão ainda não traz eventos por minuto. | Enquanto não houver eventos, o W_clutch vem do **placar final**: diferença ≤ 1 gol → 1.25; diferença de 2 → 1.00; diferença ≥ 3 → 0.70. |
+| 5 | O FSS como soma `Σ MPS × W` premia volume: 60 jogos com nota 50 superam 35 jogos com nota 70, contrariando a seção 1. | O FSS é a **média ponderada** (seção 7.3). |
+
+### 7.2. Linhas de base provisórias (v1)
+
+Δ esperado de uma atuação média de 90 minutos, estimado aplicando médias típicas de titulares das 5 grandes ligas (incluindo a probabilidade de gol, assistência e clean sheet) às matrizes de peso da seção 3:
+
+| GK | CB | FB | CDM/CM | CAM/W | ST |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| 22 | 41 | 43 | 54 | 44 | 27 |
+
+Estes valores são **provisórios** e devem ser recalibrados com dados reais na Etapa 3C, o que gera o algoritmo v2.
+
+### 7.3. FSS implementado
+
+$$\text{FSS} = \frac{\sum_{i=1}^{N} \text{MPS}_i \times \mathbf{W}_{\text{torneio}, i}}{\sum_{i=1}^{N} \mathbf{W}_{\text{torneio}, i}} \times \text{FatorPresença}$$
+
+Escala de 0 a 100. Partidas com menos de 20 minutos e sem ação decisiva no placar (gol, assistência, pênalti defendido ou cometido, erro que levou a gol, gol contra, cartão vermelho) não entram no FSS.
+
+### 7.4. Outras definições
+
+* **Posições → matrizes:** CDM e CM usam a coluna "Volante/Meia"; CAM e W usam a coluna "Meia-Atac/Ponta".
+* **W_torneio:** Copa do Mundo 1.40 em toda a fase final; Eurocopa/Copa América 1.30; Champions 1.35 no mata-mata e 1.20 na fase de liga; Top 5 ligas 1.10; copas nacionais 1.05 em semifinal/final e 0.95 antes disso; demais 0.95.
+* **W_adversário (rating ClubElo):** ≥ 1880 → 1.20 (top 10); ≥ 1780 → 1.10 (top 30); ≥ 1600 → 1.00; abaixo → 0.90. Times sem Elo ingerido ficam com o padrão 1500 (0.90).
+* **Precisão de passe:** bônus único se > 85% com pelo menos 20 passes. **Clean sheet:** só com mais de 60 minutos. **xG superado:** bônus apenas quando Gols − xG > 0.
+* **Ações sem fonte de dados hoje** (ficam de fora até a ingestão fornecê-las): gols prevenidos (xGOT), saídas aéreas, erro que levou a finalização, gol contra e perda de posse no campo defensivo (a fonte só informa o total de perdas). **Defesas** usam o total de defesas, não só as difíceis dentro da área.
+* **Arredondamento:** 4 casas nos itens e multiplicadores e 2 casas no MPS, sempre `MidpointRounding.AwayFromZero`.
+
+---
+
+## 8. Validação Prática
+
+Os testes em `tests/TheRealBest.Scoring.Tests` simulam partidas reais (Rodri na final da UCL 2023, Vinícius Jr na final de 2024, os 5 gols de Haaland contra o Leipzig em 2023 e Rüdiger contra o City nas quartas de 2024), com estatísticas aproximadas. Próximos passos, com dados reais (Etapa 3C):
+1. Comparar **Rodri vs Vinicius Jr vs Bellingham** na temporada 2023/24.
 2. Comparar um zagueiro de elite (ex: **Van Dijk / Rüdiger**) com um centroavante de ponta (ex: **Haaland / Kane**).
+3. Recalibrar as linhas de base da seção 7.2.

@@ -39,5 +39,15 @@ public enum ActionType
     OwnGoal = 27,
     DribbledPast = 28,
     GoalConceded = 29,
-    PenaltyMissed = 30
+    PenaltyMissed = 30,
+
+    // Ações adicionadas pelo Fair Player Index v1 (docs/fair_ranking_formula_specification.md)
+    PenaltyGoal = 31,
+    ExpectedAssists = 32,
+    ExpectedGoalsOverperformance = 33,
+    PassAccuracyBonus = 34,
+    GoalsPrevented = 35,
+    HighClaim = 36,
+    ErrorLeadingToShot = 37,
+    Offside = 38
 }
