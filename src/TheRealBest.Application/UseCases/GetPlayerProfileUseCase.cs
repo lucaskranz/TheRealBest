@@ -4,13 +4,15 @@ using System.Text.Json;
 using TheRealBest.Application.DTOs.Players;
 using TheRealBest.Application.DTOs.Ranking;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
 using TheRealBest.Domain.Entities;
 using TheRealBest.Domain.Interfaces;
 
 public sealed class GetPlayerProfileUseCase(
     IPlayerRepository playerRepository,
     IRankingRepository rankingRepository,
-    IMatchRepository matchRepository
+    IMatchRepository matchRepository,
+    ActionLabelResolver labels
 ) : IGetPlayerProfileUseCase
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
@@ -28,7 +30,7 @@ public sealed class GetPlayerProfileUseCase(
         var recentMatches = matchStats.Select(s => new PlayerMatchStatDto(
             MatchId: s.MatchId,
             MatchDate: s.Match.MatchDate,
-            CompetitionName: s.Match.Competition.Name,
+            CompetitionName: s.Match.Competition.NameFor(SupportedLocales.Current),
             HomeTeamName: s.Match.HomeTeam.Name,
             AwayTeamName: s.Match.AwayTeam.Name,
             HomeScore: s.Match.HomeScore,
@@ -46,6 +48,7 @@ public sealed class GetPlayerProfileUseCase(
             Name: player.Name,
             Nationality: player.Nationality,
             PrimaryPosition: player.PrimaryPosition.ToString(),
+            PrimaryPositionLabel: labels.PositionLabel(player.PrimaryPosition.ToString(), SupportedLocales.Current),
             PhotoUrl: player.PhotoUrl,
             DateOfBirth: player.DateOfBirth,
             SeasonRanking: rankingDto,
@@ -53,7 +56,7 @@ public sealed class GetPlayerProfileUseCase(
         );
     }
 
-    private static SeasonRankingItemDto MapRankingDto(SeasonRanking ranking, Player player)
+    private SeasonRankingItemDto MapRankingDto(SeasonRanking ranking, Player player)
     {
         IReadOnlyList<Top5MatchItemDto> topMatches = [];
         if (!string.IsNullOrWhiteSpace(ranking.Top5MatchesJson))
@@ -71,6 +74,7 @@ public sealed class GetPlayerProfileUseCase(
             Nationality: player.Nationality,
             PhotoUrl: player.PhotoUrl,
             PrimaryPosition: player.PrimaryPosition.ToString(),
+            PrimaryPositionLabel: labels.PositionLabel(player.PrimaryPosition.ToString(), SupportedLocales.Current),
             OverallRank: ranking.OverallRank,
             PositionRank: ranking.PositionRank,
             FssScore: ranking.FssScore,

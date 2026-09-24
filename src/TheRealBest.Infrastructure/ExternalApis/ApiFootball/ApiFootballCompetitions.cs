@@ -22,6 +22,30 @@ public static class ApiFootballCompetitions
     public const int DfbPokal = 81;
     public const int CoupeDeFrance = 66;
 
+    private static readonly Dictionary<int, (string PtBr, string En, string Es)> Names = new()
+    {
+        [WorldCup] = ("Copa do Mundo FIFA", "FIFA World Cup", "Copa Mundial de la FIFA"),
+        [ChampionsLeague] = ("Liga dos Campeões da UEFA", "UEFA Champions League", "Liga de Campeones de la UEFA"),
+        [EuroChampionship] = ("Eurocopa", "UEFA European Championship", "Eurocopa"),
+        [CopaAmerica] = ("Copa América", "Copa América", "Copa América"),
+        [PremierLeague] = ("Premier League", "Premier League", "Premier League"),
+        [LaLiga] = ("La Liga", "La Liga", "LaLiga"),
+        [SerieA] = ("Serie A", "Serie A", "Serie A"),
+        [Bundesliga] = ("Bundesliga", "Bundesliga", "Bundesliga"),
+        [Ligue1] = ("Ligue 1", "Ligue 1", "Ligue 1"),
+        [FaCup] = ("Copa da Inglaterra", "FA Cup", "FA Cup"),
+        [CopaDelRey] = ("Copa do Rei", "Copa del Rey", "Copa del Rey"),
+        [CoppaItalia] = ("Copa da Itália", "Coppa Italia", "Copa de Italia"),
+        [DfbPokal] = ("Copa da Alemanha", "DFB-Pokal", "Copa de Alemania"),
+        [CoupeDeFrance] = ("Copa da França", "Coupe de France", "Copa de Francia"),
+    };
+
+    /// <summary>Nomes por locale das competições cobertas; nulo para as demais (usa o nome da API).</summary>
+    public static IReadOnlyDictionary<string, string>? LocalizedNames(int leagueId) =>
+        Names.TryGetValue(leagueId, out var n)
+            ? new Dictionary<string, string> { ["pt-BR"] = n.PtBr, ["en"] = n.En, ["es"] = n.Es }
+            : null;
+
     public static CompetitionTier TierFor(int leagueId) => leagueId switch
     {
         WorldCup => CompetitionTier.WorldCup,

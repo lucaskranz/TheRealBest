@@ -2,10 +2,11 @@
 
 using TheRealBest.Application.DTOs.Players;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
 using TheRealBest.Domain.Enums;
 using TheRealBest.Domain.Interfaces;
 
-public sealed class SearchPlayersUseCase(IPlayerRepository playerRepository) : ISearchPlayersUseCase
+public sealed class SearchPlayersUseCase(IPlayerRepository playerRepository, ActionLabelResolver labels) : ISearchPlayersUseCase
 {
     public async Task<IReadOnlyList<PlayerSummaryDto>> ExecuteAsync(string? query, PlayerPosition? position, int limit = 20, CancellationToken cancellationToken = default)
     {
@@ -24,6 +25,7 @@ public sealed class SearchPlayersUseCase(IPlayerRepository playerRepository) : I
                 Name: p.Name,
                 Nationality: p.Nationality,
                 PrimaryPosition: p.PrimaryPosition.ToString(),
+                PrimaryPositionLabel: labels.PositionLabel(p.PrimaryPosition.ToString(), SupportedLocales.Current),
                 PhotoUrl: p.PhotoUrl,
                 DateOfBirth: p.DateOfBirth
             )).ToList();
@@ -37,6 +39,7 @@ public sealed class SearchPlayersUseCase(IPlayerRepository playerRepository) : I
                 Name: p.Name,
                 Nationality: p.Nationality,
                 PrimaryPosition: p.PrimaryPosition.ToString(),
+                PrimaryPositionLabel: labels.PositionLabel(p.PrimaryPosition.ToString(), SupportedLocales.Current),
                 PhotoUrl: p.PhotoUrl,
                 DateOfBirth: p.DateOfBirth
             )).ToList();
@@ -49,6 +52,7 @@ public sealed class SearchPlayersUseCase(IPlayerRepository playerRepository) : I
             Name: p.Name,
             Nationality: p.Nationality,
             PrimaryPosition: p.PrimaryPosition.ToString(),
+            PrimaryPositionLabel: labels.PositionLabel(p.PrimaryPosition.ToString(), SupportedLocales.Current),
             PhotoUrl: p.PhotoUrl,
             DateOfBirth: p.DateOfBirth
         )).ToList();

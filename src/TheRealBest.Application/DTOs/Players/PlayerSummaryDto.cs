@@ -5,6 +5,7 @@ public sealed record PlayerSummaryDto(
     string Name,
     string Nationality,
     string PrimaryPosition,
+    string PrimaryPositionLabel,
     string? PhotoUrl,
     DateOnly? DateOfBirth
 );

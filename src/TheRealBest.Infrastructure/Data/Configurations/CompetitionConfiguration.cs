@@ -29,6 +29,7 @@ public class CompetitionConfiguration : EntityBaseConfiguration<Competition>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(c => c.Matches).HasField("_matches");
-        builder.Navigation(c => c.Translations).HasField("_translations");
+        // Sempre carregadas junto com a competição (são poucas linhas) para Competition.NameFor(locale)
+        builder.Navigation(c => c.Translations).HasField("_translations").AutoInclude();
     }
 }

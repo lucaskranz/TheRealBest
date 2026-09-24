@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using TheRealBest.API.Models;
 using TheRealBest.Application.DTOs.Players;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
+using TheRealBest.Domain.Interfaces;
 using TheRealBest.Domain.Enums;
 
 [ApiController]
 [Route("api/v1/players")]
 public sealed class PlayersController(
+    ITranslationService translations,
     IGetPlayerProfileUseCase getPlayerProfileUseCase,
     ISearchPlayersUseCase searchPlayersUseCase
 ) : ControllerBase
@@ -46,7 +49,7 @@ public sealed class PlayersController(
         var profile = await getPlayerProfileUseCase.ExecuteAsync(id, seasonYear, cancellationToken);
         if (profile is null)
         {
-            return NotFound(ApiResponse<object>.Fail($"Jogador com ID '{id}' nÃ£o encontrado."));
+            return NotFound(ApiResponse<object>.Fail(translations.TranslateMessage("PlayerNotFound", SupportedLocales.Current, id)));
         }
 
         return Ok(ApiResponse<PlayerProfileDto>.Ok(profile, new ApiMeta()));

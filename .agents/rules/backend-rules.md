@@ -35,6 +35,11 @@
 - Conteúdo dinâmico: tabelas de tradução no banco (competition_translations, action_type_translations)
 - Middleware de localização lê Accept-Language e seta CultureInfo
 - NUNCA hardcodar strings visíveis ao usuário em controllers ou use cases
+- Recursos em src/TheRealBest.API/Resources: o .resx neutro contém o pt-BR (padrão e fallback); .en.resx e .es.resx são satélites
+- ActionLabels usa as chaves de ActionCatalog (snake_case) com a forma plural em "{chave}_plural"; toda ação nova precisa de rótulo nos 3 idiomas (LocalizationTests garante)
+- Textos via ITranslationService (implementado por ResxTranslationService); o locale da requisição vem de SupportedLocales.Current
+- LocalizationMiddleware roda ANTES do ExceptionHandlingMiddleware (a cultura definida por um middleware interno não volta para o externo)
+- DTOs expõem o código (ex.: "CDM") e o rótulo localizado (ex.: PrimaryPositionLabel) lado a lado; nomes de competição via Competition.NameFor(locale)
 
 ## Background Services
 - Implementar IHostedService para workers de longa duração

@@ -6,6 +6,7 @@ public sealed record MatchPerformanceReceiptDto(
     Guid PlayerId,
     string PlayerName,
     string PlayerPosition,
+    string PlayerPositionLabel,
     string? PhotoUrl,
     DateTime MatchDate,
     string CompetitionName,

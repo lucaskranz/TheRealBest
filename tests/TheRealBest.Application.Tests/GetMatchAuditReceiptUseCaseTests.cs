@@ -15,7 +15,7 @@ public class GetMatchAuditReceiptUseCaseTests
 
     public GetMatchAuditReceiptUseCaseTests()
     {
-        _useCase = new GetMatchAuditReceiptUseCase(_matchRepositoryMock.Object);
+        _useCase = new GetMatchAuditReceiptUseCase(_matchRepositoryMock.Object, TestLabels.Create());
     }
 
     [Fact]

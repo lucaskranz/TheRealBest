@@ -4,11 +4,12 @@ using System.Text.Json;
 using TheRealBest.Application.DTOs.Common;
 using TheRealBest.Application.DTOs.Ranking;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
 using TheRealBest.Domain.Entities;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Domain.Specifications;
 
-public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository) : IGetSeasonRankingUseCase
+public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository, ActionLabelResolver labels) : IGetSeasonRankingUseCase
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -46,7 +47,7 @@ public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository
         return rankings.Select(MapToDto).ToList();
     }
 
-    private static SeasonRankingItemDto MapToDto(SeasonRanking ranking)
+    private SeasonRankingItemDto MapToDto(SeasonRanking ranking)
     {
         var topMatches = DeserializeTopMatches(ranking.Top5MatchesJson);
 
@@ -56,6 +57,7 @@ public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository
             Nationality: ranking.Player?.Nationality ?? string.Empty,
             PhotoUrl: ranking.Player?.PhotoUrl,
             PrimaryPosition: ranking.Player?.PrimaryPosition.ToString() ?? string.Empty,
+            PrimaryPositionLabel: ranking.Player is null ? string.Empty : labels.PositionLabel(ranking.Player.PrimaryPosition.ToString(), SupportedLocales.Current),
             OverallRank: ranking.OverallRank,
             PositionRank: ranking.PositionRank,
             FssScore: ranking.FssScore,

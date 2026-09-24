@@ -57,6 +57,11 @@ public sealed class IngestMatchDataUseCase(
                 multiplier,
                 fixture.Competition.SeasonYear);
 
+            foreach (var (locale, name) in fixture.Competition.LocalizedNames ?? new Dictionary<string, string>())
+            {
+                competition.AddTranslation(locale, name);
+            }
+
             await competitionRepository.AddAsync(competition, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }

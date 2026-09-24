@@ -2,9 +2,10 @@
 
 using TheRealBest.Application.DTOs.Matches;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
 using TheRealBest.Domain.Interfaces;
 
-public sealed class GetMatchDetailUseCase(IMatchRepository matchRepository) : IGetMatchDetailUseCase
+public sealed class GetMatchDetailUseCase(IMatchRepository matchRepository, ActionLabelResolver labels) : IGetMatchDetailUseCase
 {
     public async Task<MatchDetailDto?> ExecuteAsync(Guid matchId, CancellationToken cancellationToken = default)
     {
@@ -24,6 +25,7 @@ public sealed class GetMatchDetailUseCase(IMatchRepository matchRepository) : IG
                     PlayerName: ps.Player?.Name ?? string.Empty,
                     PhotoUrl: ps.Player?.PhotoUrl,
                     PositionPlayed: ps.PositionPlayed.ToString(),
+                    PositionPlayedLabel: labels.PositionLabel(ps.PositionPlayed.ToString(), SupportedLocales.Current),
                     TeamId: ps.TeamId,
                     TeamName: ps.Team?.Name ?? (ps.TeamId == match.HomeTeamId ? match.HomeTeam.Name : match.AwayTeam.Name),
                     MinutesPlayed: ps.MinutesPlayed,
@@ -57,7 +59,7 @@ public sealed class GetMatchDetailUseCase(IMatchRepository matchRepository) : IG
         return new MatchDetailDto(
             Id: match.Id,
             MatchDate: match.MatchDate,
-            CompetitionName: match.Competition?.Name ?? string.Empty,
+            CompetitionName: match.Competition?.NameFor(SupportedLocales.Current) ?? string.Empty,
             CompetitionTier: match.Competition?.Tier.ToString() ?? string.Empty,
             RoundPhase: match.RoundPhase,
             IsKnockout: match.IsKnockout,

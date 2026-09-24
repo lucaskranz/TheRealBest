@@ -16,7 +16,7 @@ public class GetSeasonRankingUseCaseTests
 
     public GetSeasonRankingUseCaseTests()
     {
-        _useCase = new GetSeasonRankingUseCase(_rankingRepositoryMock.Object);
+        _useCase = new GetSeasonRankingUseCase(_rankingRepositoryMock.Object, TestLabels.Create());
     }
 
     [Fact]

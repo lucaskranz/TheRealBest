@@ -19,7 +19,14 @@ public class ApiFootballMapperTests
         var fixture = Fixture(UclFinal2023);
 
         fixture.ExternalId.Should().Be("1027909");
-        fixture.Competition.Should().Be(new ExternalCompetition("2", "UEFA Champions League", "World", CompetitionTier.UclKnockout, 2022));
+        fixture.Competition.Should().BeEquivalentTo(new ExternalCompetition(
+            "2", "UEFA Champions League", "World", CompetitionTier.UclKnockout, 2022,
+            new Dictionary<string, string>
+            {
+                ["pt-BR"] = "Liga dos Campeões da UEFA",
+                ["en"] = "UEFA Champions League",
+                ["es"] = "Liga de Campeones de la UEFA",
+            }));
         fixture.HomeTeam.Should().Match<ExternalTeam>(t => t.ExternalId == "50" && t.Name == "Manchester City");
         fixture.AwayTeam.ExternalId.Should().Be("505");
         fixture.RoundPhase.Should().Be("Final");

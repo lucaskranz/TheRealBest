@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using TheRealBest.API.Models;
 using TheRealBest.Application.DTOs.Matches;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
+using TheRealBest.Domain.Interfaces;
 
 [ApiController]
 [Route("api/v1/matches")]
 public sealed class MatchesController(
+    ITranslationService translations,
     IGetPagedMatchesUseCase getPagedMatchesUseCase,
     IGetMatchDetailUseCase getMatchDetailUseCase
 ) : ControllerBase
@@ -48,7 +51,7 @@ public sealed class MatchesController(
         var match = await getMatchDetailUseCase.ExecuteAsync(id, cancellationToken);
         if (match is null)
         {
-            return NotFound(ApiResponse<object>.Fail($"Partida com ID '{id}' nÃ£o foi encontrada."));
+            return NotFound(ApiResponse<object>.Fail(translations.TranslateMessage("MatchNotFound", SupportedLocales.Current, id)));
         }
 
         return Ok(ApiResponse<MatchDetailDto>.Ok(match, new ApiMeta()));

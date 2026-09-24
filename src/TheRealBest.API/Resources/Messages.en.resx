@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MatchNotFound" xml:space="preserve"><value>Match {0} not found.</value></data>
+  <data name="PlayerNotFound" xml:space="preserve"><value>Player {0} not found.</value></data>
+  <data name="ReceiptNotFound" xml:space="preserve"><value>Receipt for match {0} and player {1} not found.</value></data>
+  <data name="InvalidRequest" xml:space="preserve"><value>Invalid request: check the parameters sent.</value></data>
+  <data name="ResourceNotFound" xml:space="preserve"><value>Resource not found.</value></data>
+  <data name="InternalError" xml:space="preserve"><value>An internal error occurred while processing the request.</value></data>
+</root>

@@ -3,10 +3,11 @@
 using System.Text.Json;
 using TheRealBest.Application.DTOs.Audit;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Domain.ValueObjects;
 
-public sealed class GetMatchAuditReceiptUseCase(IMatchRepository matchRepository) : IGetMatchAuditReceiptUseCase
+public sealed class GetMatchAuditReceiptUseCase(IMatchRepository matchRepository, ActionLabelResolver labels) : IGetMatchAuditReceiptUseCase
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -37,9 +38,10 @@ public sealed class GetMatchAuditReceiptUseCase(IMatchRepository matchRepository
             PlayerId: score.PlayerId,
             PlayerName: score.Player?.Name ?? string.Empty,
             PlayerPosition: score.PositionEvaluated.ToString(),
+            PlayerPositionLabel: labels.PositionLabel(score.PositionEvaluated.ToString(), SupportedLocales.Current),
             PhotoUrl: score.Player?.PhotoUrl,
             MatchDate: score.Match?.MatchDate ?? DateTime.MinValue,
-            CompetitionName: score.Match?.Competition?.Name ?? string.Empty,
+            CompetitionName: score.Match?.Competition?.NameFor(SupportedLocales.Current) ?? string.Empty,
             HomeTeamName: score.Match?.HomeTeam?.Name ?? string.Empty,
             AwayTeamName: score.Match?.AwayTeam?.Name ?? string.Empty,
             HomeScore: score.Match?.HomeScore,
@@ -53,7 +55,7 @@ public sealed class GetMatchAuditReceiptUseCase(IMatchRepository matchRepository
         );
     }
 
-    private static IReadOnlyList<AuditActionItemDto> DeserializeBreakdown(string? json)
+    private IReadOnlyList<AuditActionItemDto> DeserializeBreakdown(string? json)
     {
         if (string.IsNullOrWhiteSpace(json)) return [];
 
@@ -64,7 +66,7 @@ public sealed class GetMatchAuditReceiptUseCase(IMatchRepository matchRepository
 
             return items.Select(i => new AuditActionItemDto(
                 ActionKey: i.ActionKey,
-                Label: i.Label,
+                Label: labels.ActionLabel(i.ActionKey, i.Count, SupportedLocales.Current),
                 Count: i.Count,
                 UnitWeight: i.UnitWeight,
                 TotalPoints: i.TotalPoints,

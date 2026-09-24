@@ -20,7 +20,8 @@ public class GetPlayerProfileUseCaseTests
         _useCase = new GetPlayerProfileUseCase(
             _playerRepositoryMock.Object,
             _rankingRepositoryMock.Object,
-            _matchRepositoryMock.Object
+            _matchRepositoryMock.Object,
+            TestLabels.Create()
         );
     }
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="goal" xml:space="preserve"><value>Goal</value></data>
+  <data name="goal_plural" xml:space="preserve"><value>Goals</value></data>
+  <data name="penalty_goal" xml:space="preserve"><value>Penalty goal</value></data>
+  <data name="penalty_goal_plural" xml:space="preserve"><value>Penalty goals</value></data>
+  <data name="assist" xml:space="preserve"><value>Assist</value></data>
+  <data name="assist_plural" xml:space="preserve"><value>Assists</value></data>
+  <data name="expected_assists" xml:space="preserve"><value>Expected assists (xA)</value></data>
+  <data name="expected_assists_plural" xml:space="preserve"><value>Expected assists (xA)</value></data>
+  <data name="big_chance_created" xml:space="preserve"><value>Big chance created</value></data>
+  <data name="big_chance_created_plural" xml:space="preserve"><value>Big chances created</value></data>
+  <data name="shot_on_target" xml:space="preserve"><value>Shot on target</value></data>
+  <data name="shot_on_target_plural" xml:space="preserve"><value>Shots on target</value></data>
+  <data name="expected_goals_overperformance" xml:space="preserve"><value>Goals above xG</value></data>
+  <data name="expected_goals_overperformance_plural" xml:space="preserve"><value>Goals above xG</value></data>
+  <data name="key_pass" xml:space="preserve"><value>Key pass</value></data>
+  <data name="key_pass_plural" xml:space="preserve"><value>Key passes</value></data>
+  <data name="progressive_pass" xml:space="preserve"><value>Progressive pass</value></data>
+  <data name="progressive_pass_plural" xml:space="preserve"><value>Progressive passes</value></data>
+  <data name="pass_accuracy_bonus" xml:space="preserve"><value>Pass accuracy above 85%</value></data>
+  <data name="pass_accuracy_bonus_plural" xml:space="preserve"><value>Pass accuracy above 85%</value></data>
+  <data name="dribble_success" xml:space="preserve"><value>Successful dribble</value></data>
+  <data name="dribble_success_plural" xml:space="preserve"><value>Successful dribbles</value></data>
+  <data name="foul_drawn" xml:space="preserve"><value>Foul drawn</value></data>
+  <data name="foul_drawn_plural" xml:space="preserve"><value>Fouls drawn</value></data>
+  <data name="tackle" xml:space="preserve"><value>Tackle</value></data>
+  <data name="tackle_plural" xml:space="preserve"><value>Tackles</value></data>
+  <data name="interception" xml:space="preserve"><value>Interception</value></data>
+  <data name="interception_plural" xml:space="preserve"><value>Interceptions</value></data>
+  <data name="aerial_duel_won" xml:space="preserve"><value>Aerial duel won</value></data>
+  <data name="aerial_duel_won_plural" xml:space="preserve"><value>Aerial duels won</value></data>
+  <data name="duel_won" xml:space="preserve"><value>Ground duel won</value></data>
+  <data name="duel_won_plural" xml:space="preserve"><value>Ground duels won</value></data>
+  <data name="ball_recovery" xml:space="preserve"><value>Ball recovery</value></data>
+  <data name="ball_recovery_plural" xml:space="preserve"><value>Ball recoveries</value></data>
+  <data name="clean_sheet" xml:space="preserve"><value>Clean sheet</value></data>
+  <data name="clean_sheet_plural" xml:space="preserve"><value>Clean sheets</value></data>
+  <data name="save" xml:space="preserve"><value>Save</value></data>
+  <data name="save_plural" xml:space="preserve"><value>Saves</value></data>
+  <data name="goals_prevented" xml:space="preserve"><value>Goals prevented</value></data>
+  <data name="goals_prevented_plural" xml:space="preserve"><value>Goals prevented</value></data>
+  <data name="penalty_saved" xml:space="preserve"><value>Penalty saved</value></data>
+  <data name="penalty_saved_plural" xml:space="preserve"><value>Penalties saved</value></data>
+  <data name="high_claim" xml:space="preserve"><value>High claim</value></data>
+  <data name="high_claim_plural" xml:space="preserve"><value>High claims</value></data>
+  <data name="error_leading_to_goal" xml:space="preserve"><value>Error leading to goal</value></data>
+  <data name="error_leading_to_goal_plural" xml:space="preserve"><value>Errors leading to goal</value></data>
+  <data name="error_leading_to_shot" xml:space="preserve"><value>Error leading to shot</value></data>
+  <data name="error_leading_to_shot_plural" xml:space="preserve"><value>Errors leading to shot</value></data>
+  <data name="penalty_committed" xml:space="preserve"><value>Penalty conceded</value></data>
+  <data name="penalty_committed_plural" xml:space="preserve"><value>Penalties conceded</value></data>
+  <data name="own_goal" xml:space="preserve"><value>Own goal</value></data>
+  <data name="own_goal_plural" xml:space="preserve"><value>Own goals</value></data>
+  <data name="yellow_card" xml:space="preserve"><value>Yellow card</value></data>
+  <data name="yellow_card_plural" xml:space="preserve"><value>Yellow cards</value></data>
+  <data name="red_card" xml:space="preserve"><value>Red card</value></data>
+  <data name="red_card_plural" xml:space="preserve"><value>Red cards</value></data>
+  <data name="big_chance_missed" xml:space="preserve"><value>Big chance missed</value></data>
+  <data name="big_chance_missed_plural" xml:space="preserve"><value>Big chances missed</value></data>
+  <data name="turnover" xml:space="preserve"><value>Turnover in own half</value></data>
+  <data name="turnover_plural" xml:space="preserve"><value>Turnovers in own half</value></data>
+  <data name="offside" xml:space="preserve"><value>Offside</value></data>
+  <data name="offside_plural" xml:space="preserve"><value>Offsides</value></data>
+  <data name="goal_conceded" xml:space="preserve"><value>Team goal conceded (after the 1st)</value></data>
+  <data name="goal_conceded_plural" xml:space="preserve"><value>Team goals conceded (after the 1st)</value></data>
+</root>

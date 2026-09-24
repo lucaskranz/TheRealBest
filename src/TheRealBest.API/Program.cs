@@ -1,4 +1,5 @@
 ﻿using TheRealBest.API.BackgroundServices;
+using TheRealBest.API.Localization;
 using TheRealBest.API.Middleware;
 using TheRealBest.Application;
 using TheRealBest.Domain.Interfaces;
@@ -15,6 +16,7 @@ builder.Services.AddApplication();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IScoringRulesProvider, ScoringRulesProvider>();
 builder.Services.AddSingleton<IScoringEngine, ScoringEngine>();
+builder.Services.AddSingleton<ITranslationService, ResxTranslationService>();
 
 // CORS for Frontend (Next.js)
 builder.Services.AddCors(options =>
@@ -37,6 +39,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Localização primeiro: a cultura precisa valer também para as mensagens de erro
+app.UseMiddleware<LocalizationMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.

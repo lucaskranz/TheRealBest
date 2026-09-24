@@ -5,6 +5,7 @@ public sealed record MatchPlayerPerformanceDto(
     string PlayerName,
     string? PhotoUrl,
     string PositionPlayed,
+    string PositionPlayedLabel,
     Guid TeamId,
     string TeamName,
     int MinutesPlayed,

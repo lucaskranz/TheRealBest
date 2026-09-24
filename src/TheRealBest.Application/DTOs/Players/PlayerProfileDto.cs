@@ -7,6 +7,7 @@ public sealed record PlayerProfileDto(
     string Name,
     string Nationality,
     string PrimaryPosition,
+    string PrimaryPositionLabel,
     string? PhotoUrl,
     DateOnly? DateOfBirth,
     SeasonRankingItemDto? SeasonRanking,

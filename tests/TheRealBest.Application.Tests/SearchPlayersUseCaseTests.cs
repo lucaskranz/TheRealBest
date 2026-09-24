@@ -14,7 +14,7 @@ public class SearchPlayersUseCaseTests
 
     public SearchPlayersUseCaseTests()
     {
-        _useCase = new SearchPlayersUseCase(_playerRepositoryMock.Object);
+        _useCase = new SearchPlayersUseCase(_playerRepositoryMock.Object, TestLabels.Create());
     }
 
     [Fact]

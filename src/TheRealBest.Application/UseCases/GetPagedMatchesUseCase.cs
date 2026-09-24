@@ -3,6 +3,7 @@
 using TheRealBest.Application.DTOs.Common;
 using TheRealBest.Application.DTOs.Matches;
 using TheRealBest.Application.Interfaces;
+using TheRealBest.Application.Localization;
 using TheRealBest.Domain.Interfaces;
 
 public sealed class GetPagedMatchesUseCase(IMatchRepository matchRepository) : IGetPagedMatchesUseCase
@@ -21,7 +22,7 @@ public sealed class GetPagedMatchesUseCase(IMatchRepository matchRepository) : I
         var dtoList = items.Select(m => new MatchSummaryDto(
             Id: m.Id,
             MatchDate: m.MatchDate,
-            CompetitionName: m.Competition?.Name ?? string.Empty,
+            CompetitionName: m.Competition?.NameFor(SupportedLocales.Current) ?? string.Empty,
             CompetitionTier: m.Competition?.Tier.ToString() ?? string.Empty,
             RoundPhase: m.RoundPhase,
             IsKnockout: m.IsKnockout,

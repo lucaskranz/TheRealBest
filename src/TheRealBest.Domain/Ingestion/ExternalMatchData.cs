@@ -6,12 +6,14 @@ using TheRealBest.Domain.ValueObjects;
 // Dados importados de uma fonte externa, identificados apenas por IDs externos.
 // A ingestão resolve esses IDs para as entidades do banco (criando-as quando necessário).
 
+/// <param name="LocalizedNames">Nome por locale (pt-BR, en, es), quando conhecido. Vira competition_translations.</param>
 public sealed record ExternalCompetition(
     string ExternalId,
     string Name,
     string Country,
     CompetitionTier Tier,
-    int SeasonYear);
+    int SeasonYear,
+    IReadOnlyDictionary<string, string>? LocalizedNames = null);
 
 public sealed record ExternalTeam(
     string ExternalId,

@@ -77,7 +77,7 @@ TheRealBest.sln
 | Tabela | Propósito |
 |:---|:---|
 | players | Cadastro de jogadores (nome, nacionalidade, posição primária, foto) |
-| 	eams | Clubes (nome, logo, país, ELO ranking) |
+| teams | Clubes (nome, logo, país, ELO ranking) |
 | competitions | Torneios (nome, tier, multiplicador, temporada) |
 | matches | Partidas (times, placar, competição, data, fase) |
 | match_player_stats | Estatísticas brutas por jogador por partida (todas as métricas da API) |
@@ -85,7 +85,7 @@ TheRealBest.sln
 | season_rankings | FSS acumulado, rank geral, rank por posição, clutch index |
 | scoring_weights | Pesos configuráveis por posição e ação (versionados) |
 | competition_translations | Traduções de nomes de competições por locale |
-| ction_type_translations | Traduções de labels de ações por locale |
+| action_type_translations | Reservada (sem uso): os rótulos das ações vêm de `ActionLabels.resx` |
 
 ---
 
@@ -123,7 +123,7 @@ FatorPresença = min(1.0, MinutosJogados / 2200)^0.5
 
 - Frontend: 
 ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-Language
-- Backend: IStringLocalizer + .resx para labels, tabelas DB para conteúdo dinâmico
+- Backend: `LocalizationMiddleware` lê o Accept-Language (pesos q, idioma principal: pt-PT → pt-BR, en-US → en) e responde com `Content-Language`; textos estáticos (rótulos do recibo, posições, mensagens) em `.resx` (`src/TheRealBest.API/Resources`); nomes de competição em `competition_translations`, preenchida na ingestão
 - Nomes de jogadores e times NÃO são traduzidos
 
 ---
@@ -174,7 +174,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 3C | Seeds com Dados Reais | ✅ Concluída | 30 partidas reais do ciclo 2023/24 via API-Football (`--seed`), algoritmo v2 calibrado; pendente: Elo real (ClubElo fora do ar na implementação) |
 | 4A | Controllers REST (Ranking + Players) | ✅ Concluída | Endpoints, DTOs, paginação, filtros |
 | 4B | Controllers REST (Audit + Matches) | ✅ Concluída | Recibo auditável, detalhamento de partida |
-| 4C | Localização no Backend | ⬜ Pendente | Middleware, .resx, ActionLabelResolver |
+| 4C | Localização no Backend | ✅ Concluída | Middleware, .resx, ActionLabelResolver |
 | 4D | Frontend: Leaderboard + Filtros | ⬜ Pendente | Página de ranking com filtros posicionais |
 | 4E | Frontend: Perfil do Jogador + Recibo | ⬜ Pendente | Player page, MatchReceipt, radar chart |
 | 4F | Frontend: Vs Ballon d'Or + Fórmula | ⬜ Pendente | Páginas comparativa e livro de regras |

@@ -37,6 +37,20 @@ public class Competition : EntityBase
         SeasonYear = seasonYear;
     }
 
+    /// <summary>Nome no locale pedido; sem tradução cadastrada, o nome original da fonte.</summary>
+    public string NameFor(string locale) =>
+        _translations.FirstOrDefault(t => string.Equals(t.Locale, locale, StringComparison.OrdinalIgnoreCase))?.Name ?? Name;
+
+    public void AddTranslation(string locale, string name, string? countryName = null)
+    {
+        if (_translations.Any(t => string.Equals(t.Locale, locale, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        _translations.Add(new CompetitionTranslation(Id, locale, name, countryName));
+    }
+
     public void UpdateMultiplier(decimal newMultiplier)
     {
         TournamentMultiplier = newMultiplier;

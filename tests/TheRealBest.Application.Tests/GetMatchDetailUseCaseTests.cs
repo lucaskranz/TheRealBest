@@ -15,7 +15,7 @@ public class GetMatchDetailUseCaseTests
 
     public GetMatchDetailUseCaseTests()
     {
-        _useCase = new GetMatchDetailUseCase(_matchRepositoryMock.Object);
+        _useCase = new GetMatchDetailUseCase(_matchRepositoryMock.Object, TestLabels.Create());
     }
 
     [Fact]
