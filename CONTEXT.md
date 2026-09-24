@@ -163,7 +163,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 3A | Client API-Football + Mapper | ✅ Concluída | HttpClient tipado, modelos, mapeamento |
 | 3B | Background Workers de Ingestão | ✅ Concluída | MatchDataIngestionService, pipeline |
 | 3C | Seeds com Dados Reais | ✅ Concluída | Temporada 2023/24, jogadores emblemáticos |
-| 4A | Controllers REST (Ranking + Players) | ⬜ Pendente | Endpoints, DTOs, paginação, filtros |
+| 4A | Controllers REST (Ranking + Players) | ✅ Concluída | Endpoints, DTOs, paginação, filtros |
 | 4B | Controllers REST (Audit + Matches) | ⬜ Pendente | Recibo auditável, detalhamento de partida |
 | 4C | Localização no Backend | ⬜ Pendente | Middleware, .resx, ActionLabelResolver |
 | 4D | Frontend: Leaderboard + Filtros | ⬜ Pendente | Página de ranking com filtros posicionais |

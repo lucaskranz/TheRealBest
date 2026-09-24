@@ -1,4 +1,4 @@
-namespace TheRealBest.Application;
+﻿namespace TheRealBest.Application;
 
 using Microsoft.Extensions.DependencyInjection;
 using TheRealBest.Application.Interfaces;
@@ -11,6 +11,9 @@ public static class DependencyInjection
         services.AddScoped<IIngestMatchDataUseCase, IngestMatchDataUseCase>();
         services.AddScoped<IRecalculateSeasonRankingUseCase, RecalculateSeasonRankingUseCase>();
         services.AddScoped<IMatchDataIngestionPipeline, MatchDataIngestionPipeline>();
+        services.AddScoped<IGetSeasonRankingUseCase, GetSeasonRankingUseCase>();
+        services.AddScoped<IGetPlayerProfileUseCase, GetPlayerProfileUseCase>();
+        services.AddScoped<ISearchPlayersUseCase, SearchPlayersUseCase>();
 
         return services;
     }
