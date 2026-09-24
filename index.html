@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Real Best | Beyond The Ballon</title>
+  <meta name="description" content="O ranking justo do melhor jogador do mundo baseado em dados jogo a jogo, eliminando o viés de fama e popularidade.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-inner container">
+      <div class="brand">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">THE REAL BEST</span>
+          <span class="brand-badge">BEYOND THE BALLON</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-btn active" data-tab="ranking">Ranking Oficial</button>
+        <button class="nav-btn" data-tab="vs-ballon">The Real Best vs. Ballon d'Or</button>
+        <button class="nav-btn" data-tab="formula">O Algoritmo & Regras</button>
+      </nav>
+
+      <div class="header-right">
+        <div class="season-selector">
+          <span class="status-dot"></span>
+          <span>Temporada 2023/24 Auditada</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span class="hero-sparkle">✦</span> O Fim do Concurso de Popularidade
+        </div>
+        <h1 class="hero-heading">
+          Futebol sem grife.<br>
+          <span class="highlight-gold">Apenas mérito matemático.</span>
+        </h1>
+        <p class="hero-subtext">
+          O primeiro ranking global 100% auditável. Cada passe sob pressão, desarme decisivo e gol sob o peso de mata-mata calculado jogo a jogo. Sem lobby, sem votos de compadrio.
+        </p>
+
+        <div class="hero-stats-bar">
+          <div class="hero-stat-item">
+            <span class="stat-number">5.820+</span>
+            <span class="stat-label">Minutos Auditados</span>
+          </div>
+          <div class="hero-stat-sep"></div>
+          <div class="hero-stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Transparência em Cada Lance</span>
+          </div>
+          <div class="hero-stat-sep"></div>
+          <div class="hero-stat-item">
+            <span class="stat-number">6</span>
+            <span class="stat-label">Fórmulas Específicas por Posição</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotlight Card (Top 1) -->
+      <div class="hero-spotlight" id="top-player-spotlight">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Tabs -->
+  <main class="main-content container">
+
+    <!-- TAB 1: RANKING -->
+    <section id="tab-ranking" class="tab-pane active">
+      <!-- Controls & Filters -->
+      <div class="ranking-controls">
+        <div class="filter-group-positions">
+          <button class="filter-chip active" data-pos="all">Geral (Todos)</button>
+          <button class="filter-chip" data-pos="ST/W">Atacantes & Pontas</button>
+          <button class="filter-chip" data-pos="CAM">Meias Ofensivos</button>
+          <button class="filter-chip" data-pos="CM/CDM">Volantes & Meias Centrais</button>
+          <button class="filter-chip" data-pos="CB/FB">Zagueiros & Laterais</button>
+          <button class="filter-chip" data-pos="GK">Goleiros</button>
+        </div>
+
+        <div class="search-and-league">
+          <div class="search-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="player-search-input" placeholder="Buscar jogador, time ou país...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Table -->
+      <div class="leaderboard-card">
+        <div class="table-responsive">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th class="th-rank">#</th>
+                <th class="th-player">Atleta & Equipe</th>
+                <th class="th-pos">Posição</th>
+                <th class="th-games">Jogos (Min)</th>
+                <th class="th-rating">Média (MPS)</th>
+                <th class="th-clutch">Índice Clutch</th>
+                <th class="th-score">Score Sazonal (FSS)</th>
+                <th class="th-action">Auditar</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-tbody">
+              <!-- Dynamically populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: VS BALLON D'OR -->
+    <section id="tab-vs-ballon" class="tab-pane">
+      <div class="vs-header">
+        <h2>The Real Best vs. Ballon d'Or (A Auditoria da Polêmica)</h2>
+        <p>Veja onde a votação de jornalistas e a política do futebol distorceram a realidade do gramado na temporada 2023/24.</p>
+      </div>
+
+      <div class="vs-comparison-grid" id="vs-comparison-cards">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- TAB 3: THE FORMULA & RULES -->
+    <section id="tab-formula" class="tab-pane">
+      <div class="formula-doc">
+        <div class="formula-doc-header">
+          <h2>Como Calculamos Cada Ponto (O Livro de Regras)</h2>
+          <p>Nenhuma nota vem do nada. O algoritmo avalia eventos objetivos e pondera o contexto exato de cada partida.</p>
+        </div>
+
+        <div class="formula-grid">
+          <div class="formula-card">
+            <div class="formula-card-icon">⚖️</div>
+            <h3>1. Nota Base por Partida</h3>
+            <p>Todo atleta inicia a partida com <strong>50.0 pontos</strong>. Conforme executa ações positivas ou comete erros, sua nota sobe ou desce em uma escala de 0 a 100.</p>
+          </div>
+
+          <div class="formula-card">
+            <div class="formula-card-icon">🛡️</div>
+            <h3>2. Pesos Posicionais Justos</h3>
+            <p>Gols de atacantes valem +12 pts (obrigação funcional), enquanto gols de zagueiros valem +30 pts. Volantes pontuam pesadamente por desarmes providenciais e quebra de linhas sob pressão.</p>
+          </div>
+
+          <div class="formula-card">
+            <div class="formula-card-icon">⚡</div>
+            <h3>3. Fator Decisivo (Anti-Junk Time)</h3>
+            <p>Ações executadas quando o placar está empatado ou com 1 gol de diferença valem <strong>+25%</strong>. Gols com o jogo já ganho (ex: 5º gol de um 6x0) sofrem corte de <strong>-30%</strong>.</p>
+          </div>
+
+          <div class="formula-card">
+            <div class="formula-card-icon">🏆</div>
+            <h3>4. Peso de Torneios & Adversários</h3>
+            <p>Uma grande atuação nas semifinais da Champions League (x1.35) contra um gigante do futebol mundial recebe um multiplicador muito superior a uma partida protocolar de copa doméstica.</p>
+          </div>
+        </div>
+
+        <!-- Position Matrix Table -->
+        <div class="matrix-preview-card">
+          <h3>Exemplo de Ponderação Comparativa</h3>
+          <div class="table-responsive">
+            <table class="matrix-table">
+              <thead>
+                <tr>
+                  <th>Ação em Campo</th>
+                  <th>Centroavante</th>
+                  <th>Ponta Criador</th>
+                  <th>Meia Ofensivo</th>
+                  <th>Volante Central</th>
+                  <th>Zagueiro</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Gol de Bola Rolando</strong></td>
+                  <td class="pt-val">+12 pts</td>
+                  <td class="pt-val">+14 pts</td>
+                  <td class="pt-val">+16 pts</td>
+                  <td class="pt-val">+20 pts</td>
+                  <td class="pt-val">+30 pts</td>
+                </tr>
+                <tr>
+                  <td><strong>Desarme / Interceptação Crítica</strong></td>
+                  <td class="pt-val">+1.0 pt</td>
+                  <td class="pt-val">+1.5 pts</td>
+                  <td class="pt-val">+2.5 pts</td>
+                  <td class="pt-val highlight-pt">+5.0 pts</td>
+                  <td class="pt-val highlight-pt">+5.0 pts</td>
+                </tr>
+                <tr>
+                  <td><strong>Clean Sheet (Jogo sem sofrer gol)</strong></td>
+                  <td class="pt-val">—</td>
+                  <td class="pt-val">—</td>
+                  <td class="pt-val">—</td>
+                  <td class="pt-val">+5.0 pts</td>
+                  <td class="pt-val highlight-pt">+16.0 pts</td>
+                </tr>
+                <tr>
+                  <td><strong>Grande Chance Clara Perdida</strong></td>
+                  <td class="pt-val danger-pt">-8.0 pts</td>
+                  <td class="pt-val danger-pt">-6.0 pts</td>
+                  <td class="pt-val danger-pt">-6.0 pts</td>
+                  <td class="pt-val danger-pt">-4.0 pts</td>
+                  <td class="pt-val danger-pt">-2.0 pts</td>
+                </tr>
+                <tr>
+                  <td><strong>Erro Grave que resulta em Gol</strong></td>
+                  <td class="pt-val danger-pt">-10.0 pts</td>
+                  <td class="pt-val danger-pt">-10.0 pts</td>
+                  <td class="pt-val danger-pt">-12.0 pts</td>
+                  <td class="pt-val danger-pt">-18.0 pts</td>
+                  <td class="pt-val danger-pt">-25.0 pts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Player Detail Modal / Audit Drawer -->
+  <div class="modal-overlay" id="player-modal-overlay">
+    <div class="modal-drawer" id="player-modal">
+      <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      
+      <div id="modal-player-content">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <strong>THE REAL BEST</strong> &bull; <em>Beyond The Ballon</em>
+        <p>A auditoria algorítmica independente do futebol internacional.</p>
+      </div>
+      <div class="footer-right">
+        <span>Matemática &bull; Transparência &bull; Justiça</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
