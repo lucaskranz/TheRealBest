@@ -10,6 +10,7 @@ public interface IMatchRepository
     Task<IReadOnlyList<Match>> GetByCompetitionAndSeasonAsync(Guid competitionId, int seasonYear, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MatchPlayerStats>> GetPlayerStatsByPlayerAndSeasonAsync(Guid playerId, int seasonYear, CancellationToken cancellationToken = default);
     Task<MatchPerformanceScore?> GetPerformanceScoreAsync(Guid matchId, Guid playerId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<MatchPerformanceScore>> GetSeasonScoresAsync(int seasonYear, CancellationToken cancellationToken = default);
     Task AddAsync(Match match, CancellationToken cancellationToken = default);
     Task AddPlayerStatsAsync(MatchPlayerStats stats, CancellationToken cancellationToken = default);
     Task AddPerformanceScoreAsync(MatchPerformanceScore score, CancellationToken cancellationToken = default);

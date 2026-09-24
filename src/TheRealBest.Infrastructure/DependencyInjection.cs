@@ -9,6 +9,7 @@ using Polly;
 using Refit;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure.Data;
+using TheRealBest.Infrastructure.Data.Repositories;
 using TheRealBest.Infrastructure.ExternalApis.ApiFootball;
 
 public static class DependencyInjection
@@ -23,8 +24,20 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException($"Connection string '{ConnectionStringName}' is not configured.");
 
         services.AddDbContext<AppDbContext>(options => ConfigureDbContext(options, connectionString));
+        services.AddRepositories();
         services.AddApiFootball(configuration);
 
+        return services;
+    }
+
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<ITeamRepository, TeamRepository>();
+        services.AddScoped<ICompetitionRepository, CompetitionRepository>();
+        services.AddScoped<IMatchRepository, MatchRepository>();
+        services.AddScoped<IRankingRepository, RankingRepository>();
         return services;
     }
 
@@ -48,7 +61,6 @@ public static class DependencyInjection
 
         var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer(ApiFootballJson.Options));
 
-        // Ordem dos handlers: retry (externo) → pacer → autenticação. Cada nova tentativa também respeita o ritmo.
         services.AddRefitClient<IApiFootballApi>(_ => refitSettings, ApiFootballHttpClientName)
             .ConfigureHttpClient((provider, client) =>
                 client.BaseAddress = new Uri(provider.GetRequiredService<IOptions<ApiFootballOptions>>().Value.BaseUrl))

@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="7.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.*" />
     <PackageReference Include="xunit" Version="2.5.3" />
@@ -25,6 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\TheRealBest.Application\TheRealBest.Application.csproj" />
     <ProjectReference Include="..\..\src\TheRealBest.Domain\TheRealBest.Domain.csproj" />
+    <ProjectReference Include="..\..\src\TheRealBest.Infrastructure\TheRealBest.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\TheRealBest.Scoring\TheRealBest.Scoring.csproj" />
   </ItemGroup>
 
 </Project>
