@@ -14,6 +14,14 @@ public static class TestEngine
     public static MatchReceipt Score(MatchPlayerStats stats, MatchContext context) =>
         Create().CalculateMatchScore(stats, context);
 
+    public static MatchReceipt Score(MatchPlayerStats stats, MatchContext context, ScoringRuleSet rules) =>
+        new ScoringEngine(new FixedRulesProvider(rules), new FixedTimeProvider(FixedNow)).CalculateMatchScore(stats, context);
+
+    private sealed class FixedRulesProvider(ScoringRuleSet rules) : IScoringRulesProvider
+    {
+        public ScoringRuleSet GetRules() => rules;
+    }
+
     public static MatchPerformanceScore StoredScore(
         decimal finalMps,
         decimal tournamentMultiplier = 1.10m,

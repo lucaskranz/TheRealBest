@@ -97,8 +97,8 @@ public class MatchPerformanceCalculatorTests
         var fullGame = TestEngine.Score(StatsBuilder.For(PlayerPosition.CB).Minutes(90).Build(), Contexts.LeagueOpenGame());
         var halfGame = TestEngine.Score(StatsBuilder.For(PlayerPosition.CB).Minutes(45).Build(), Contexts.LeagueOpenGame());
 
-        fullGame.PositionBaseline.Should().Be(41m);
-        halfGame.PositionBaseline.Should().Be(20.5m);
+        fullGame.PositionBaseline.Should().Be(20.1m);
+        halfGame.PositionBaseline.Should().Be(10.05m);
     }
 
     [Fact]

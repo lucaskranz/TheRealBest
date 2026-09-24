@@ -98,7 +98,7 @@ MPS = Clamp(0, 100, Base + (ΔAções − LinhaDeBase_posição × FatorMinutos)
 
 - **Base = 50.0** (nota neutra: uma atuação média vale 50 em qualquer posição e contexto)
 - **ΔAções:** Soma de eventos positivos e negativos com pesos específicos por posição
-- **LinhaDeBase_posição:** ΔAções esperado de uma atuação média na posição (provisório até a calibração da Etapa 3C)
+- **LinhaDeBase_posição:** ΔAções médio de uma atuação completa na posição, medido em dados reais (algoritmo v2)
 - **FatorMinutos:** Normalização (< 60min = M/90; 60-90min = 1.0; prorrogação = bônus), aplicada só às ações de volume
 - **MultContexto = W_torneio × W_adversário × W_clutch**
 
@@ -151,6 +151,7 @@ ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-
 - `dotnet run --project src/TheRealBest.API -- --seed` importa as partidas de `Infrastructure/Data/Seeds/RealMatchSelection.cs` (30 jogos do ciclo da Bola de Ouro 2024) e recalcula o ranking. Não roda automaticamente ao subir a API
 - Retomável: partidas já importadas são puladas, e se a cota diária acabar basta rodar de novo após 00:00 UTC
 - Euro e Copa América de junho/julho entram na temporada de clubes que terminou (Euro 2024 → temporada 2023/24)
+- **Elo dos adversários:** buscado no ClubElo (`api.clubelo.com`, gratuito) na data de cada partida e gravado em `matches`. Seleções e falhas da fonte = multiplicador neutro. Partidas importadas sem Elo não são reprocessadas: para preenchê-lo, limpe as tabelas e rode `--seed` de novo (custo zero de cota graças ao cache)
 
 ---
 
@@ -170,7 +171,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 2B | Testes do Motor de Pontuação | ✅ Concluída | Cenários reais (Rodri, Vinicius Jr, etc.) |
 | 3A | Client API-Football + Mapper | ✅ Concluída | HttpClient tipado, modelos, mapeamento |
 | 3B | Background Workers de Ingestão | ✅ Concluída | MatchDataIngestionService, pipeline |
-| 3C | Seeds com Dados Reais | 🔄 Em andamento | 30 partidas reais do ciclo 2023/24 via API-Football (`--seed`); recalibração das linhas de base pendente |
+| 3C | Seeds com Dados Reais | ✅ Concluída | 30 partidas reais do ciclo 2023/24 via API-Football (`--seed`), algoritmo v2 calibrado; pendente: Elo real (ClubElo fora do ar na implementação) |
 | 4A | Controllers REST (Ranking + Players) | ✅ Concluída | Endpoints, DTOs, paginação, filtros |
 | 4B | Controllers REST (Audit + Matches) | ✅ Concluída | Recibo auditável, detalhamento de partida |
 | 4C | Localização no Backend | ⬜ Pendente | Middleware, .resx, ActionLabelResolver |

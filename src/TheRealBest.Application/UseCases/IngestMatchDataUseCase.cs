@@ -16,6 +16,7 @@ public sealed class IngestMatchDataUseCase(
     IMatchRepository matchRepository,
     IUnitOfWork unitOfWork,
     IScoringEngine scoringEngine,
+    IClubEloProvider clubEloProvider,
     ILogger<IngestMatchDataUseCase> logger) : IIngestMatchDataUseCase
 {
     public async Task<IngestionResultDto> ExecuteAsync(ExternalMatchReport report, CancellationToken cancellationToken = default)
@@ -82,10 +83,20 @@ public sealed class IngestMatchDataUseCase(
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
+        // 5. Elo dos clubes na data do jogo (seleções não têm rating no ClubElo: multiplicador neutro)
+        if (match.HomeEloRating is null && match.AwayEloRating is null && IsClubCompetition(competition.Tier))
+        {
+            var matchDate = DateOnly.FromDateTime(match.MatchDate);
+            match.SetEloRatings(
+                await clubEloProvider.GetEloAsync(homeTeam.Name, matchDate, cancellationToken),
+                await clubEloProvider.GetEloAsync(awayTeam.Name, matchDate, cancellationToken));
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
         int playersProcessed = 0;
         int scoresCalculated = 0;
 
-        // 5. Ingerir jogadores e estatÃ­sticas
+        // 6. Ingerir jogadores e estatÃ­sticas
         foreach (var perf in report.Performances)
         {
             var player = await EnsurePlayerAsync(perf.Player, perf.Stats.Position, cancellationToken);
@@ -100,7 +111,7 @@ public sealed class IngestMatchDataUseCase(
                 competition.Tier,
                 match.IsKnockout,
                 match.RoundPhase,
-                OpponentEloRanking: isHome ? awayTeam.EloRanking : homeTeam.EloRanking,
+                OpponentEloRanking: isHome ? match.AwayEloRating : match.HomeEloRating,
                 TeamScore: isHome ? match.HomeScore.GetValueOrDefault() : match.AwayScore.GetValueOrDefault(),
                 OpponentScore: isHome ? match.AwayScore.GetValueOrDefault() : match.HomeScore.GetValueOrDefault());
 
@@ -142,6 +153,9 @@ public sealed class IngestMatchDataUseCase(
 
         return new IngestionResultDto(match.Id, fixture.ExternalId, playersProcessed, scoresCalculated);
     }
+
+    private static bool IsClubCompetition(Domain.Enums.CompetitionTier tier) =>
+        tier is not (Domain.Enums.CompetitionTier.WorldCup or Domain.Enums.CompetitionTier.InternationalContinental);
 
     private async Task<Team> EnsureTeamAsync(ExternalTeam external, CancellationToken cancellationToken)
     {

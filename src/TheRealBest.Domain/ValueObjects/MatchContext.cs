@@ -5,12 +5,13 @@ using TheRealBest.Domain.Enums;
 
 /// <summary>
 /// Contexto de uma partida do ponto de vista do time do jogador, usado pelo motor de pontuação.
+/// OpponentEloRanking é o rating do adversário na data do jogo; nulo quando indisponível (multiplicador neutro).
 /// </summary>
 public sealed record MatchContext(
     CompetitionTier Tier,
     bool IsKnockout,
     string RoundPhase,
-    int OpponentEloRanking,
+    int? OpponentEloRanking,
     int TeamScore,
     int OpponentScore
 )
@@ -41,7 +42,7 @@ public sealed record MatchContext(
             match.Competition.Tier,
             match.IsKnockout,
             match.RoundPhase,
-            OpponentEloRanking: isHome ? match.AwayTeam.EloRanking : match.HomeTeam.EloRanking,
+            OpponentEloRanking: isHome ? match.AwayEloRating : match.HomeEloRating,
             TeamScore: isHome ? match.HomeScore.Value : match.AwayScore.Value,
             OpponentScore: isHome ? match.AwayScore.Value : match.HomeScore.Value);
     }

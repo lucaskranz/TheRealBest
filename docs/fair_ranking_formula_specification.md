@@ -161,15 +161,16 @@ $$\text{MPS} = \text{Clamp}\Big(0, 100, \text{Base} + \big(\Delta\text{Ações} 
 | 4 | O W_clutch é definido lance a lance (placar e minuto de cada ação), mas a ingestão ainda não traz eventos por minuto. | Enquanto não houver eventos, o W_clutch vem do **placar final**: diferença ≤ 1 gol → 1.25; diferença de 2 → 1.00; diferença ≥ 3 → 0.70. |
 | 5 | O FSS como soma `Σ MPS × W` premia volume: 60 jogos com nota 50 superam 35 jogos com nota 70, contrariando a seção 1. | O FSS é a **média ponderada** (seção 7.3). |
 
-### 7.2. Linhas de base provisórias (v1)
+### 7.2. Linhas de base por posição
 
-Δ esperado de uma atuação média de 90 minutos, estimado aplicando médias típicas de titulares das 5 grandes ligas (incluindo a probabilidade de gol, assistência e clean sheet) às matrizes de peso da seção 3:
+**v2 (em vigor):** média empírica de ΔAções em 583 atuações completas (60–90 min) de dados reais da API-Football, em 29 partidas do ciclo 2023/24. Com ela, a atuação média de cada posição fica em 49–50 pontos de MPS.
 
-| GK | CB | FB | CDM/CM | CAM/W | ST |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| 22 | 41 | 43 | 54 | 44 | 27 |
+| Versão | GK | CB | FB | CDM | CM | CAM | W | ST |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **v2** (empírica) | 19.9 | 20.1 | 25.3 | 31.2 | 26.0 | 35.1 | 28.8 | 21.2 |
+| v1 (estimada) | 22 | 41 | 43 | 54 | 54 | 44 | 44 | 27 |
 
-Estes valores são **provisórios** e devem ser recalibrados com dados reais na Etapa 3C, o que gera o algoritmo v2.
+A v1 estimava médias típicas por 90 minutos assumindo métricas que a API-Football não fornece (recuperações, passes progressivos, duelos aéreos, xG). Com dados reais, ela deixava volantes e zagueiros sistematicamente abaixo de 50. A amostra da v2 é pequena e concentrada em clubes de elite e seus adversários: recalibrar (nova versão) quando a base crescer ou quando outra fonte trouxer as métricas ausentes. Scores de uma versão continuam reproduzíveis pelo `algorithm_version`.
 
 ### 7.3. FSS implementado
 
@@ -183,11 +184,11 @@ Escala de 0 a 100. Partidas com menos de 20 minutos e sem ação decisiva no pla
 
 * **Posições → matrizes:** CDM e CM usam a coluna "Volante/Meia"; CAM e W usam a coluna "Meia-Atac/Ponta".
 * **W_torneio:** Copa do Mundo 1.40 em toda a fase final; Eurocopa/Copa América 1.30; Champions 1.35 no mata-mata e 1.20 na fase de liga; Top 5 ligas 1.10; copas nacionais 1.05 em semifinal/final e 0.95 antes disso; demais 0.95.
-* **W_adversário (rating ClubElo):** ≥ 1880 → 1.20 (top 10); ≥ 1780 → 1.10 (top 30); ≥ 1600 → 1.00; abaixo → 0.90. Times sem Elo ingerido ficam com o padrão 1500 (0.90).
+* **W_adversário (rating ClubElo na data do jogo, gravado na partida):** ≥ 1880 → 1.20 (top 10); ≥ 1780 → 1.10 (top 30); ≥ 1600 → 1.00; abaixo → 0.90. **Sem rating** (seleções, que o ClubElo não cobre, ou fonte indisponível) → **1.00, neutro**.
 * **Precisão de passe:** bônus único se > 85% com pelo menos 20 passes. **Clean sheet:** só com mais de 60 minutos. **xG superado:** bônus apenas quando Gols − xG > 0.
 * **Ações sem fonte de dados hoje** (ficam de fora até a ingestão fornecê-las): gols prevenidos (xGOT), saídas aéreas, erro que levou a finalização e perda de posse no campo defensivo (a fonte só informa o total de perdas). **Defesas** usam o total de defesas, não só as difíceis dentro da área. **Gols contra** e **gols sofridos com o jogador em campo** vêm dos eventos da partida.
 * **xG ausente:** sem xG na fonte, o campo fica 0. Como todo gol tem xG > 0, xG = 0 é tratado como "sem dado" e o bônus de xG superado não é aplicado.
-* **Cobertura da API-Football:** a fonte principal não fornece xG, xA, grandes chances, recuperações, passes progressivos nem duelos aéreos separados. As linhas de base da seção 7.2 assumem essas métricas. Com dados só da API-Football, as atuações ficam sistematicamente abaixo de 50 (ex.: Rodri na final da UCL 2023 ≈ 53), sobretudo volantes e zagueiros. A recalibração da Etapa 3C deve usar a média empírica de Δ por posição sobre os dados efetivamente ingeridos.
+* **Cobertura da API-Football:** a fonte principal não fornece xG, xA, grandes chances, recuperações, passes progressivos nem duelos aéreos separados. As linhas de base da v1 assumiam essas métricas; a v2 foi calibrada sobre os dados efetivamente ingeridos (seção 7.2).
 * **Arredondamento:** 4 casas nos itens e multiplicadores e 2 casas no MPS, sempre `MidpointRounding.AwayFromZero`.
 
 ---

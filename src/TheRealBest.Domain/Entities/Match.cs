@@ -18,6 +18,10 @@ public class Match : EntityBase
     public DateTime MatchDate { get; private set; }
     public bool IsKnockout { get; private set; }
 
+    /// <summary>Rating Elo (escala ClubElo) de cada time na data da partida. Nulo quando indisponível (ex.: seleções).</summary>
+    public int? HomeEloRating { get; private set; }
+    public int? AwayEloRating { get; private set; }
+
     // Navigation properties
     private readonly List<MatchPlayerStats> _playerStats = [];
     public virtual IReadOnlyCollection<MatchPlayerStats> PlayerStats => _playerStats.AsReadOnly();
@@ -48,6 +52,13 @@ public class Match : EntityBase
         IsKnockout = isKnockout;
         HomeScore = homeScore;
         AwayScore = awayScore;
+    }
+
+    public void SetEloRatings(int? homeEloRating, int? awayEloRating)
+    {
+        HomeEloRating = homeEloRating;
+        AwayEloRating = awayEloRating;
+        MarkUpdated();
     }
 
     public void SetScore(int homeScore, int awayScore)

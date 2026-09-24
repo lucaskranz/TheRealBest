@@ -6,7 +6,7 @@
 - O módulo TheRealBest.Scoring é COMPLETAMENTE ISOLADO — depende apenas de TheRealBest.Domain
 - Toda lógica de cálculo de pontuação DEVE estar neste módulo (nunca em controllers ou repositories)
 - Os pesos padrão ficam em código (WeightMatrices/) e são servidos por IScoringRulesProvider; um provider que leia a tabela scoring_weights pode substituí-lo sem alterar o motor (ScoringRuleSet.FromWeights)
-- Toda alteração de peso, linha de base ou fórmula exige incrementar a versão do algoritmo (ScoringRulesProvider.DefaultVersion)
+- Toda alteração de peso, linha de base ou fórmula exige incrementar a versão do algoritmo (ScoringRulesProvider.DefaultVersion), mantendo a versão anterior disponível (ex.: ScoringRulesProvider.Version1) e seus snapshots
 - O algoritmo deve ser determinístico: mesmos inputs SEMPRE produzem o mesmo output (horário via TimeProvider; arredondamento sempre MidpointRounding.AwayFromZero)
 
 ## Estrutura Obrigatória
@@ -18,7 +18,7 @@
 ## Regras de Cálculo
 - MPS = Clamp(0, 100, 50 + (ΔAções − LinhaDeBase_posição × FatorMinutos) × MultContexto)
 - O contexto multiplica só o desempenho: uma atuação neutra vale 50 em qualquer jogo
-- A linha de base da posição faz uma atuação média valer 50 em qualquer posição (valores provisórios até a calibração da 3C)
+- A linha de base da posição faz uma atuação média valer 50 em qualquer posição. v2 = média empírica de Δ por posição em dados reais (seção 7.2 da especificação); recalibrar gera nova versão
 - Gols de atacantes valem MENOS que gols de defensores (pesos invertidos por responsabilidade posicional)
 - Clean Sheet tem peso alto para defensores e goleiros, zero para atacantes
 - Grandes chances perdidas têm penalidade severa para atacantes (-8 pts), leve para defensores (-2 pts)
@@ -28,7 +28,7 @@
 ## Multiplicadores de Contexto
 - MultContexto = W_torneio × W_adversário × W_clutch
 - W_torneio: Copa do Mundo (1.40) > UCL mata-mata (1.35) > Euro/Copa América (1.30) > UCL fase de liga (1.20) > Top 5 ligas (1.10) > Copas nacionais semi/final (1.05) > Outros (0.95)
-- W_adversário (rating ClubElo): ≥ 1880 (1.20) > ≥ 1780 (1.10) > ≥ 1600 (1.00) > abaixo (0.90)
+- W_adversário (rating ClubElo na data do jogo, em matches.home_elo_rating/away_elo_rating): ≥ 1880 (1.20) > ≥ 1780 (1.10) > ≥ 1600 (1.00) > abaixo (0.90); sem rating (seleções ou fonte fora do ar) = 1.00 neutro
 - W_clutch pelo placar final (enquanto não há eventos por minuto): diferença ≤ 1 (1.25) > 2 gols (1.00) > ≥ 3 gols, junk time (0.70)
 
 ## Ranking Sazonal (FSS)

@@ -21,8 +21,10 @@ public static class OpponentStrengthMultiplier
     public const decimal MidTable = 1.00m;
     public const decimal Weak = 0.90m;
 
-    public static decimal For(int opponentElo) => opponentElo switch
+    /// <param name="opponentElo">Rating na data do jogo. Nulo (seleções ou fonte indisponível) = neutro, não "fraco".</param>
+    public static decimal For(int? opponentElo) => opponentElo switch
     {
+        null => MidTable,
         >= Top10EloThreshold => Top10,
         >= Top30EloThreshold => Top30,
         >= MidTableEloThreshold => MidTable,

@@ -20,6 +20,7 @@ public class IngestMatchDataUseCaseTests
     private readonly Mock<IMatchRepository> _matchRepo = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<IScoringEngine> _scoringEngine = new();
+    private readonly Mock<IClubEloProvider> _clubElo = new();
 
     private IngestMatchDataUseCase CreateUseCase() =>
         new(
@@ -29,6 +30,7 @@ public class IngestMatchDataUseCaseTests
             _matchRepo.Object,
             _unitOfWork.Object,
             _scoringEngine.Object,
+            _clubElo.Object,
             NullLogger<IngestMatchDataUseCase>.Instance);
 
     [Fact]

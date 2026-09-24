@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
 using Refit;
@@ -12,6 +13,7 @@ using TheRealBest.Infrastructure.Data;
 using TheRealBest.Infrastructure.Data.Repositories;
 using TheRealBest.Infrastructure.Data.Seeds;
 using TheRealBest.Infrastructure.ExternalApis.ApiFootball;
+using TheRealBest.Infrastructure.ExternalApis.ClubElo;
 
 public static class DependencyInjection
 {
@@ -27,6 +29,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options => ConfigureDbContext(options, connectionString));
         services.AddRepositories();
         services.AddApiFootball(configuration);
+        services.AddClubElo(configuration);
         services.AddScoped<IRealDataSeeder, ApiFootballRealDataSeeder>();
 
         return services;
@@ -52,6 +55,22 @@ public static class DependencyInjection
                 npgsql.EnableRetryOnFailure(maxRetryCount: 3);
             })
             .UseSnakeCaseNamingConvention();
+
+    private static void AddClubElo(this IServiceCollection services, IConfiguration configuration)
+    {
+        var options = configuration.GetSection(ClubEloOptions.SectionName).Get<ClubEloOptions>() ?? new ClubEloOptions();
+        services.AddHttpClient(ClubEloProvider.HttpClientName, client =>
+        {
+            client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(20);
+        });
+
+        // Singleton: o cache em memória dos ratings por data vale para toda a importação
+        services.AddSingleton<IClubEloProvider>(provider => new ClubEloProvider(
+            provider.GetRequiredService<IHttpClientFactory>().CreateClient(ClubEloProvider.HttpClientName),
+            options,
+            provider.GetRequiredService<ILogger<ClubEloProvider>>()));
+    }
 
     private static void AddApiFootball(this IServiceCollection services, IConfiguration configuration)
     {

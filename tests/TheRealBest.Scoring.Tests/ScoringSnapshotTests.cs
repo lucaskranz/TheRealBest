@@ -7,12 +7,13 @@ using TheRealBest.Scoring.Rules;
 using TheRealBest.Scoring.Tests.Builders;
 
 /// <summary>
-/// Snapshots do algoritmo v1. Se um destes testes quebrar, o cálculo mudou: scores históricos seriam alterados.
-/// Mudanças intencionais exigem incrementar ScoringRulesProvider.DefaultVersion e registrar os novos valores.
+/// Snapshots por versão do algoritmo. Se um destes testes quebrar, o cálculo de uma versão já publicada mudou e
+/// scores históricos seriam alterados. Mudanças intencionais exigem nova versão (ScoringRulesProvider.DefaultVersion)
+/// e um novo bloco de snapshots, mantendo os anteriores.
 /// </summary>
 public class ScoringSnapshotTests
 {
-    public static TheoryData<string, decimal, decimal, decimal, decimal> Snapshots => new()
+    public static TheoryData<string, decimal, decimal, decimal, decimal> Version1Snapshots => new()
     {
         // cenário,                        SubtotalRaw, LinhaDeBase, MultContexto, MPS
         { "rodri-ucl-final-2023",          91.9m,       54m,         1.8563m,      100m },
@@ -23,20 +24,42 @@ public class ScoringSnapshotTests
         { "typical-st-league-draw",        18m,         27m,         1.375m,       37.63m },
     };
 
-    [Fact]
-    public void AlgorithmVersion_IsOne()
+    /// <summary>v2: linhas de base empíricas (dados reais da API-Football).</summary>
+    public static TheoryData<string, decimal, decimal, decimal, decimal> Version2Snapshots => new()
     {
-        ScoringRulesProvider.DefaultVersion.Should().Be(1, "snapshots below were recorded for v1");
+        { "rodri-ucl-final-2023",          91.9m,       31.2m,       1.8563m,      100m },
+        { "vinicius-ucl-final-2024",       69.7m,       28.8m,       1.485m,       100m },
+        { "haaland-5-goals-leipzig-2023",  95.9m,       21.2m,       1.0395m,      100m },
+        { "rudiger-vs-city-2024",          67.552m,     23.4507m,    2.025m,       100m },
+        { "typical-cdm-league-draw",       47.5m,       31.2m,       1.375m,       72.41m },
+        { "typical-st-league-draw",        18m,         21.2m,       1.375m,       45.6m },
+    };
+
+    [Fact]
+    public void Versions_AreTracked()
+    {
+        ScoringRulesProvider.Version1.Version.Should().Be(1);
+        ScoringRulesProvider.DefaultVersion.Should().Be(2, "Version2Snapshots were recorded for the current default");
+        ScoringRulesProvider.Default.Version.Should().Be(ScoringRulesProvider.DefaultVersion);
     }
 
     [Theory]
-    [MemberData(nameof(Snapshots))]
-    public void Score_MatchesRecordedSnapshot(string scenario, decimal subtotal, decimal baseline, decimal multiplier, decimal mps)
+    [MemberData(nameof(Version1Snapshots))]
+    public void Version1_ScoreMatchesRecordedSnapshot(string scenario, decimal subtotal, decimal baseline, decimal multiplier, decimal mps) =>
+        AssertSnapshot(ScoringRulesProvider.Version1, scenario, subtotal, baseline, multiplier, mps);
+
+    [Theory]
+    [MemberData(nameof(Version2Snapshots))]
+    public void Version2_ScoreMatchesRecordedSnapshot(string scenario, decimal subtotal, decimal baseline, decimal multiplier, decimal mps) =>
+        AssertSnapshot(ScoringRulesProvider.Default, scenario, subtotal, baseline, multiplier, mps);
+
+    private static void AssertSnapshot(ScoringRuleSet rules, string scenario, decimal subtotal, decimal baseline, decimal multiplier, decimal mps)
     {
         var (stats, context) = Scenario(scenario);
 
-        var receipt = TestEngine.Score(stats, context);
+        var receipt = TestEngine.Score(stats, context, rules);
 
+        receipt.AlgorithmVersion.Should().Be(rules.Version);
         receipt.SubtotalRaw.Should().Be(subtotal);
         receipt.PositionBaseline.Should().Be(baseline);
         receipt.ContextMultiplier.Combined.Should().Be(multiplier);

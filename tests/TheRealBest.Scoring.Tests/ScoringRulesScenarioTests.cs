@@ -5,6 +5,7 @@ using TheRealBest.Domain.Entities;
 using TheRealBest.Domain.Enums;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Domain.ValueObjects;
+using TheRealBest.Scoring.Rules;
 using TheRealBest.Scoring.Tests.Builders;
 
 /// <summary>
@@ -51,10 +52,11 @@ public class ScoringRulesScenarioTests
     }
 
     [Fact]
-    public void TypicalStatLines_ScoreCloseToEachOtherAcrossPositions()
+    public void Version1_TypicalFullDataStatLines_ScoreCloseToEachOtherAcrossPositions()
     {
-        // Sem a linha de base, volantes e zagueiros saturariam em 100 e atacantes ficariam bem abaixo.
-        // As linhas típicas não têm gol/assistência (que entram na expectativa da posição), então ficam um pouco abaixo de 50.
+        // Calibração v1: as linhas típicas incluem métricas que a API-Football não fornece (recuperações, passes
+        // progressivos, duelos aéreos), como as linhas de base da v1 assumiam. A v2 é calibrada com dados reais
+        // da API-Football (ver ApiFootballScoringTests no projeto de testes de Infrastructure).
         var typical = new Dictionary<PlayerPosition, MatchPlayerStats>
         {
             [PlayerPosition.GK] = TypicalLines.Goalkeeper().Build(),
@@ -67,7 +69,7 @@ public class ScoringRulesScenarioTests
 
         var scores = typical.ToDictionary(
             entry => entry.Key,
-            entry => TestEngine.Score(entry.Value, Contexts.LeagueOpenGame(1, 1)).FinalMps);
+            entry => TestEngine.Score(entry.Value, Contexts.LeagueOpenGame(1, 1), ScoringRulesProvider.Version1).FinalMps);
 
         scores.Values.Should().OnlyContain(mps => mps >= 30m && mps <= 60m);
         (scores.Values.Max() - scores.Values.Min()).Should().BeLessThan(15m, "no position should be structurally favored");
@@ -95,7 +97,7 @@ public class ScoringRulesScenarioTests
 
         receipt.MinutesFactor.Should().Be(1.1667m);
         receipt.ActionBreakdown.Single(i => i.ActionKey == "tackle").TotalPoints.Should().Be(28.0008m);
-        receipt.PositionBaseline.Should().Be(47.8347m);
+        receipt.PositionBaseline.Should().Be(23.4507m);
     }
 
     [Fact]
