@@ -37,7 +37,7 @@ src/
 ## i18n
 
 - Locales: `pt-BR`, `en`, `es`, sempre com prefixo na URL.
-- Detecção: cookie `NEXT_LOCALE` > `Accept-Language` > fallback `en`.
+- Detecção: cookie `NEXT_LOCALE` > `Accept-Language` > fallback `pt-BR` (idioma padrão).
 - `pt-BR` é o idioma de referência para os tipos: chamadas `t('...')` com chave inexistente não compilam.
 - Novas strings: adicione a chave nos três locales e rode `npm run i18n:check`.
 

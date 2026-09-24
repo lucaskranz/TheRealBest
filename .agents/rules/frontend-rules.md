@@ -18,7 +18,7 @@
 - NUNCA hardcodar textos em português, inglês ou espanhol nos componentes
 - Arquivos de tradução organizados por namespace: common, ranking, player, receipt, formula, positions
 - Cada namespace é um JSON separado por locale em src/messages/{locale}/
-- O src/proxy.ts (Next 16: substitui o antigo middleware.ts) detecta o locale (cookie > Accept-Language > fallback en)
+- O src/proxy.ts (Next 16: substitui o antigo middleware.ts) detecta o locale (cookie > Accept-Language > fallback pt-BR, o idioma padrão)
 - LocaleSwitcher no header permite troca manual e salva preferência em cookie NEXT_LOCALE
 - Toda página deve gerar meta tags hreflang para SEO multilíngue
 

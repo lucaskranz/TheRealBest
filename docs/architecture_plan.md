@@ -593,7 +593,7 @@ flowchart LR
     B -->|Não| D{Accept-Language do navegador}
     D -->|pt-BR ou pt| E[Redireciona para /pt-BR]
     D -->|es| F[Redireciona para /es]
-    D -->|Outro| G[Redireciona para /en - fallback]
+    D -->|Outro| G[Redireciona para /pt-BR - padrão]
 ```
 
 **Organização dos Arquivos de Tradução:**

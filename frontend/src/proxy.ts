@@ -2,7 +2,7 @@ import createMiddleware from "next-intl/middleware";
 
 import { routing } from "./i18n/routing";
 
-// Detecção de locale: cookie NEXT_LOCALE > Accept-Language > defaultLocale (en)
+// Detecção de locale: cookie NEXT_LOCALE > Accept-Language > defaultLocale (pt-BR)
 export default createMiddleware(routing);
 
 export const config = {
