@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TheRealBest.API/TheRealBest.API.csproj" />
+    <Project Path="src/TheRealBest.Application/TheRealBest.Application.csproj" />
+    <Project Path="src/TheRealBest.Domain/TheRealBest.Domain.csproj" />
+    <Project Path="src/TheRealBest.Infrastructure/TheRealBest.Infrastructure.csproj" />
+    <Project Path="src/TheRealBest.Scoring/TheRealBest.Scoring.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TheRealBest.API.IntegrationTests/TheRealBest.API.IntegrationTests.csproj" />
+    <Project Path="tests/TheRealBest.Application.Tests/TheRealBest.Application.Tests.csproj" />
+    <Project Path="tests/TheRealBest.Domain.Tests/TheRealBest.Domain.Tests.csproj" />
+    <Project Path="tests/TheRealBest.Scoring.Tests/TheRealBest.Scoring.Tests.csproj" />
+  </Folder>
+</Solution>

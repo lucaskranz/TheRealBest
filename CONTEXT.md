@@ -144,7 +144,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 
 | # | Etapa | Status | Descrição |
 |:---:|:---|:---:|:---|
-| 1A | Solution .NET + Estrutura Clean Architecture | ⬜ Pendente | Criar solution, projetos, referências |
+| 1A | Solution .NET + Estrutura Clean Architecture | ✅ Concluída | Criar solution, projetos, referências |
 | 1B | Entidades de Domínio e Enums | ⬜ Pendente | Player, Team, Match, MatchPlayerStats, etc. |
 | 1C | Banco de Dados (EF Core + Migrations) | ⬜ Pendente | DbContext, Configurations, Migration inicial |
 | 1D | Frontend Next.js + i18n + Design System | ⬜ Pendente | Setup Next.js 14, next-intl, Tailwind, tokens |
@@ -186,3 +186,4 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 - Backend: C# com nullable reference types habilitado, PascalCase
 - Frontend: TypeScript strict mode, camelCase para variáveis/funções, PascalCase para componentes
 - Todos os textos visíveis ao usuário DEVEM usar o sistema de tradução (nunca strings hardcoded)
+
