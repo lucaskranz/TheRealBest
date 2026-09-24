@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "title": "The Real Best | Beyond The Ballon",
+    "description": "El ranking global de futbolistas basado exclusivamente en datos partido a partido, sin sesgo de fama ni popularidad."
+  },
+  "brand": {
+    "name": "The Real Best",
+    "tagline": "Beyond The Ballon",
+    "slogan": "Beyond The Ballon. Beyond The Hype. Pure Performance.",
+    "homeLabel": "Página de inicio de The Real Best"
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "ranking": "Ranking",
+    "vsBallon": "Vs. Balón de Oro",
+    "formula": "El Algoritmo"
+  },
+  "localeSwitcher": {
+    "label": "Idioma",
+    "locales": {
+      "pt-BR": "Português",
+      "en": "English",
+      "es": "Español"
+    }
+  },
+  "home": {
+    "hero": {
+      "tag": "El fin del concurso de popularidad",
+      "title": "Fútbol sin etiquetas.",
+      "titleHighlight": "Solo mérito matemático.",
+      "subtitle": "El primer ranking global 100% auditable. Cada pase, entrada y gol se calcula partido a partido, con pesos específicos para cada posición.",
+      "primaryCta": "Ver el ranking",
+      "secondaryCta": "Entender el algoritmo"
+    },
+    "pillars": {
+      "title": "Por qué confiar en este ranking",
+      "auditable": {
+        "title": "100% auditable",
+        "description": "Haz clic en cualquier jugador y consulta el desglose matemático de cada punto ganado o perdido."
+      },
+      "positional": {
+        "title": "Fórmulas por posición",
+        "description": "Centrales, pivotes, laterales, mediapuntas y delanteros se evalúan con las métricas de su función táctica."
+      },
+      "antiJunkTime": {
+        "title": "Factor anti-junk time",
+        "description": "Los goles en goleadas ante rivales débiles valen menos que las acciones decisivas en partidos igualados contra la élite."
+      }
+    }
+  },
+  "footer": {
+    "coverage": "Cobertura: las 5 grandes ligas europeas, la UEFA Champions League y los torneos de selecciones.",
+    "dataSources": "Datos: API-Football y FBref.",
+    "rights": "© {year} The Real Best. Todos los derechos reservados."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La jugada que buscas no está en nuestro desglose.",
+    "backHome": "Volver al inicio"
+  }
+}

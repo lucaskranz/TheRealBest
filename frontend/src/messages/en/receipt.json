@@ -1,0 +1,14 @@
+{
+  "baseScore": "Base score on kick-off",
+  "actionsTitle": "Role-specific actions",
+  "penaltiesTitle": "Deductions and errors",
+  "contextTitle": "Context multipliers",
+  "minutesFactor": "Minutes played factor",
+  "finalScore": "Final audited score",
+  "algorithmVersion": "Algorithm v{version}",
+  "multipliers": {
+    "tournament": "Tournament: {name}",
+    "opponent": "Opponent strength",
+    "clutch": "Clutch factor"
+  }
+}

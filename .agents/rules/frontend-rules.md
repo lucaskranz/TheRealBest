@@ -18,16 +18,16 @@
 - NUNCA hardcodar textos em português, inglês ou espanhol nos componentes
 - Arquivos de tradução organizados por namespace: common, ranking, player, receipt, formula, positions
 - Cada namespace é um JSON separado por locale em src/messages/{locale}/
-- O middleware.ts na raiz detecta o locale (cookie > Accept-Language > fallback en)
+- O src/proxy.ts (Next 16: substitui o antigo middleware.ts) detecta o locale (cookie > Accept-Language > fallback en)
 - LocaleSwitcher no header permite troca manual e salva preferência em cookie NEXT_LOCALE
 - Toda página deve gerar meta tags hreflang para SEO multilíngue
 
 ## Estilização
 - Tailwind CSS 4 como framework principal
-- Design tokens definidos em CSS custom properties (design-tokens.css)
+- Design tokens definidos em CSS custom properties (src/styles/design-tokens.css), expostos ao Tailwind via @theme inline em globals.css
 - Dark mode como padrão; paleta: grafite profundo, dourado acetinado, verde esmeralda
 - Glassmorphism com backdrop-filter para cards elevados
-- Tipografia: Cabinet Grotesk (display) + Inter (body) via Google Fonts
+- Tipografia: Cabinet Grotesk (display, self-hosted via next/font/local — não existe no Google Fonts) + Inter (body, via next/font/google)
 - Micro-animações suaves (transitions, hover effects) em elementos interativos
 - Responsividade obrigatória (mobile-first approach)
 

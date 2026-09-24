@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "title": "The Real Best | Beyond The Ballon",
+    "description": "O ranking global de jogadores de futebol baseado exclusivamente em dados jogo a jogo, sem viés de fama ou popularidade."
+  },
+  "brand": {
+    "name": "The Real Best",
+    "tagline": "Beyond The Ballon",
+    "slogan": "Beyond The Ballon. Beyond The Hype. Pure Performance.",
+    "homeLabel": "Página inicial do The Real Best"
+  },
+  "nav": {
+    "label": "Navegação principal",
+    "ranking": "Ranking",
+    "vsBallon": "Vs. Bola de Ouro",
+    "formula": "O Algoritmo"
+  },
+  "localeSwitcher": {
+    "label": "Idioma",
+    "locales": {
+      "pt-BR": "Português",
+      "en": "English",
+      "es": "Español"
+    }
+  },
+  "home": {
+    "hero": {
+      "tag": "O fim do concurso de popularidade",
+      "title": "Futebol sem grife.",
+      "titleHighlight": "Apenas mérito matemático.",
+      "subtitle": "O primeiro ranking global 100% auditável. Cada passe, desarme e gol é calculado jogo a jogo, com pesos específicos para cada posição.",
+      "primaryCta": "Ver o ranking",
+      "secondaryCta": "Entender o algoritmo"
+    },
+    "pillars": {
+      "title": "Por que confiar neste ranking",
+      "auditable": {
+        "title": "100% auditável",
+        "description": "Clique em qualquer jogador e veja o extrato matemático de cada ponto ganho ou perdido."
+      },
+      "positional": {
+        "title": "Fórmulas posicionais",
+        "description": "Zagueiros, volantes, laterais, meias e atacantes são avaliados pelas métricas da sua função tática."
+      },
+      "antiJunkTime": {
+        "title": "Fator anti-junk time",
+        "description": "Gols em goleadas contra times fracos valem menos que decisões em jogos equilibrados contra a elite."
+      }
+    }
+  },
+  "footer": {
+    "coverage": "Cobertura: 5 grandes ligas europeias, UEFA Champions League e torneios de seleções.",
+    "dataSources": "Dados: API-Football e FBref.",
+    "rights": "© {year} The Real Best. Todos os direitos reservados."
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "O lance que você procura não está no nosso extrato.",
+    "backHome": "Voltar ao início"
+  }
+}

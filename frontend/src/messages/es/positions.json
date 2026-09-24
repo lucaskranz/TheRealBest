@@ -1,0 +1,23 @@
+{
+  "names": {
+    "GK": "Portero",
+    "CB": "Defensa central",
+    "FB": "Lateral",
+    "CDM": "Pivote",
+    "CM": "Mediocentro",
+    "CAM": "Mediapunta",
+    "W": "Extremo",
+    "ST": "Delantero centro"
+  },
+  "short": {
+    "GK": "POR",
+    "CB": "DFC",
+    "FB": "LAT",
+    "CDM": "MCD",
+    "CM": "MC",
+    "CAM": "MP",
+    "W": "EXT",
+    "ST": "DC"
+  },
+  "all": "Todas las posiciones"
+}

@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "../styles/design-tokens.css";
+
+/* Expõe os design tokens como utilitários do Tailwind (bg-surface, text-gold, font-display, ...) */
+@theme inline {
+  --color-deep: var(--trb-bg-deep);
+  --color-surface: var(--trb-bg-surface);
+  --color-elevated: var(--trb-bg-elevated);
+  --color-glass: var(--trb-bg-glass);
+
+  --color-line: var(--trb-border-subtle);
+  --color-line-strong: var(--trb-border-strong);
+
+  --color-gold: var(--trb-gold);
+  --color-gold-glow: var(--trb-gold-glow);
+  --color-gold-deep: var(--trb-gold-deep);
+  --color-gold-subtle: var(--trb-gold-subtle);
+  --color-gold-border: var(--trb-gold-border);
+
+  --color-emerald: var(--trb-emerald);
+  --color-emerald-subtle: var(--trb-emerald-subtle);
+  --color-danger: var(--trb-danger);
+  --color-danger-subtle: var(--trb-danger-subtle);
+  --color-info: var(--trb-info);
+
+  --color-main: var(--trb-text-main);
+  --color-secondary: var(--trb-text-secondary);
+  --color-muted: var(--trb-text-muted);
+  --color-on-gold: var(--trb-text-on-gold);
+
+  --font-display: var(--trb-font-display);
+  --font-sans: var(--trb-font-body);
+
+  --radius-sm: var(--trb-radius-sm);
+  --radius-md: var(--trb-radius-md);
+  --radius-lg: var(--trb-radius-lg);
+
+  --shadow-card: var(--trb-shadow-card);
+  --shadow-glow: var(--trb-shadow-glow);
+
+  --ease-out-soft: var(--trb-ease-out);
+}
+
+@layer base {
+  html {
+    background-color: var(--trb-bg-deep);
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--trb-bg-deep);
+    background-image:
+      radial-gradient(ellipse at 50% -20%, rgba(245, 158, 11, 0.12), transparent 60%),
+      radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05), transparent 40%);
+    background-attachment: fixed;
+    color: var(--trb-text-main);
+    font-family: var(--trb-font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--trb-font-display);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--trb-gold);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--trb-gold-subtle);
+    color: var(--trb-gold-glow);
+  }
+}
+
+@layer components {
+  /* Card elevado com glassmorphism */
+  .glass {
+    background-color: var(--trb-bg-glass);
+    border: 1px solid var(--trb-border-subtle);
+    backdrop-filter: blur(var(--trb-glass-blur));
+    -webkit-backdrop-filter: blur(var(--trb-glass-blur));
+  }
+
+  .text-gradient-gold {
+    background-image: linear-gradient(135deg, var(--trb-gold-glow), var(--trb-gold-deep));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

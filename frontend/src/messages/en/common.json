@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "title": "The Real Best | Beyond The Ballon",
+    "description": "The global football player ranking built exclusively on match-by-match data, free from fame and popularity bias."
+  },
+  "brand": {
+    "name": "The Real Best",
+    "tagline": "Beyond The Ballon",
+    "slogan": "Beyond The Ballon. Beyond The Hype. Pure Performance.",
+    "homeLabel": "The Real Best home page"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "ranking": "Ranking",
+    "vsBallon": "Vs. Ballon d'Or",
+    "formula": "The Algorithm"
+  },
+  "localeSwitcher": {
+    "label": "Language",
+    "locales": {
+      "pt-BR": "Português",
+      "en": "English",
+      "es": "Español"
+    }
+  },
+  "home": {
+    "hero": {
+      "tag": "The end of the popularity contest",
+      "title": "Football without the label.",
+      "titleHighlight": "Only mathematical merit.",
+      "subtitle": "The first 100% auditable global ranking. Every pass, tackle and goal is scored match by match, with weights specific to each position.",
+      "primaryCta": "See the ranking",
+      "secondaryCta": "Understand the algorithm"
+    },
+    "pillars": {
+      "title": "Why trust this ranking",
+      "auditable": {
+        "title": "100% auditable",
+        "description": "Click any player and see the mathematical breakdown of every point gained or lost."
+      },
+      "positional": {
+        "title": "Positional formulas",
+        "description": "Center backs, defensive midfielders, full backs, playmakers and forwards are judged by the metrics of their tactical role."
+      },
+      "antiJunkTime": {
+        "title": "Anti-junk-time factor",
+        "description": "Goals in blowouts against weak sides count less than decisive plays in tight games against elite opponents."
+      }
+    }
+  },
+  "footer": {
+    "coverage": "Coverage: Europe's top 5 leagues, UEFA Champions League and national team tournaments.",
+    "dataSources": "Data: API-Football and FBref.",
+    "rights": "© {year} The Real Best. All rights reserved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The play you are looking for is not in our breakdown.",
+    "backHome": "Back to home"
+  }
+}

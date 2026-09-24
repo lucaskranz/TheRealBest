@@ -1,0 +1,23 @@
+{
+  "names": {
+    "GK": "Goalkeeper",
+    "CB": "Center Back",
+    "FB": "Full Back",
+    "CDM": "Defensive Midfielder",
+    "CM": "Central Midfielder",
+    "CAM": "Attacking Midfielder",
+    "W": "Winger",
+    "ST": "Striker"
+  },
+  "short": {
+    "GK": "GK",
+    "CB": "CB",
+    "FB": "FB",
+    "CDM": "CDM",
+    "CM": "CM",
+    "CAM": "CAM",
+    "W": "W",
+    "ST": "ST"
+  },
+  "all": "All positions"
+}

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   The Real Best — Design Tokens
+   Dark mode é o tema padrão (e único): grafite profundo, dourado acetinado,
+   verde esmeralda. Estes tokens são expostos ao Tailwind em app/globals.css.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Superfícies (grafite) */
+  --trb-bg-deep: #08090d;
+  --trb-bg-surface: #10131d;
+  --trb-bg-elevated: #161b29;
+  --trb-bg-glass: rgba(22, 27, 41, 0.7);
+
+  /* Bordas */
+  --trb-border-subtle: rgba(255, 255, 255, 0.07);
+  --trb-border-strong: rgba(255, 255, 255, 0.15);
+
+  /* Dourado acetinado (marca, destaque, top 1) */
+  --trb-gold: #f59e0b;
+  --trb-gold-glow: #fbbf24;
+  --trb-gold-deep: #d97706;
+  --trb-gold-subtle: rgba(245, 158, 11, 0.12);
+  --trb-gold-border: rgba(245, 158, 11, 0.3);
+
+  /* Esmeralda (ganhos de pontuação, estados positivos) */
+  --trb-emerald: #10b981;
+  --trb-emerald-subtle: rgba(16, 185, 129, 0.12);
+
+  /* Perigo (deduções e falhas) */
+  --trb-danger: #ef4444;
+  --trb-danger-subtle: rgba(239, 68, 68, 0.12);
+
+  /* Informativo (dados neutros, links secundários) */
+  --trb-info: #3b82f6;
+
+  /* Texto */
+  --trb-text-main: #f3f4f6;
+  --trb-text-secondary: #9ca3af;
+  --trb-text-muted: #6b7280;
+  --trb-text-on-gold: #0b0b0f;
+
+  /* Tipografia: variáveis --font-cabinet e --font-inter vêm de next/font (lib/fonts.ts) */
+  --trb-font-display: var(--font-cabinet), ui-sans-serif, system-ui, sans-serif;
+  --trb-font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Raios */
+  --trb-radius-sm: 8px;
+  --trb-radius-md: 12px;
+  --trb-radius-lg: 18px;
+
+  /* Sombras e brilho */
+  --trb-shadow-card: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --trb-shadow-glow: 0 0 25px rgba(245, 158, 11, 0.18);
+
+  /* Glassmorphism */
+  --trb-glass-blur: 14px;
+
+  /* Movimento */
+  --trb-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --trb-duration: 250ms;
+}

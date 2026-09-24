@@ -1,0 +1,14 @@
+{
+  "baseScore": "Nota base ao entrar em campo",
+  "actionsTitle": "Ações específicas da função",
+  "penaltiesTitle": "Deduções e falhas",
+  "contextTitle": "Multiplicadores de contexto",
+  "minutesFactor": "Fator de minutos jogados",
+  "finalScore": "Pontuação final auditada",
+  "algorithmVersion": "Algoritmo v{version}",
+  "multipliers": {
+    "tournament": "Torneio: {name}",
+    "opponent": "Força do adversário",
+    "clutch": "Fator decisivo"
+  }
+}

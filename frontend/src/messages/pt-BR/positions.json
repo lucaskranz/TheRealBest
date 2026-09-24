@@ -1,0 +1,23 @@
+{
+  "names": {
+    "GK": "Goleiro",
+    "CB": "Zagueiro",
+    "FB": "Lateral",
+    "CDM": "Volante",
+    "CM": "Meio-campista",
+    "CAM": "Meia-atacante",
+    "W": "Ponta",
+    "ST": "Centroavante"
+  },
+  "short": {
+    "GK": "GOL",
+    "CB": "ZAG",
+    "FB": "LAT",
+    "CDM": "VOL",
+    "CM": "MC",
+    "CAM": "MEI",
+    "W": "PON",
+    "ST": "CA"
+  },
+  "all": "Todas as posições"
+}

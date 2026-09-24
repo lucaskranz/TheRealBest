@@ -1,0 +1,20 @@
+{
+  "title": "Official ranking",
+  "subtitle": "{season} season, ordered by Fair Season Score (FSS).",
+  "columns": {
+    "rank": "#",
+    "player": "Player",
+    "position": "Position",
+    "team": "Team",
+    "matches": "Matches",
+    "minutes": "Minutes",
+    "mpsAverage": "Avg. MPS",
+    "fss": "FSS"
+  },
+  "filters": {
+    "position": "Position",
+    "search": "Search player",
+    "season": "Season"
+  },
+  "empty": "No players found for the selected filters."
+}

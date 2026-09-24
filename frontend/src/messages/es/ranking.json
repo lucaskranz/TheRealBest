@@ -1,0 +1,20 @@
+{
+  "title": "Ranking oficial",
+  "subtitle": "Temporada {season}, ordenada por el Fair Season Score (FSS).",
+  "columns": {
+    "rank": "#",
+    "player": "Jugador",
+    "position": "Posición",
+    "team": "Equipo",
+    "matches": "Partidos",
+    "minutes": "Minutos",
+    "mpsAverage": "MPS medio",
+    "fss": "FSS"
+  },
+  "filters": {
+    "position": "Posición",
+    "search": "Buscar jugador",
+    "season": "Temporada"
+  },
+  "empty": "No se encontraron jugadores para los filtros seleccionados."
+}
