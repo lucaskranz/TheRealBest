@@ -40,7 +40,8 @@
 - Implementar IHostedService para workers de longa duração
 - Usar IServiceScopeFactory para criar scopes dentro dos workers
 - Logging estruturado com Serilog em todos os workers
-- Retry policies com Polly para chamadas a APIs externas
+- Retry policies com Polly para chamadas a APIs externas (só erros transitórios 5xx; nunca repetir HTTP 429)
+- APIs externas com limite por minuto (API-Football): requisições sequenciais via ApiFootballRequestPacer, nunca em paralelo — exceder o limite pode bloquear a conta
 
 ## Testes
 - Testes unitários para toda lógica do Scoring Engine

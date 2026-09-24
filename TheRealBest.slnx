@@ -10,6 +10,7 @@
     <Project Path="tests/TheRealBest.API.IntegrationTests/TheRealBest.API.IntegrationTests.csproj" />
     <Project Path="tests/TheRealBest.Application.Tests/TheRealBest.Application.Tests.csproj" />
     <Project Path="tests/TheRealBest.Domain.Tests/TheRealBest.Domain.Tests.csproj" />
+    <Project Path="tests/TheRealBest.Infrastructure.Tests/TheRealBest.Infrastructure.Tests.csproj" />
     <Project Path="tests/TheRealBest.Scoring.Tests/TheRealBest.Scoring.Tests.csproj" />
   </Folder>
 </Solution>

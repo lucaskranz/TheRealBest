@@ -136,6 +136,14 @@ ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-
 | **FBref** | Dados avançados (xG, xA, Big Chances, SCA) | Enriquecimento |
 | **Sofascore** | Validação cruzada e dados complementares | Futuro |
 
+### API-Football: acesso e limites
+- Acesso direto pela api-sports.io (`https://v3.football.api-sports.io`, header `x-apisports-key`), cliente em `Infrastructure/ExternalApis/ApiFootball`
+- A chave **nunca** vai para o repositório: `dotnet user-secrets set "ApiFootball:ApiKey" "<chave>" --project src/TheRealBest.API`
+- **Plano Free:** só temporadas 2022–2024, 100 requisições/dia e 10/min. **Pro:** todas as temporadas, 7.500/dia e 300/min, sem renovação automática. Ajustar `ApiFootball:RequestsPerMinute` ao plano
+- Exceder o limite por minuto pode bloquear a conta: o cliente enfileira e espaça as requisições e para quando a cota diária acaba (zera às 00:00 UTC)
+- Custo: 1 requisição por listagem de partidas; 3 por partida importada (jogadores, eventos, escalações)
+- A API-Football **não** fornece xG, xA, grandes chances, recuperações, passes progressivos nem duelos aéreos separados: esses campos ficam zerados até o enriquecimento via FBref
+
 ---
 
 ## 8. Roadmap de Implementação por Etapas
@@ -152,7 +160,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 1D | Frontend Next.js + i18n + Design System | ✅ Concluída | Setup Next.js 14, next-intl, Tailwind, tokens |
 | 2A | Motor de Pontuação (Scoring Engine) | ✅ Concluída | Weight matrices, calculators, multipliers |
 | 2B | Testes do Motor de Pontuação | ✅ Concluída | Cenários reais (Rodri, Vinicius Jr, etc.) |
-| 3A | Client API-Football + Mapper | ⬜ Pendente | HttpClient tipado, modelos, mapeamento |
+| 3A | Client API-Football + Mapper | ✅ Concluída | HttpClient tipado, modelos, mapeamento |
 | 3B | Background Workers de Ingestão | ⬜ Pendente | MatchDataIngestionService, pipeline |
 | 3C | Seeds com Dados Reais | ⬜ Pendente | Temporada 2023/24, jogadores emblemáticos |
 | 4A | Controllers REST (Ranking + Players) | ⬜ Pendente | Endpoints, DTOs, paginação, filtros |

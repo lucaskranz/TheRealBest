@@ -1,6 +1,7 @@
 namespace TheRealBest.Domain.Entities;
 
 using TheRealBest.Domain.Enums;
+using TheRealBest.Domain.ValueObjects;
 
 public class MatchPlayerStats : EntityBase
 {
@@ -51,6 +52,7 @@ public class MatchPlayerStats : EntityBase
     public int BigChancesMissed { get; private set; }
     public int BigChancesCreated { get; private set; }
     public int ErrorsLeadingToGoal { get; private set; }
+    public int OwnGoals { get; private set; }
     public int ShotCreatingActions { get; private set; }
     public int ProgressivePasses { get; private set; }
     public int ProgressiveCarries { get; private set; }
@@ -61,6 +63,37 @@ public class MatchPlayerStats : EntityBase
     public virtual MatchPerformanceScore? PerformanceScore { get; private set; }
 
     protected MatchPlayerStats() { }
+
+    /// <summary>
+    /// Cria as estatísticas de uma partida a partir de uma linha importada de fonte externa.
+    /// </summary>
+    public static MatchPlayerStats FromStatLine(Guid matchId, Guid playerId, Guid teamId, PlayerStatLine line)
+    {
+        var stats = new MatchPlayerStats(matchId, playerId, teamId, line.Position, line.MinutesPlayed);
+
+        stats.SetOffensiveStats(
+            line.Goals, line.Assists, line.ShotsTotal, line.ShotsOnTarget, line.KeyPasses,
+            line.BigChancesCreated, line.BigChancesMissed, line.Xg, line.Xa, line.ShotCreatingActions,
+            line.PenaltiesScored);
+
+        var passAccuracy = line.PassesTotal == 0
+            ? 0m
+            : Math.Round(line.PassesAccurate * 100m / line.PassesTotal, 2, MidpointRounding.AwayFromZero);
+        stats.SetPassingStats(
+            line.PassesTotal, line.PassesAccurate, passAccuracy, line.ProgressivePasses,
+            line.ProgressiveCarries, line.Touches, line.Turnovers);
+
+        stats.SetDefensiveStats(
+            line.TacklesTotal, line.Interceptions, line.Blocks, line.BallRecoveries, line.DuelsTotal, line.DuelsWon,
+            line.AerialDuelsTotal, line.AerialDuelsWon, line.DribbledPast, line.ErrorsLeadingToGoal, line.OwnGoals);
+
+        stats.SetGoalkeepingAndDisciplinary(
+            line.Saves, line.GoalsConceded, line.PenaltiesSaved, line.CleanSheet, line.FoulsCommitted, line.FoulsDrawn,
+            line.YellowCards, line.RedCards, line.PenaltiesWon, line.PenaltiesCommitted, line.PenaltiesMissed,
+            line.DribblesAttempted, line.DribblesSuccess, line.Offsides);
+
+        return stats;
+    }
 
     public MatchPlayerStats(
         Guid matchId,
@@ -133,7 +166,8 @@ public class MatchPlayerStats : EntityBase
         int aerialDuelsTotal,
         int aerialDuelsWon,
         int dribbledPast,
-        int errorsLeadingToGoal)
+        int errorsLeadingToGoal,
+        int ownGoals = 0)
     {
         TacklesTotal = tacklesTotal;
         Interceptions = interceptions;
@@ -145,6 +179,7 @@ public class MatchPlayerStats : EntityBase
         AerialDuelsWon = aerialDuelsWon;
         DribbledPast = dribbledPast;
         ErrorsLeadingToGoal = errorsLeadingToGoal;
+        OwnGoals = ownGoals;
         MarkUpdated();
     }
 

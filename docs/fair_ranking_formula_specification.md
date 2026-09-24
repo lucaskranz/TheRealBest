@@ -185,7 +185,9 @@ Escala de 0 a 100. Partidas com menos de 20 minutos e sem ação decisiva no pla
 * **W_torneio:** Copa do Mundo 1.40 em toda a fase final; Eurocopa/Copa América 1.30; Champions 1.35 no mata-mata e 1.20 na fase de liga; Top 5 ligas 1.10; copas nacionais 1.05 em semifinal/final e 0.95 antes disso; demais 0.95.
 * **W_adversário (rating ClubElo):** ≥ 1880 → 1.20 (top 10); ≥ 1780 → 1.10 (top 30); ≥ 1600 → 1.00; abaixo → 0.90. Times sem Elo ingerido ficam com o padrão 1500 (0.90).
 * **Precisão de passe:** bônus único se > 85% com pelo menos 20 passes. **Clean sheet:** só com mais de 60 minutos. **xG superado:** bônus apenas quando Gols − xG > 0.
-* **Ações sem fonte de dados hoje** (ficam de fora até a ingestão fornecê-las): gols prevenidos (xGOT), saídas aéreas, erro que levou a finalização, gol contra e perda de posse no campo defensivo (a fonte só informa o total de perdas). **Defesas** usam o total de defesas, não só as difíceis dentro da área.
+* **Ações sem fonte de dados hoje** (ficam de fora até a ingestão fornecê-las): gols prevenidos (xGOT), saídas aéreas, erro que levou a finalização e perda de posse no campo defensivo (a fonte só informa o total de perdas). **Defesas** usam o total de defesas, não só as difíceis dentro da área. **Gols contra** e **gols sofridos com o jogador em campo** vêm dos eventos da partida.
+* **xG ausente:** sem xG na fonte, o campo fica 0. Como todo gol tem xG > 0, xG = 0 é tratado como "sem dado" e o bônus de xG superado não é aplicado.
+* **Cobertura da API-Football:** a fonte principal não fornece xG, xA, grandes chances, recuperações, passes progressivos nem duelos aéreos separados. As linhas de base da seção 7.2 assumem essas métricas. Com dados só da API-Football, as atuações ficam sistematicamente abaixo de 50 (ex.: Rodri na final da UCL 2023 ≈ 53), sobretudo volantes e zagueiros. A recalibração da Etapa 3C deve usar a média empírica de Δ por posição sobre os dados efetivamente ingeridos.
 * **Arredondamento:** 4 casas nos itens e multiplicadores e 2 casas no MPS, sempre `MidpointRounding.AwayFromZero`.
 
 ---

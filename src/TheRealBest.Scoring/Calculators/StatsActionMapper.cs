@@ -8,7 +8,7 @@ using TheRealBest.Domain.Enums;
 /// </summary>
 /// <remarks>
 /// Ações da especificação sem fonte de dados confiável hoje ficam de fora até a ingestão fornecê-las:
-/// GoalsPrevented (xGOT), HighClaim, ErrorLeadingToShot, OwnGoal e Turnover (a spec pune só perdas no
+/// GoalsPrevented (xGOT), HighClaim, ErrorLeadingToShot e Turnover (a spec pune só perdas no
 /// campo defensivo; a fonte atual informa apenas o total de perdas).
 /// </remarks>
 public static class StatsActionMapper
@@ -33,7 +33,8 @@ public static class StatsActionMapper
             [ActionType.ExpectedAssists] = stats.Xa,
             [ActionType.BigChanceCreated] = stats.BigChancesCreated,
             [ActionType.ShotOnTarget] = stats.ShotsOnTarget,
-            [ActionType.ExpectedGoalsOverperformance] = Math.Max(0m, stats.Goals - stats.Xg),
+            // Sem xG na fonte o campo fica 0; como todo gol tem xG > 0, xG = 0 significa "sem dado", não "sem chance"
+            [ActionType.ExpectedGoalsOverperformance] = stats.Xg > 0m ? Math.Max(0m, stats.Goals - stats.Xg) : 0m,
             [ActionType.KeyPass] = stats.KeyPasses,
             [ActionType.ProgressivePass] = stats.ProgressivePasses,
             [ActionType.PassAccuracyBonus] = HasPassAccuracyBonus(stats) ? 1 : 0,
@@ -50,6 +51,7 @@ public static class StatsActionMapper
             [ActionType.PenaltySaved] = stats.PenaltiesSaved,
 
             [ActionType.ErrorLeadingToGoal] = stats.ErrorsLeadingToGoal,
+            [ActionType.OwnGoal] = stats.OwnGoals,
             [ActionType.PenaltyCommitted] = stats.PenaltiesCommitted,
             [ActionType.YellowCard] = stats.YellowCards,
             [ActionType.RedCard] = stats.RedCards,

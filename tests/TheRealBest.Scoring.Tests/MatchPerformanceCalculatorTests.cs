@@ -149,6 +149,29 @@ public class MatchPerformanceCalculatorTests
     }
 
     [Fact]
+    public void Calculate_GoalWithoutXgData_GetsNoOverperformanceBonus()
+    {
+        var withoutXg = TestEngine.Score(StatsBuilder.For(PlayerPosition.ST).Goals(1).Build(), Contexts.LeagueOpenGame());
+        var withXg = TestEngine.Score(StatsBuilder.For(PlayerPosition.ST).Goals(1).ExpectedGoals(0.3m).Build(), Contexts.LeagueOpenGame());
+
+        withoutXg.ActionBreakdown.Should().NotContain(i => i.ActionKey == "expected_goals_overperformance");
+        withXg.ActionBreakdown.Should().ContainSingle(i => i.ActionKey == "expected_goals_overperformance")
+            .Which.TotalPoints.Should().Be(4.9m);
+    }
+
+    [Fact]
+    public void Calculate_OwnGoal_IsAFullDecisivePenalty()
+    {
+        var stats = StatsBuilder.For(PlayerPosition.CB).Minutes(10).OwnGoals(1).Build();
+
+        var receipt = TestEngine.Score(stats, Contexts.League(0, 1, Contexts.EloMidTable));
+
+        receipt.PenaltyBreakdown.Should().ContainSingle(i => i.ActionKey == "own_goal")
+            .Which.Should().Match<ActionScoreItem>(i => i.TotalPoints == -16m && i.MinutesFactor == 1m);
+        receipt.CountsTowardsSeason.Should().BeTrue();
+    }
+
+    [Fact]
     public void Calculate_ScoreIsClampedBetween0And100()
     {
         var outstanding = StatsBuilder.For(PlayerPosition.CB).Goals(3).Assists(2).CleanSheet().Build();
