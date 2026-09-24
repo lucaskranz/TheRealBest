@@ -145,7 +145,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | # | Etapa | Status | Descrição |
 |:---:|:---|:---:|:---|
 | 1A | Solution .NET + Estrutura Clean Architecture | ✅ Concluída | Criar solution, projetos, referências |
-| 1B | Entidades de Domínio e Enums | ⬜ Pendente | Player, Team, Match, MatchPlayerStats, etc. |
+| 1B | Entidades de Domínio e Enums | ✅ Concluída | Player, Team, Match, MatchPlayerStats, etc. |
 | 1C | Banco de Dados (EF Core + Migrations) | ⬜ Pendente | DbContext, Configurations, Migration inicial |
 | 1D | Frontend Next.js + i18n + Design System | ⬜ Pendente | Setup Next.js 14, next-intl, Tailwind, tokens |
 | 2A | Motor de Pontuação (Scoring Engine) | ⬜ Pendente | Weight matrices, calculators, multipliers |
@@ -174,7 +174,8 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 
 ### Commits
 - Formato: 	ipo(escopo): descrição
-- Tipos: eat, ix, docs, efactor, 	est, chore, style
+- Tipos: eat, ix, docs, 
+efactor, 	est, chore, style
 - Exemplos: eat(scoring): add weight matrix for center backs, eat(i18n): add Spanish translations
 
 ### Branches
