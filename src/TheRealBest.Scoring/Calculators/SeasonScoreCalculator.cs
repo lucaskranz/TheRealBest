@@ -9,11 +9,18 @@ using TheRealBest.Domain.ValueObjects;
 /// </summary>
 /// <remarks>
 /// A especificação descreve uma soma (Σ MPS × W), que premia volume de jogos acima de qualidade.
-/// A média ponderada mantém a escala de 0 a 100 e deixa o FatorPresença como única proteção contra amostras pequenas.
+/// A média ponderada mantém a escala de 0 a 100; o FatorPresença suaviza amostras pequenas e o corte de elegibilidade
+/// (10 partidas e 900 minutos) as retira do ranking.
 /// </remarks>
 public static class SeasonScoreCalculator
 {
     public const int FullPresenceMinutes = 2200;
+
+    /// <summary>Mínimo de partidas contadas (CountsTowardsSeason) para aparecer no ranking.</summary>
+    public const int MinMatchesForRanking = 10;
+
+    /// <summary>Mínimo de minutos jogados na temporada para aparecer no ranking.</summary>
+    public const int MinMinutesForRanking = 900;
 
     public static SeasonScore Calculate(IEnumerable<MatchPerformanceScore> scores, int totalSeasonMinutes)
     {
@@ -36,8 +43,12 @@ public static class SeasonScoreCalculator
             WeightedMpsSum: ScoringMath.Round4(weightedSum),
             WeightedMpsAverage: ScoringMath.Round4(weightedAverage),
             PresenceFactor: presenceFactor,
-            Fss: ScoringMath.Round4(weightedAverage * presenceFactor));
+            Fss: ScoringMath.Round4(weightedAverage * presenceFactor),
+            IsRankingEligible: IsRankingEligible(counted.Count, totalSeasonMinutes));
     }
+
+    public static bool IsRankingEligible(int matchesCounted, int totalSeasonMinutes) =>
+        matchesCounted >= MinMatchesForRanking && totalSeasonMinutes >= MinMinutesForRanking;
 
     public static decimal CalculatePresenceFactor(int totalSeasonMinutes)
     {

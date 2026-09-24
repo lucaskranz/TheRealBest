@@ -105,6 +105,7 @@ MPS = Clamp(0, 100, Base + (ΔAções − LinhaDeBase_posição × FatorMinutos)
 ### Ranking da Temporada (FSS - Fair Season Score)
 `
 FSS = (Σ MPS_i × W_torneio_i / Σ W_torneio_i) × FatorPresença
+Elegível para o ranking: mínimo de 10 partidas E 900 minutos na temporada
 FatorPresença = min(1.0, MinutosJogados / 2200)^0.5
 `
 

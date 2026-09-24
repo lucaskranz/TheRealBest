@@ -30,7 +30,9 @@ public class SeasonRankingConfiguration : EntityBaseConfiguration<SeasonRanking>
 
         // Um registro por jogador por temporada (base para o upsert do ranking)
         builder.HasIndex(r => new { r.PlayerId, r.SeasonYear }).IsUnique();
-        builder.HasIndex(r => new { r.SeasonYear, r.OverallRank });
-        builder.HasIndex(r => new { r.SeasonYear, r.PositionRank });
+
+        // Posições só existem entre elegíveis (10 partidas e 900 minutos): índices parciais para as consultas do ranking
+        builder.HasIndex(r => new { r.SeasonYear, r.OverallRank }).HasFilter("is_ranking_eligible");
+        builder.HasIndex(r => new { r.SeasonYear, r.PositionRank }).HasFilter("is_ranking_eligible");
     }
 }

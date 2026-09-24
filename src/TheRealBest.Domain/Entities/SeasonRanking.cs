@@ -15,6 +15,12 @@ public class SeasonRanking : EntityBase
     public int OverallRank { get; private set; }
     public int PositionRank { get; private set; }
     public decimal ClutchIndex { get; private set; }
+
+    /// <summary>
+    /// Mínimo de 10 partidas contadas e 900 minutos. Inelegíveis ficam salvos (perfil do jogador),
+    /// mas não aparecem no ranking nem entram no cálculo de OverallRank e PositionRank.
+    /// </summary>
+    public bool IsRankingEligible { get; private set; }
     public string Top5MatchesJson { get; private set; } = "[]";
     public DateTime RecalculatedAt { get; private set; }
 
@@ -32,6 +38,7 @@ public class SeasonRanking : EntityBase
         int overallRank,
         int positionRank,
         decimal clutchIndex,
+        bool isRankingEligible,
         string top5MatchesJson = "[]",
         Guid? id = null) : base(id ?? Guid.NewGuid())
     {
@@ -46,6 +53,7 @@ public class SeasonRanking : EntityBase
         OverallRank = overallRank;
         PositionRank = positionRank;
         ClutchIndex = clutchIndex;
+        IsRankingEligible = isRankingEligible;
         Top5MatchesJson = top5MatchesJson;
         RecalculatedAt = DateTime.UtcNow;
     }

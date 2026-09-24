@@ -22,6 +22,30 @@ public class SeasonScoreCalculatorTests
         star.Fss.Should().BeGreaterThan(average.Fss);
     }
 
+    [Theory]
+    [InlineData(10, 900, true)]
+    [InlineData(35, 3000, true)]
+    [InlineData(9, 2000, false)]  // minutos suficientes, poucas partidas
+    [InlineData(10, 899, false)]  // partidas suficientes, poucos minutos
+    [InlineData(8, 700, false)]   // o "lesionado" dos 8 jogos perfeitos
+    public void Calculate_RankingEligibility_RequiresTenMatchesAnd900Minutes(int matches, int minutes, bool expected)
+    {
+        Season(matches, mps: 70m, minutes).IsRankingEligible.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Calculate_RankingEligibility_IgnoresMatchesThatDoNotCountTowardsSeason()
+    {
+        // 9 partidas válidas + 3 participações curtas sem ação decisiva = 9 partidas para o ranking
+        var scores = Enumerable.Range(0, 9).Select(_ => TestEngine.StoredScore(70m))
+            .Concat(Enumerable.Range(0, 3).Select(_ => TestEngine.StoredScore(50m, countsTowardsSeason: false)));
+
+        var result = SeasonScoreCalculator.Calculate(scores, totalSeasonMinutes: 1000);
+
+        result.MatchesCounted.Should().Be(9);
+        result.IsRankingEligible.Should().BeFalse();
+    }
+
     [Fact]
     public void Calculate_WeightsAverageByTournament()
     {

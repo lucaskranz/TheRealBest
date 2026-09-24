@@ -177,6 +177,8 @@ $$\text{FSS} = \frac{\sum_{i=1}^{N} \text{MPS}_i \times \mathbf{W}_{\text{tornei
 
 Escala de 0 a 100. Partidas com menos de 20 minutos e sem ação decisiva no placar (gol, assistência, pênalti defendido ou cometido, erro que levou a gol, gol contra, cartão vermelho) não entram no FSS.
 
+**Elegibilidade para o ranking:** o jogador só aparece no ranking com **no mínimo 10 partidas contadas e 900 minutos** na temporada. Quem não atinge o corte tem o FSS calculado e salvo (para o perfil), mas não recebe posição no ranking. O FatorPresença continua valendo para os elegíveis, entre 900 e 2200 minutos.
+
 ### 7.4. Outras definições
 
 * **Posições → matrizes:** CDM e CM usam a coluna "Volante/Meia"; CAM e W usam a coluna "Meia-Atac/Ponta".

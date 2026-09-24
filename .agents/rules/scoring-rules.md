@@ -35,6 +35,8 @@
 - FSS = (Σ MPS_i × W_torneio_i / Σ W_torneio_i) × FatorPresença — média ponderada, escala 0–100
 - FatorPresença = min(1.0, MinutosJogados / 2200)^0.5
 - 2200 minutos ≈ 25 jogos completos (protege contra amostras pequenas)
+- Elegibilidade: só entra no ranking quem tem no mínimo 10 partidas contadas E 900 minutos (SeasonScore.IsRankingEligible / season_rankings.is_ranking_eligible)
+- Inelegíveis ficam salvos em season_rankings (perfil do jogador), mas não aparecem na listagem nem recebem OverallRank/PositionRank; as consultas de ranking DEVEM filtrar is_ranking_eligible
 
 ## Auditabilidade Total
 - O MatchPerformanceScore DEVE armazenar action_breakdown e penalty_breakdown como JSONB
