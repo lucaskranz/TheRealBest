@@ -54,15 +54,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Executa o seed automÃ¡tico se a base de partidas estiver vazia ou com argumento --seed
-var isSeedArg = args.Contains("--seed");
-var shouldSeedOnStartup = builder.Configuration.GetValue<bool>("Seed:AutoSeedOnStartup", defaultValue: true);
-
-if (isSeedArg || shouldSeedOnStartup)
+// Seed com dados reais da API-Football: só sob demanda (consome cota da API), e encerra ao terminar.
+// Uso: dotnet run --project src/TheRealBest.API -- --seed
+if (args.Contains("--seed"))
 {
     using var scope = app.Services.CreateScope();
-    var seeder = scope.ServiceProvider.GetRequiredService<IRealDataSeeder>();
-    await seeder.SeedAsync();
+    await scope.ServiceProvider.GetRequiredService<IRealDataSeeder>().SeedAsync();
+    return;
 }
 
 app.Run();

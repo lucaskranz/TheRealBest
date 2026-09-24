@@ -24,7 +24,7 @@ public static class ApiFootballMapper
                 item.League.Name,
                 item.League.Country ?? string.Empty,
                 ApiFootballCompetitions.TierFor(item.League.Id),
-                item.League.Season),
+                ApiFootballCompetitions.FootballSeasonOf(item.League.Id, item.League.Season, item.Fixture.Date)),
             HomeTeam: ToTeam(item.Teams.Home),
             AwayTeam: ToTeam(item.Teams.Away),
             RoundPhase: item.League.Round,

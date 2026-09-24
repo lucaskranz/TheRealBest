@@ -33,6 +33,24 @@ public static class ApiFootballCompetitions
     };
 
     /// <summary>
+    /// Temporada do calendário do futebol europeu (agosto a julho) à qual a partida pertence.
+    /// Ligas usam o ano de início na própria API; torneios de seleções usam o ano do torneio, então a Euro e a
+    /// Copa América de junho/julho de 2024 (API season 2024) pertencem à temporada 2023/24, a do ciclo da Bola de Ouro 2024.
+    /// </summary>
+    public static int FootballSeasonOf(int leagueId, int apiSeason, DateTimeOffset kickoff)
+    {
+        var tier = TierFor(leagueId);
+        var isNationalTeamTournament = tier is CompetitionTier.WorldCup or CompetitionTier.InternationalContinental;
+        if (!isNationalTeamTournament)
+        {
+            return apiSeason;
+        }
+
+        var date = kickoff.UtcDateTime;
+        return date.Month >= 8 ? date.Year : date.Year - 1;
+    }
+
+    /// <summary>
     /// Rodadas de pontos corridos e fases de grupos/liga não são mata-mata ("Regular Season - 5", "Group A - 2", "League Stage - 3").
     /// </summary>
     public static bool IsKnockoutRound(string round) =>

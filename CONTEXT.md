@@ -143,6 +143,14 @@ ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-
 - Exceder o limite por minuto pode bloquear a conta: o cliente enfileira e espaça as requisições e para quando a cota diária acaba (zera às 00:00 UTC)
 - Custo: 1 requisição por listagem de partidas; 3 por partida importada (jogadores, eventos, escalações)
 - A API-Football **não** fornece xG, xA, grandes chances, recuperações, passes progressivos nem duelos aéreos separados: esses campos ficam zerados até o enriquecimento via FBref
+- **Cache de respostas** (`ApiFootball:ResponseCacheEnabled`, ligado em Development): respostas de partidas encerradas ficam em `%LOCALAPPDATA%/TheRealBest/api-football-cache`, fora do repositório. Recriar o banco ou repetir o seed não gasta cota
+- O parâmetro `ids` (várias partidas por requisição, com jogadores e eventos embutidos) **não** existe no plano Free; num plano pago, reduz muito o custo de carga
+
+### Seed com dados reais
+- **Nunca** usar dados digitados à mão: todo dado vem da API-Football, identificado pelo ID externo da fonte
+- `dotnet run --project src/TheRealBest.API -- --seed` importa as partidas de `Infrastructure/Data/Seeds/RealMatchSelection.cs` (30 jogos do ciclo da Bola de Ouro 2024) e recalcula o ranking. Não roda automaticamente ao subir a API
+- Retomável: partidas já importadas são puladas, e se a cota diária acabar basta rodar de novo após 00:00 UTC
+- Euro e Copa América de junho/julho entram na temporada de clubes que terminou (Euro 2024 → temporada 2023/24)
 
 ---
 
@@ -162,7 +170,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 2B | Testes do Motor de Pontuação | ✅ Concluída | Cenários reais (Rodri, Vinicius Jr, etc.) |
 | 3A | Client API-Football + Mapper | ✅ Concluída | HttpClient tipado, modelos, mapeamento |
 | 3B | Background Workers de Ingestão | ✅ Concluída | MatchDataIngestionService, pipeline |
-| 3C | Seeds com Dados Reais | ✅ Concluída | Temporada 2023/24, jogadores emblemáticos |
+| 3C | Seeds com Dados Reais | 🔄 Em andamento | 30 partidas reais do ciclo 2023/24 via API-Football (`--seed`); recalibração das linhas de base pendente |
 | 4A | Controllers REST (Ranking + Players) | ✅ Concluída | Endpoints, DTOs, paginação, filtros |
 | 4B | Controllers REST (Audit + Matches) | ✅ Concluída | Recibo auditável, detalhamento de partida |
 | 4C | Localização no Backend | ⬜ Pendente | Middleware, .resx, ActionLabelResolver |

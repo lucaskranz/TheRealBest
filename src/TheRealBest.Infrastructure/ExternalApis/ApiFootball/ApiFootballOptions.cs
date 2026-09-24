@@ -14,4 +14,18 @@ public sealed class ApiFootballOptions
     /// então o cliente espaça as requisições para nunca passar deste valor.
     /// </summary>
     public int RequestsPerMinute { get; set; } = 10;
+
+    /// <summary>
+    /// Guarda em disco as respostas de partidas encerradas (dados que não mudam mais). Recriar o banco ou repetir
+    /// uma importação passa a custar zero requisições — essencial no plano Free (100/dia).
+    /// </summary>
+    public bool ResponseCacheEnabled { get; set; }
+
+    /// <summary>Pasta do cache. Vazio = %LOCALAPPDATA%/TheRealBest/api-football-cache (fora do repositório).</summary>
+    public string ResponseCacheDirectory { get; set; } = string.Empty;
+
+    public string ResolvedResponseCacheDirectory =>
+        string.IsNullOrWhiteSpace(ResponseCacheDirectory)
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TheRealBest", "api-football-cache")
+            : ResponseCacheDirectory;
 }

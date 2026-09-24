@@ -19,6 +19,8 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
             .Include(m => m.Competition)
             .Include(m => m.HomeTeam)
             .Include(m => m.AwayTeam)
+            // Necessário para a ingestão detectar partidas já importadas (PlayerStats.Count > 0)
+            .Include(m => m.PlayerStats)
             .FirstOrDefaultAsync(m => m.ExternalApiId == externalApiId, cancellationToken);
 
     public async Task<Match?> GetWithStatsByIdAsync(Guid id, CancellationToken cancellationToken = default) =>

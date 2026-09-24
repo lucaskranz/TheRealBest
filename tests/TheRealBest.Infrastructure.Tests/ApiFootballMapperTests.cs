@@ -30,6 +30,17 @@ public class ApiFootballMapperTests
         (fixture.HomeScore, fixture.AwayScore).Should().Be((1, 0));
     }
 
+    [Theory]
+    [InlineData(ApiFootballCompetitions.EuroChampionship, 2024, "2024-07-14", 2023)] // Final da Euro 2024 → temporada 2023/24
+    [InlineData(ApiFootballCompetitions.CopaAmerica, 2024, "2024-07-15", 2023)]
+    [InlineData(ApiFootballCompetitions.WorldCup, 2022, "2022-12-18", 2022)]       // Copa do Catar → temporada 2022/23
+    [InlineData(ApiFootballCompetitions.PremierLeague, 2023, "2024-05-19", 2023)]  // Ligas: season da API
+    public void FootballSeasonOf_MapsNationalTeamTournamentsToClubSeason(int leagueId, int apiSeason, string kickoff, int expected)
+    {
+        ApiFootballCompetitions.FootballSeasonOf(leagueId, apiSeason, DateTimeOffset.Parse(kickoff + "T19:00:00Z"))
+            .Should().Be(expected);
+    }
+
     [Fact]
     public void ToFixture_MatchDecidedOnPenalties_IsFinishedWithScoreAfterExtraTime()
     {

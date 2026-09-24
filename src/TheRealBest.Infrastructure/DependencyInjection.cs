@@ -27,7 +27,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options => ConfigureDbContext(options, connectionString));
         services.AddRepositories();
         services.AddApiFootball(configuration);
-        services.AddScoped<IRealDataSeeder, Season2023RealDataSeeder>();
+        services.AddScoped<IRealDataSeeder, ApiFootballRealDataSeeder>();
 
         return services;
     }
@@ -58,16 +58,20 @@ public static class DependencyInjection
         services.Configure<ApiFootballOptions>(configuration.GetSection(ApiFootballOptions.SectionName));
         services.TryAddSingleton(TimeProvider.System);
         services.AddSingleton<ApiFootballRequestPacer>();
+        services.AddTransient<ApiFootballResponseCacheHandler>();
         services.AddTransient<ApiFootballRateLimitHandler>();
         services.AddTransient<ApiFootballAuthHandler>();
 
         var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer(ApiFootballJson.Options));
 
+        // Ordem dos handlers: retry (externo) → cache em disco → pacer → autenticação.
+        // Acertos no cache não consomem cota; cada nova tentativa também respeita o ritmo.
         services.AddRefitClient<IApiFootballApi>(_ => refitSettings, ApiFootballHttpClientName)
             .ConfigureHttpClient((provider, client) =>
                 client.BaseAddress = new Uri(provider.GetRequiredService<IOptions<ApiFootballOptions>>().Value.BaseUrl))
             .AddTransientHttpErrorPolicy(policy =>
                 policy.WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt))))
+            .AddHttpMessageHandler<ApiFootballResponseCacheHandler>()
             .AddHttpMessageHandler<ApiFootballRateLimitHandler>()
             .AddHttpMessageHandler<ApiFootballAuthHandler>();
 

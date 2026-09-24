@@ -35,13 +35,12 @@ public class RankingAndPlayersApiTests : IClassFixture<WebApplicationFactory<Pro
         envelope.Meta!.Page.Should().Be(1);
         envelope.Errors.Should().BeNull();
 
-        // Se o banco estiver populado com os seeds, Rodri deve ser o #1
+        // Com dados no banco, a lista vem ordenada pela posição e só com elegíveis (sem supor quem é o líder)
         if (envelope.Data!.Count > 0)
         {
-            var first = envelope.Data[0];
-            first.OverallRank.Should().Be(1);
-            first.PlayerName.Should().Be("Rodri");
-            first.IsRankingEligible.Should().BeTrue();
+            envelope.Data[0].OverallRank.Should().Be(1);
+            envelope.Data.Select(r => r.OverallRank).Should().BeInAscendingOrder();
+            envelope.Data.Should().OnlyContain(r => r.IsRankingEligible);
         }
     }
 
