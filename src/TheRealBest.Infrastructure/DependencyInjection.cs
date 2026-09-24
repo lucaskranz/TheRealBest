@@ -10,6 +10,7 @@ using Refit;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure.Data;
 using TheRealBest.Infrastructure.Data.Repositories;
+using TheRealBest.Infrastructure.Data.Seeds;
 using TheRealBest.Infrastructure.ExternalApis.ApiFootball;
 
 public static class DependencyInjection
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options => ConfigureDbContext(options, connectionString));
         services.AddRepositories();
         services.AddApiFootball(configuration);
+        services.AddScoped<IRealDataSeeder, Season2023RealDataSeeder>();
 
         return services;
     }

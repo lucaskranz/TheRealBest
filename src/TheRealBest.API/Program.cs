@@ -2,6 +2,7 @@ using TheRealBest.API.BackgroundServices;
 using TheRealBest.Application;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure;
+using TheRealBest.Infrastructure.Data.Seeds;
 using TheRealBest.Scoring;
 using TheRealBest.Scoring.Rules;
 
@@ -38,5 +39,16 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Executa o seed automÃ¡tico se a base de partidas estiver vazia ou com argumento --seed
+var isSeedArg = args.Contains("--seed");
+var shouldSeedOnStartup = builder.Configuration.GetValue<bool>("Seed:AutoSeedOnStartup", defaultValue: true);
+
+if (isSeedArg || shouldSeedOnStartup)
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<IRealDataSeeder>();
+    await seeder.SeedAsync();
+}
 
 app.Run();

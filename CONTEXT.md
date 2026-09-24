@@ -162,7 +162,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 2B | Testes do Motor de Pontuação | ✅ Concluída | Cenários reais (Rodri, Vinicius Jr, etc.) |
 | 3A | Client API-Football + Mapper | ✅ Concluída | HttpClient tipado, modelos, mapeamento |
 | 3B | Background Workers de Ingestão | ✅ Concluída | MatchDataIngestionService, pipeline |
-| 3C | Seeds com Dados Reais | ⬜ Pendente | Temporada 2023/24, jogadores emblemáticos |
+| 3C | Seeds com Dados Reais | ✅ Concluída | Temporada 2023/24, jogadores emblemáticos |
 | 4A | Controllers REST (Ranking + Players) | ⬜ Pendente | Endpoints, DTOs, paginação, filtros |
 | 4B | Controllers REST (Audit + Matches) | ⬜ Pendente | Recibo auditável, detalhamento de partida |
 | 4C | Localização no Backend | ⬜ Pendente | Middleware, .resx, ActionLabelResolver |
