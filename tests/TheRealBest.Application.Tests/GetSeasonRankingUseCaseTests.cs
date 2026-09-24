@@ -12,11 +12,15 @@ using TheRealBest.Domain.Specifications;
 public class GetSeasonRankingUseCaseTests
 {
     private readonly Mock<IRankingRepository> _rankingRepositoryMock = new();
+    private readonly Mock<IMatchRepository> _matchRepositoryMock = new();
     private readonly GetSeasonRankingUseCase _useCase;
 
     public GetSeasonRankingUseCaseTests()
     {
-        _useCase = new GetSeasonRankingUseCase(_rankingRepositoryMock.Object, TestLabels.Create());
+        _useCase = new GetSeasonRankingUseCase(_rankingRepositoryMock.Object, _matchRepositoryMock.Object, TestLabels.Create());
+        _matchRepositoryMock
+            .Setup(r => r.GetLatestClubTeamsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<Guid, Team>());
     }
 
     [Fact]

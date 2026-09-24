@@ -7,6 +7,8 @@ public sealed record SeasonRankingItemDto(
     string? PhotoUrl,
     string PrimaryPosition,
     string PrimaryPositionLabel,
+    string? TeamName,
+    string? TeamLogoUrl,
     int OverallRank,
     int PositionRank,
     decimal FssScore,

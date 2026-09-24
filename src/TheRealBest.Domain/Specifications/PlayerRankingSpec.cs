@@ -3,7 +3,7 @@ namespace TheRealBest.Domain.Specifications;
 using TheRealBest.Domain.Enums;
 
 /// <summary>
-/// EspecificaÃ§Ã£o de filtros e paginaÃ§Ã£o para consulta do ranking de jogadores.
+/// Especificação de filtros e paginação para consulta do ranking de jogadores.
 /// </summary>
 public sealed record PlayerRankingSpec(
     int SeasonYear,
@@ -11,7 +11,8 @@ public sealed record PlayerRankingSpec(
     Guid? CompetitionId = null,
     string? Nationality = null,
     int Page = 1,
-    int PageSize = 25
+    int PageSize = 25,
+    string? Search = null
 )
 {
     public int Skip => Math.Max(0, (Page - 1) * PageSize);

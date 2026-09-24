@@ -25,7 +25,11 @@ public sealed class GetPlayerProfileUseCase(
         var ranking = await rankingRepository.GetByPlayerAndSeasonAsync(playerId, seasonYear, cancellationToken);
         var matchStats = await matchRepository.GetPlayerStatsByPlayerAndSeasonAsync(playerId, seasonYear, cancellationToken);
 
-        var rankingDto = ranking is not null ? MapRankingDto(ranking, player) : null;
+        // Clube = time do jogo por clube mais recente na temporada (jogos de seleção não contam)
+        var latestClubTeam = matchStats
+            .Where(s => s.Match.Competition.Tier is not (Domain.Enums.CompetitionTier.WorldCup or Domain.Enums.CompetitionTier.InternationalContinental))
+            .MaxBy(s => s.Match.MatchDate)?.Team;
+        var rankingDto = ranking is not null ? MapRankingDto(ranking, player, latestClubTeam) : null;
 
         var recentMatches = matchStats.Select(s => new PlayerMatchStatDto(
             MatchId: s.MatchId,
@@ -56,7 +60,7 @@ public sealed class GetPlayerProfileUseCase(
         );
     }
 
-    private SeasonRankingItemDto MapRankingDto(SeasonRanking ranking, Player player)
+    private SeasonRankingItemDto MapRankingDto(SeasonRanking ranking, Player player, Team? team)
     {
         IReadOnlyList<Top5MatchItemDto> topMatches = [];
         if (!string.IsNullOrWhiteSpace(ranking.Top5MatchesJson))
@@ -75,6 +79,8 @@ public sealed class GetPlayerProfileUseCase(
             PhotoUrl: player.PhotoUrl,
             PrimaryPosition: player.PrimaryPosition.ToString(),
             PrimaryPositionLabel: labels.PositionLabel(player.PrimaryPosition.ToString(), SupportedLocales.Current),
+            TeamName: team?.Name,
+            TeamLogoUrl: team?.LogoUrl,
             OverallRank: ranking.OverallRank,
             PositionRank: ranking.PositionRank,
             FssScore: ranking.FssScore,

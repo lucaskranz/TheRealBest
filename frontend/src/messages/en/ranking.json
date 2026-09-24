@@ -1,6 +1,11 @@
 {
+  "metadata": {
+    "title": "{season} Ranking",
+    "description": "The best players of the {season} season by Fair Season Score: match-by-match data, position-specific formulas and every point auditable."
+  },
   "title": "Official ranking",
   "subtitle": "{season} season, ordered by Fair Season Score (FSS).",
+  "caption": "{season} season ranking",
   "columns": {
     "rank": "#",
     "player": "Player",
@@ -11,10 +16,33 @@
     "mpsAverage": "Avg. MPS",
     "fss": "FSS"
   },
+  "hints": {
+    "mpsAverage": "Average match score (0 to 100; 50 is an average performance for the position).",
+    "fss": "Fair Season Score: match scores averaged by tournament weight, discounted for players with few minutes."
+  },
   "filters": {
     "position": "Position",
+    "all": "All",
     "search": "Search player",
+    "searchPlaceholder": "Player name",
+    "submit": "Search",
+    "clear": "Clear search",
     "season": "Season"
   },
-  "empty": "No players found for the selected filters."
+  "pagination": {
+    "label": "Ranking pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "status": "Page {page} of {total}"
+  },
+  "notes": {
+    "eligibility": "Players need at least {matches} matches and {minutes} minutes in the season to be ranked.",
+    "sample": "The data covers a sample of the season's matches; the ranking changes as more matches are imported."
+  },
+  "empty": "No players found for the selected filters.",
+  "emptySearch": "No players found for “{search}”.",
+  "error": {
+    "title": "The ranking could not be loaded",
+    "description": "The data API did not respond. Please try again shortly."
+  }
 }

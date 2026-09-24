@@ -8,5 +8,6 @@ public sealed record RankingFilterDto(
     string? Nationality = null,
     bool OnlyEligible = true,
     int Page = 1,
-    int PageSize = 25
+    int PageSize = 25,
+    string? Search = null
 );

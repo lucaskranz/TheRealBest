@@ -175,7 +175,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 4A | Controllers REST (Ranking + Players) | ✅ Concluída | Endpoints, DTOs, paginação, filtros |
 | 4B | Controllers REST (Audit + Matches) | ✅ Concluída | Recibo auditável, detalhamento de partida |
 | 4C | Localização no Backend | ✅ Concluída | Middleware, .resx, ActionLabelResolver |
-| 4D | Frontend: Leaderboard + Filtros | ⬜ Pendente | Página de ranking com filtros posicionais |
+| 4D | Frontend: Leaderboard + Filtros | ✅ Concluída | Página de ranking com filtros posicionais |
 | 4E | Frontend: Perfil do Jogador + Recibo | ⬜ Pendente | Player page, MatchReceipt, radar chart |
 | 4F | Frontend: Vs Ballon d'Or + Fórmula | ⬜ Pendente | Páginas comparativa e livro de regras |
 | 5A | Deploy Backend (Railway/Render) | ⬜ Pendente | Docker, CI/CD, variáveis de ambiente |

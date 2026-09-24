@@ -15,28 +15,12 @@ public sealed class RankingRepository(AppDbContext context) : IRankingRepository
 
     public async Task<IReadOnlyList<SeasonRanking>> GetRankingsAsync(PlayerRankingSpec spec, CancellationToken cancellationToken = default)
     {
-        var query = context.SeasonRankings
-            .Include(r => r.Player)
-            .Where(r => r.SeasonYear == spec.SeasonYear && r.IsRankingEligible);
+        var query = ApplyFilters(context.SeasonRankings.Include(r => r.Player), spec);
 
-        if (spec.Position.HasValue)
-        {
-            query = query.Where(r => r.Player.PrimaryPosition == spec.Position.Value);
-        }
-
-        if (!string.IsNullOrWhiteSpace(spec.Nationality))
-        {
-            query = query.Where(r => r.Player.Nationality == spec.Nationality);
-        }
-
-        if (spec.Position.HasValue)
-        {
-            query = query.OrderBy(r => r.PositionRank);
-        }
-        else
-        {
-            query = query.OrderBy(r => r.OverallRank);
-        }
+        // Com filtro de posição, a ordem é a da posição; senão, a geral
+        query = spec.Position.HasValue
+            ? query.OrderBy(r => r.PositionRank)
+            : query.OrderBy(r => r.OverallRank);
 
         return await query
             .Skip(spec.Skip)
@@ -44,10 +28,13 @@ public sealed class RankingRepository(AppDbContext context) : IRankingRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<int> CountRankingsAsync(PlayerRankingSpec spec, CancellationToken cancellationToken = default)
+    public async Task<int> CountRankingsAsync(PlayerRankingSpec spec, CancellationToken cancellationToken = default) =>
+        await ApplyFilters(context.SeasonRankings, spec).CountAsync(cancellationToken);
+
+    /// <summary>Filtros comuns à listagem e à contagem: só elegíveis, posição, nacionalidade e busca por nome.</summary>
+    private static IQueryable<SeasonRanking> ApplyFilters(IQueryable<SeasonRanking> query, PlayerRankingSpec spec)
     {
-        var query = context.SeasonRankings
-            .Where(r => r.SeasonYear == spec.SeasonYear && r.IsRankingEligible);
+        query = query.Where(r => r.SeasonYear == spec.SeasonYear && r.IsRankingEligible);
 
         if (spec.Position.HasValue)
         {
@@ -59,8 +46,18 @@ public sealed class RankingRepository(AppDbContext context) : IRankingRepository
             query = query.Where(r => r.Player.Nationality == spec.Nationality);
         }
 
-        return await query.CountAsync(cancellationToken);
+        if (!string.IsNullOrWhiteSpace(spec.Search))
+        {
+            // Sem diferenciar maiúsculas nem acentos; curingas digitados pelo usuário são tratados como texto
+            var pattern = "%" + EscapeLike(spec.Search.Trim()) + "%";
+            query = query.Where(r => EF.Functions.ILike(EF.Functions.Unaccent(r.Player.Name), EF.Functions.Unaccent(pattern)));
+        }
+
+        return query;
     }
+
+    private static string EscapeLike(string term) =>
+        term.Replace(@"\", @"\\").Replace("%", @"\%").Replace("_", @"\_");
 
     public async Task UpsertRankingAsync(SeasonRanking ranking, CancellationToken cancellationToken = default)
     {

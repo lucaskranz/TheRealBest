@@ -19,9 +19,10 @@ public sealed class RankingController(IGetSeasonRankingUseCase getSeasonRankingU
         [FromQuery] bool onlyEligible = true,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 25,
+        [FromQuery] string? search = null,
         CancellationToken cancellationToken = default)
     {
-        var filter = new RankingFilterDto(seasonYear, position, nationality, onlyEligible, page, pageSize);
+        var filter = new RankingFilterDto(seasonYear, position, nationality, onlyEligible, page, pageSize, search);
         var result = await getSeasonRankingUseCase.ExecuteAsync(filter, cancellationToken);
 
         var meta = new ApiMeta

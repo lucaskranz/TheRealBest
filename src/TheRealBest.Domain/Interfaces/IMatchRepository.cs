@@ -12,6 +12,8 @@ public interface IMatchRepository
     Task<MatchPerformanceScore?> GetPerformanceScoreAsync(Guid matchId, Guid playerId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MatchPerformanceScore>> GetSeasonScoresAsync(int seasonYear, CancellationToken cancellationToken = default);
     Task<(IReadOnlyList<Match> Items, int TotalCount)> GetPagedMatchesAsync(int seasonYear, Guid? competitionId, Guid? teamId, int page, int pageSize, CancellationToken cancellationToken = default);
+    /// <summary>Clube mais recente de cada jogador na temporada (ignora jogos de seleções).</summary>
+    Task<IReadOnlyDictionary<Guid, Team>> GetLatestClubTeamsAsync(IReadOnlyCollection<Guid> playerIds, int seasonYear, CancellationToken cancellationToken = default);
     Task AddAsync(Match match, CancellationToken cancellationToken = default);
     Task AddPlayerStatsAsync(MatchPlayerStats stats, CancellationToken cancellationToken = default);
     Task AddPerformanceScoreAsync(MatchPerformanceScore score, CancellationToken cancellationToken = default);

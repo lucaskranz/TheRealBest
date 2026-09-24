@@ -9,7 +9,10 @@ using TheRealBest.Domain.Entities;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Domain.Specifications;
 
-public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository, ActionLabelResolver labels) : IGetSeasonRankingUseCase
+public sealed class GetSeasonRankingUseCase(
+    IRankingRepository rankingRepository,
+    IMatchRepository matchRepository,
+    ActionLabelResolver labels) : IGetSeasonRankingUseCase
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -21,13 +24,15 @@ public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository
             CompetitionId: null,
             Nationality: filter.Nationality,
             Page: Math.Max(1, filter.Page),
-            PageSize: Math.Clamp(filter.PageSize, 1, 100)
+            PageSize: Math.Clamp(filter.PageSize, 1, 100),
+            Search: filter.Search
         );
 
         var rankings = await rankingRepository.GetRankingsAsync(spec, cancellationToken);
         var totalCount = await rankingRepository.CountRankingsAsync(spec, cancellationToken);
 
-        var items = rankings.Select(MapToDto).ToList();
+        var teams = await matchRepository.GetLatestClubTeamsAsync(rankings.Select(r => r.PlayerId).ToList(), spec.SeasonYear, cancellationToken);
+        var items = rankings.Select(r => MapToDto(r, teams.GetValueOrDefault(r.PlayerId))).ToList();
 
         return new PagedResult<SeasonRankingItemDto>(items, totalCount, spec.Page, spec.PageSize);
     }
@@ -44,10 +49,11 @@ public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository
         );
 
         var rankings = await rankingRepository.GetRankingsAsync(spec, cancellationToken);
-        return rankings.Select(MapToDto).ToList();
+        var teams = await matchRepository.GetLatestClubTeamsAsync(rankings.Select(r => r.PlayerId).ToList(), seasonYear, cancellationToken);
+        return rankings.Select(r => MapToDto(r, teams.GetValueOrDefault(r.PlayerId))).ToList();
     }
 
-    private SeasonRankingItemDto MapToDto(SeasonRanking ranking)
+    private SeasonRankingItemDto MapToDto(SeasonRanking ranking, Team? team)
     {
         var topMatches = DeserializeTopMatches(ranking.Top5MatchesJson);
 
@@ -58,6 +64,8 @@ public sealed class GetSeasonRankingUseCase(IRankingRepository rankingRepository
             PhotoUrl: ranking.Player?.PhotoUrl,
             PrimaryPosition: ranking.Player?.PrimaryPosition.ToString() ?? string.Empty,
             PrimaryPositionLabel: ranking.Player is null ? string.Empty : labels.PositionLabel(ranking.Player.PrimaryPosition.ToString(), SupportedLocales.Current),
+            TeamName: team?.Name,
+            TeamLogoUrl: team?.LogoUrl,
             OverallRank: ranking.OverallRank,
             PositionRank: ranking.PositionRank,
             FssScore: ranking.FssScore,

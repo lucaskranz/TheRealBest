@@ -44,6 +44,42 @@ public class RankingAndPlayersApiTests : IClassFixture<WebApplicationFactory<Pro
         }
     }
 
+    [Theory]
+    [InlineData("vinicius")] // sem acento encontra "Vinícius"
+    [InlineData("RODRI")]    // sem diferenciar maiúsculas
+    public async Task GetRankings_Search_IgnoresCaseAndAccents(string search)
+    {
+        var envelope = await _client.GetFromJsonAsync<ApiResponse<List<SeasonRankingItemDto>>>(
+            $"/api/v1/ranking?seasonYear=2023&search={Uri.EscapeDataString(search)}", JsonOpts);
+
+        envelope!.Data.Should().NotBeNull();
+        envelope.Data!.Should().OnlyContain(r => RemoveAccents(r.PlayerName).Contains(search, StringComparison.OrdinalIgnoreCase));
+        envelope.Meta!.TotalCount.Should().Be(envelope.Data.Count);
+    }
+
+    [Fact]
+    public async Task GetRankings_SearchWithLikeWildcard_IsTreatedAsText()
+    {
+        var envelope = await _client.GetFromJsonAsync<ApiResponse<List<SeasonRankingItemDto>>>(
+            "/api/v1/ranking?seasonYear=2023&search=%25", JsonOpts);
+
+        envelope!.Data.Should().BeEmpty("'%' must not act as a wildcard that matches everyone");
+    }
+
+    [Fact]
+    public async Task GetRankings_ItemsIncludeClub()
+    {
+        var envelope = await _client.GetFromJsonAsync<ApiResponse<List<SeasonRankingItemDto>>>(
+            "/api/v1/ranking?seasonYear=2023&pageSize=5", JsonOpts);
+
+        envelope!.Data.Should().OnlyContain(r => !string.IsNullOrEmpty(r.TeamName));
+    }
+
+    private static string RemoveAccents(string value) =>
+        new(value.Normalize(System.Text.NormalizationForm.FormD)
+            .Where(c => System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+            .ToArray());
+
     [Fact]
     public async Task GetTopContenders_Returns200WithTopPlayers()
     {

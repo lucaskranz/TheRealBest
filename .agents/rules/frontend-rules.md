@@ -43,6 +43,11 @@
 - Client Components usam hooks customizados (useRanking, usePlayerProfile)
 - O client HTTP (lib/api.ts) DEVE enviar o header Accept-Language com o locale atual
 - ISR (Incremental Static Regeneration) para páginas de ranking (revalidate a cada rodada)
+- Server Components buscam a API com `apiGet` (lib/api.ts), que envia Accept-Language e usa cache de 1 hora (`next.revalidate`)
+- Filtros e paginação ficam na URL (?position=CDM&search=rod&page=2): links e `next/form`, sem estado no cliente; valores inválidos são ignorados, nunca quebram a página
+- Toda página que depende da API trata falha com mensagem traduzida (a API fora do ar não pode derrubar a página)
+- Rotas de jogador usam o ID da API .NET: /[locale]/player/[id] (Etapa 4E)
+- Imagens externas (fotos e escudos) só de media.api-sports.io, liberado em next.config.ts (images.remotePatterns)
 
 ## SEO
 - Cada página deve ter metadata dinâmico (generateMetadata) com título e descrição localizados

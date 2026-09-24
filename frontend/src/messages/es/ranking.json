@@ -1,6 +1,11 @@
 {
+  "metadata": {
+    "title": "Ranking {season}",
+    "description": "Los mejores jugadores de la temporada {season} según el Fair Season Score: datos partido a partido, fórmulas por posición y cada punto auditable."
+  },
   "title": "Ranking oficial",
   "subtitle": "Temporada {season}, ordenada por el Fair Season Score (FSS).",
+  "caption": "Ranking de la temporada {season}",
   "columns": {
     "rank": "#",
     "player": "Jugador",
@@ -11,10 +16,33 @@
     "mpsAverage": "MPS medio",
     "fss": "FSS"
   },
+  "hints": {
+    "mpsAverage": "Nota media por partido (0 a 100; 50 es una actuación media para la posición).",
+    "fss": "Fair Season Score: media de las notas ponderada por el peso de cada torneo, con descuento para quien jugó poco."
+  },
   "filters": {
     "position": "Posición",
+    "all": "Todas",
     "search": "Buscar jugador",
+    "searchPlaceholder": "Nombre del jugador",
+    "submit": "Buscar",
+    "clear": "Limpiar búsqueda",
     "season": "Temporada"
   },
-  "empty": "No se encontraron jugadores para los filtros seleccionados."
+  "pagination": {
+    "label": "Paginación del ranking",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "status": "Página {page} de {total}"
+  },
+  "notes": {
+    "eligibility": "Entran en el ranking los jugadores con al menos {matches} partidos y {minutes} minutos en la temporada.",
+    "sample": "Los datos cubren una muestra de partidos de la temporada; el ranking cambia a medida que se importan nuevos partidos."
+  },
+  "empty": "No se encontraron jugadores para los filtros seleccionados.",
+  "emptySearch": "No se encontraron jugadores para “{search}”.",
+  "error": {
+    "title": "No se pudo cargar el ranking",
+    "description": "La API de datos no respondió. Inténtalo de nuevo en unos instantes."
+  }
 }

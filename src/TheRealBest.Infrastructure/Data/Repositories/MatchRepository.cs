@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using TheRealBest.Domain.Entities;
+using TheRealBest.Domain.Enums;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure.Data;
 
@@ -110,6 +111,29 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
             .ToListAsync(cancellationToken);
 
         return (items, totalCount);
+    }
+
+    public async Task<IReadOnlyDictionary<Guid, Team>> GetLatestClubTeamsAsync(
+        IReadOnlyCollection<Guid> playerIds,
+        int seasonYear,
+        CancellationToken cancellationToken = default)
+    {
+        if (playerIds.Count == 0)
+        {
+            return new Dictionary<Guid, Team>();
+        }
+
+        var appearances = await context.MatchPlayerStats
+            .Where(s => playerIds.Contains(s.PlayerId)
+                && s.Match.Competition.SeasonYear == seasonYear
+                && s.Match.Competition.Tier != CompetitionTier.WorldCup
+                && s.Match.Competition.Tier != CompetitionTier.InternationalContinental)
+            .Select(s => new { s.PlayerId, s.Match.MatchDate, s.Team })
+            .ToListAsync(cancellationToken);
+
+        return appearances
+            .GroupBy(a => a.PlayerId)
+            .ToDictionary(g => g.Key, g => g.MaxBy(a => a.MatchDate)!.Team);
     }
 
     public async Task AddAsync(Match match, CancellationToken cancellationToken = default) =>
