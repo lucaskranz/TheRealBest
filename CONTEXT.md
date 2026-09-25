@@ -181,8 +181,40 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 4D | Frontend: Leaderboard + Filtros | ✅ Concluída | Página de ranking com filtros posicionais |
 | 4E | Frontend: Perfil do Jogador + Recibo | ✅ Concluída | Player page, MatchReceipt, radar chart |
 | 4F | Frontend: Vs Ballon d'Or + Fórmula | ✅ Concluída | `/formula` (pesos, linhas de base e multiplicadores via `GET /api/v1/formula`, gerado das constantes do motor) e `/vs-ballon` (classificação oficial 2024 citada × FSS 2023/24 via `GET /api/v1/comparison/ballon-dor/2024`) |
-| 5A | Deploy Backend (Railway/Render) | ⬜ Pendente | Docker, CI/CD, variáveis de ambiente |
-| 5B | Deploy Frontend (Vercel) | ⬜ Pendente | Build, domínio, SEO multilíngue |
+| 5A | Ingestão de temporadas completas | ⬜ Pendente | Importação por competição e temporada, lotes de 20 partidas via `ids` (plano Pro), retomável e ciente da cota |
+| 5B | Carga histórica 2022/23 → 2025/26 | ⬜ Pendente | Todas as partidas do escopo nas 4 temporadas, com Elo e relatório de conferência (**exige plano Pro**) |
+| 5C | Recalibração do algoritmo (v3) | ⬜ Pendente | Linhas de base empíricas com as temporadas completas, revisão de posições e recálculo em massa |
+| 5D | Ranking Top 50 multi-temporada | ⬜ Pendente | Seletor de temporada, Top 50 por temporada, histórico de temporadas no perfil do jogador |
+| 5E | Temporada atual (2026/27) ao vivo | ⬜ Pendente | Atualização incremental semanal, ranking provisório com corte proporcional, variação desde a última rodada |
+| 5F | Vs. Bola de Ouro multi-edição | ⬜ Pendente | Edições 2023, 2024 e 2025 (e 2026 quando publicada), sempre com a classificação oficial citada |
+| 6A | Deploy Backend / Dados | ⬜ Pendente | Hospedagem gratuita; avaliar site estático gerado localmente vs. API no ar |
+| 6B | Deploy Frontend + atualização automática | ⬜ Pendente | Build, domínio, SEO multilíngue, rotina semanal (ex.: GitHub Actions) para a temporada atual |
+
+### Fase 5 — Dados em escala (plano Pro da API-Football)
+
+Decisão do usuário: assinar o plano **Pro** (7.500 requisições/dia, 300/min) para ter o histórico completo e acompanhar a temporada atual. O seed de 30 partidas (`--seed`) continua como demonstração no plano Free.
+
+**Temporadas:** 2022/23, 2023/24, 2024/25, 2025/26 (históricas, completas) e 2026/27 (atual, em andamento).
+
+**Escopo por temporada** (todas as partidas, não só as de candidatos):
+
+| Temporada | Clubes | Seleções |
+|:---|:---|:---|
+| 2022/23 | 5 grandes ligas, Champions League, copas nacionais (FA Cup, Copa del Rey, Coppa Italia, DFB-Pokal, Coupe de France) | Copa do Mundo 2022 |
+| 2023/24 | idem | Euro 2024, Copa América 2024 |
+| 2024/25 | idem (Champions no novo formato) | — |
+| 2025/26 | idem | Copa do Mundo 2026 |
+| 2026/27 | idem, em andamento | — |
+
+**Estimativa de custo:** ~2.000–2.400 partidas por temporada. Sem `ids` (3 requisições por partida) ≈ 6.600 req/temporada, cerca de 1 dia de cota cada. Com `ids` (20 partidas por requisição, com jogadores, eventos e escalações embutidos) ≈ 150–350 req/temporada: o histórico inteiro cabe em um dia. A temporada atual custa < 250 req/semana.
+
+**Detalhamento das etapas:**
+- **5A:** comando `--import-season <ano> [--competition <id>]` que lista as partidas de cada competição (1 requisição por competição/temporada) e importa só as encerradas e ainda não gravadas, em lotes via `ids` quando o plano permitir (fallback de 3 requisições por partida no Free). Retomável, respeita a cota diária e o limite por minuto (`ApiFootball:RequestsPerMinute` = 300 no Pro), usa o cache em disco. Validar antes da assinatura com uma competição pequena no Free (ex.: Copa América 2024).
+- **5B:** rodar a carga das 4 temporadas históricas. Relatório de conferência por competição (partidas esperadas × importadas, partidas sem estatísticas de jogador, jogadores sem posição). Elo do ClubElo por data de jogo.
+- **5C:** recalcular as linhas de base por posição com as temporadas completas (nova versão do algoritmo, v3; v1/v2 continuam reproduzíveis). Revisar a resolução de posição (ex.: volantes escalados como zagueiros em parte da temporada). Recalcular MPS/FSS em lote com desempenho aceitável (dezenas de milhares de atuações). Reavaliar o corte de elegibilidade (hoje 10 partidas e 900 minutos) **com o usuário** antes de mudar.
+- **5D:** o ranking exibe o **Top 50** da temporada (o filtro por posição mostra o Top 50 da posição). A busca continua encontrando qualquer jogador elegível, e o perfil mostra a colocação mesmo fora do Top 50. Seletor de temporada (22/23 → 26/27) no ranking e no perfil; perfil com a evolução do jogador entre temporadas.
+- **5E:** atualização incremental (partidas encerradas desde a última execução) e recálculo do ranking. Enquanto poucos jogadores atingem o corte, mostrar um **ranking provisório** com corte proporcional às rodadas disputadas, identificado como tal. Exibir "atualizado em" e a variação de posição desde a atualização anterior.
+- **5F:** catálogos oficiais da Bola de Ouro 2023 (temporada 22/23), 2025 (24/25) e 2026 (25/26, só depois de publicada), com fonte citada como na edição 2024. Seletor de edição na página `/vs-ballon`.
 
 ### Como Usar Este Roadmap
 1. Ao iniciar uma nova conversa, o agente DEVE ler este CONTEXT.md
