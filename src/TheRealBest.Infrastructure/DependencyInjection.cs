@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddClubElo(configuration);
         services.AddScoped<IRealDataSeeder, ApiFootballRealDataSeeder>();
         services.AddScoped<ISeasonImporter, SeasonImporter>();
+        services.AddScoped<ISeasonAuditor, SeasonAuditor>();
 
         return services;
     }

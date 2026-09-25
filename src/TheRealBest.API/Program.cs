@@ -4,6 +4,7 @@ using TheRealBest.API.Formula;
 using TheRealBest.API.Localization;
 using TheRealBest.API.Middleware;
 using TheRealBest.Application;
+using TheRealBest.Application.Interfaces;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure;
 using TheRealBest.Infrastructure.Data.Seeds;
@@ -86,6 +87,45 @@ if (ImportSeasonCommand.IsRequested(args))
     using var scope = app.Services.CreateScope();
     var summary = await scope.ServiceProvider.GetRequiredService<ISeasonImporter>().ImportAsync(request);
     Environment.ExitCode = summary.Stop is SeasonImportStop.SeasonNotInPlan ? 1 : 0;
+    return;
+}
+
+// Conferência de uma temporada importada (esperadas × gravadas, sem dados de jogador, sem posição tática, sem Elo).
+// Uso: dotnet run --project src/TheRealBest.API -- --audit-season 2023 [--competition 39]
+if (SeasonToolsCommand.IsAuditRequested(args))
+{
+    var request = SeasonToolsCommand.Parse(args, SeasonToolsCommand.AuditFlag, out var error);
+    if (request is null)
+    {
+        Console.Error.WriteLine(error);
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    using var scope = app.Services.CreateScope();
+    var report = await scope.ServiceProvider.GetRequiredService<ISeasonAuditor>().AuditAsync(request.Season, request.CompetitionId);
+    Environment.ExitCode = report.IsComplete ? 0 : 2;
+    return;
+}
+
+// Preenche o Elo das partidas de clubes gravadas sem ele e recalcula as notas delas. Sem custo de cota da API-Football.
+// Uso: dotnet run --project src/TheRealBest.API -- --backfill-elo 2023
+if (SeasonToolsCommand.IsBackfillEloRequested(args))
+{
+    var request = SeasonToolsCommand.Parse(args, SeasonToolsCommand.BackfillEloFlag, out var error);
+    if (request is null)
+    {
+        Console.Error.WriteLine(error);
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    using var scope = app.Services.CreateScope();
+    var summary = await scope.ServiceProvider.GetRequiredService<IBackfillEloUseCase>().ExecuteAsync(request.Season);
+    app.Logger.LogInformation(
+        "Elo {Season}: {Missing} partidas sem Elo completo, {Updated} atualizadas, {Rescored} notas recalculadas. Clubes ainda sem rating ({Count}): {Teams}",
+        summary.SeasonYear, summary.MatchesMissingElo, summary.MatchesUpdated, summary.PerformancesRescored,
+        summary.TeamsNotFound.Count, string.Join(", ", summary.TeamsNotFound));
     return;
 }
 

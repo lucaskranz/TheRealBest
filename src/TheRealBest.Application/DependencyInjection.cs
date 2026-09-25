@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<ActionLabelResolver>();
         services.AddScoped<IIngestMatchDataUseCase, IngestMatchDataUseCase>();
         services.AddScoped<IRecalculateSeasonRankingUseCase, RecalculateSeasonRankingUseCase>();
+        services.AddScoped<IBackfillEloUseCase, BackfillEloUseCase>();
         services.AddScoped<IMatchDataIngestionPipeline, MatchDataIngestionPipeline>();
         services.AddScoped<IGetSeasonRankingUseCase, GetSeasonRankingUseCase>();
         services.AddScoped<IGetPlayerProfileUseCase, GetPlayerProfileUseCase>();

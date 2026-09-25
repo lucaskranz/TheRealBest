@@ -52,6 +52,19 @@ public class MatchTimelineTests
     }
 
     [Fact]
+    public void VarCancelledGoal_NotListedAsGoal_KeepsEarlierValidGoal()
+    {
+        // Chelsea 1 × 1 Liverpool (2023/24): gol válido aos 18', gol anulado aos 30' que a fonte não lista como "Goal"
+        var timeline = MatchTimeline.Build(
+            [Events.Goal(18, Away, AwayStriker), Events.VarGoalCancelled(30, Away, AwayStriker), Events.Goal(37, Home, HomeStriker)],
+            Starters, Home, Away, homeScore: 1, awayScore: 1);
+
+        timeline.MatchesFinalScore.Should().BeTrue();
+        timeline.GoalsConcededWhileOnPitch(HomeDefender, Home).Should().Be(1);
+        timeline.GoalsConcededWhileOnPitch(AwayStriker, Away).Should().Be(1);
+    }
+
+    [Fact]
     public void Substitution_WithSwappedPlayers_IsCorrected()
     {
         // Evento invertido: "player" é quem entra e "assist" quem sai (o titular)

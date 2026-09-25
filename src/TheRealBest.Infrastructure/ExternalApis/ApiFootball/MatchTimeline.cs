@@ -57,6 +57,7 @@ public sealed class MatchTimeline
         var leftAt = new Dictionary<int, decimal>();
         var ownGoals = new Dictionary<int, int>();
         var goalEvents = new List<EventItem>();
+        var varCancellations = new List<EventItem>();
 
         foreach (var e in ordered)
         {
@@ -89,18 +90,12 @@ public sealed class MatchTimeline
 
                 case "var" when e.Detail?.Contains("cancelled", StringComparison.OrdinalIgnoreCase) == true
                              || e.Detail?.Contains("disallowed", StringComparison.OrdinalIgnoreCase) == true:
-                    // Gol anulado: remove o último gol daquele time registrado até o minuto do VAR
-                    var cancelled = goalEvents.LastOrDefault(g => g.Team.Id == e.Team.Id && MinuteOf(g) <= MinuteOf(e));
-                    if (cancelled is not null)
-                    {
-                        goalEvents.Remove(cancelled);
-                    }
-
+                    varCancellations.Add(e);
                     break;
             }
         }
 
-        var (goals, matchesScore) = ResolveBenefitingTeams(goalEvents, homeTeamId, awayTeamId, homeScore, awayScore);
+        var (goals, matchesScore) = ResolveGoals(goalEvents, varCancellations, homeTeamId, awayTeamId, homeScore, awayScore);
         return new MatchTimeline(goals, enteredAt, leftAt, ownGoals, substitutions, matchesScore);
     }
 
@@ -125,6 +120,35 @@ public sealed class MatchTimeline
         detail is not null
         && (detail.Contains("Red Card", StringComparison.OrdinalIgnoreCase)
             || detail.Contains("Second Yellow", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    /// A fonte costuma omitir o gol anulado pelo VAR (só o evento "Goal cancelled" aparece), mas às vezes lista os dois.
+    /// A anulação só é aplicada quando os gols listados não reproduzem o placar final: removê-la sempre apagaria um gol
+    /// válido do mesmo time marcado antes do lance anulado.
+    /// </summary>
+    private static (List<(decimal, int)> Goals, bool MatchesScore) ResolveGoals(
+        List<EventItem> goalEvents, List<EventItem> varCancellations, int homeTeamId, int awayTeamId, int? homeScore, int? awayScore)
+    {
+        var asListed = ResolveBenefitingTeams(goalEvents, homeTeamId, awayTeamId, homeScore, awayScore);
+        if (asListed.MatchesScore || varCancellations.Count == 0)
+        {
+            return asListed;
+        }
+
+        // Remove o último gol daquele time registrado até o minuto do VAR
+        var withCancellations = goalEvents.ToList();
+        foreach (var cancellation in varCancellations)
+        {
+            var cancelled = withCancellations.LastOrDefault(g => g.Team.Id == cancellation.Team.Id && MinuteOf(g) <= MinuteOf(cancellation));
+            if (cancelled is not null)
+            {
+                withCancellations.Remove(cancelled);
+            }
+        }
+
+        var afterVar = ResolveBenefitingTeams(withCancellations, homeTeamId, awayTeamId, homeScore, awayScore);
+        return afterVar.MatchesScore ? afterVar : asListed;
+    }
 
     /// <summary>
     /// Em gols contra, a fonte pode atribuir o evento ao time de quem marcou ou ao time beneficiado.

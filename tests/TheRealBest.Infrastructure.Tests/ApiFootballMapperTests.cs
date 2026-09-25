@@ -69,6 +69,47 @@ public class ApiFootballMapperTests
     }
 
     [Fact]
+    public void ToMatchReport_LineupWithoutStartingEleven_DoesNotThrow()
+    {
+        // Copa del Rey 2022/23, fase preliminar (Mollerussa × Cardassar): escalação sem "startXI" e sem jogadores
+        var fixture = new ExternalFixture(
+            "964121",
+            new ExternalCompetition("143", "Copa del Rey", "Spain", CompetitionTier.DomesticCup, 2022),
+            new ExternalTeam("100", "Mollerussa", string.Empty),
+            new ExternalTeam("200", "Cardassar", string.Empty),
+            "Preliminary Round",
+            IsKnockout: true,
+            new DateTime(2022, 10, 12, 18, 0, 0, DateTimeKind.Utc),
+            IsFinished: true,
+            HomeScore: 1,
+            AwayScore: 0);
+        LineupItem[] lineups = [new(new TeamInfo(100, "Mollerussa", null), null, null, null), new(new TeamInfo(200, "Cardassar", null), null, null, null)];
+
+        var report = ApiFootballMapper.ToMatchReport(fixture, [], [], lineups);
+
+        report.Performances.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ToMatchReport_PlayersWithoutId_AreSkipped()
+    {
+        // Copa del Rey 2022/23, 1ª fase: a fonte lista jogadores do clube amador com id 0
+        var report = Report(UclFinal2023);
+        var players = Load<FixturePlayersItem>(UclFinal2023, "players").Response
+            .Select(team => team with
+            {
+                Players = team.Players.Select((p, i) => i < 3 ? p with { Player = p.Player with { Id = 0 } } : p).ToList(),
+            })
+            .ToList();
+
+        var withoutIds = ApiFootballMapper.ToMatchReport(
+            report.Fixture, players, Load<EventItem>(UclFinal2023, "events").Response, Load<LineupItem>(UclFinal2023, "lineups").Response);
+
+        withoutIds.Performances.Should().OnlyContain(p => p.Player.ExternalId != "0");
+        withoutIds.Performances.Count.Should().BeLessThan(report.Performances.Count);
+    }
+
+    [Fact]
     public void ToMatchReport_Rodri_MapsRawStatistics()
     {
         var rodri = Player(Report(UclFinal2023), "44").Stats;

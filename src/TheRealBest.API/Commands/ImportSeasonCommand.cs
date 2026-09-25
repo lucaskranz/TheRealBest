@@ -53,7 +53,7 @@ public static class ImportSeasonCommand
         return new SeasonImportRequest(season.Value, competition, limit);
     }
 
-    private static bool TryReadInt(string[] args, string flag, bool required, out int? value, ref string? error)
+    internal static bool TryReadInt(string[] args, string flag, bool required, out int? value, ref string? error)
     {
         value = null;
         var index = Array.IndexOf(args, flag);

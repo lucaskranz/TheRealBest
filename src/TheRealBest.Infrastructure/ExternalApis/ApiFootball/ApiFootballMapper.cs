@@ -58,12 +58,15 @@ public static class ApiFootballMapper
         var homeTeamId = int.Parse(fixture.HomeTeam.ExternalId, CultureInfo.InvariantCulture);
         var awayTeamId = int.Parse(fixture.AwayTeam.ExternalId, CultureInfo.InvariantCulture);
 
-        var starters = lineups.SelectMany(l => l.StartXI).Select(s => s.Player.Id).ToHashSet();
+        var starters = lineups.SelectMany(l => l.StartXI ?? []).Select(s => s.Player.Id).ToHashSet();
         var timeline = MatchTimeline.Build(events, starters, homeTeamId, awayTeamId, fixture.HomeScore, fixture.AwayScore);
 
         var appearances = players
             .SelectMany(team => team.Players.Select(entry => (Team: team.Team, entry.Player, Stats: entry.Statistics.FirstOrDefault())))
             .Where(a => a.Stats?.Games.Minutes is > 0)
+            // Jogadores sem ID (clubes amadores nas copas) não podem ser identificados entre partidas: ficam de fora
+            .Where(a => a.Player.Id > 0)
+            .DistinctBy(a => a.Player.Id)
             .ToList();
 
         var positions = PositionResolver.Resolve(

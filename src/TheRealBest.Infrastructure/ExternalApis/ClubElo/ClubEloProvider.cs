@@ -18,6 +18,11 @@ public sealed class ClubEloProvider(HttpClient httpClient, ClubEloOptions option
     private readonly ConcurrentDictionary<DateOnly, Task<IReadOnlyDictionary<string, int>?>> _ratingsByDate = new();
     private readonly ConcurrentDictionary<string, byte> _warnedTeams = new();
 
+    /// <summary>Falhas seguidas da fonte a partir das quais ela é dada como fora do ar até o fim da execução.</summary>
+    public const int MaxConsecutiveFailures = 3;
+
+    private int _consecutiveFailures;
+
     public async Task<int?> GetEloAsync(string teamName, DateOnly date, CancellationToken cancellationToken = default)
     {
         var ratings = await _ratingsByDate.GetOrAdd(date, d => LoadAsync(d, cancellationToken));
@@ -51,13 +56,26 @@ public sealed class ClubEloProvider(HttpClient httpClient, ClubEloOptions option
         }
         else
         {
+            // Fonte fora do ar: não espera o timeout de cada data nova (o Elo pode ser preenchido depois com --backfill-elo)
+            if (Volatile.Read(ref _consecutiveFailures) >= MaxConsecutiveFailures)
+            {
+                return null;
+            }
+
             try
             {
                 csv = await httpClient.GetStringAsync(fileName, cancellationToken);
+                Interlocked.Exchange(ref _consecutiveFailures, 0);
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException && !cancellationToken.IsCancellationRequested)
             {
-                logger.LogWarning(ex, "ClubElo indisponível para {Date}; adversários serão tratados como neutros.", fileName);
+                logger.LogWarning("ClubElo indisponível para {Date} ({Error}); adversários serão tratados como neutros.", fileName, ex.Message);
+                if (Interlocked.Increment(ref _consecutiveFailures) == MaxConsecutiveFailures)
+                {
+                    logger.LogWarning("ClubElo: {Count} falhas seguidas, fonte considerada fora do ar até o fim desta execução. Use --backfill-elo quando ela voltar.",
+                        MaxConsecutiveFailures);
+                }
+
                 return null;
             }
 

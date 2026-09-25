@@ -32,6 +32,21 @@ public static class ApiFootballSeasonScope
         [2025] = [new(WorldCup, 2026)],
     };
 
+    private static readonly IReadOnlyDictionary<int, int> TopLeagueByCup = new Dictionary<int, int>
+    {
+        [FaCup] = PremierLeague,
+        [CopaDelRey] = LaLiga,
+        [CoppaItalia] = SerieA,
+        [DfbPokal] = Bundesliga,
+        [CoupeDeFrance] = Ligue1,
+    };
+
+    /// <summary>
+    /// Primeira divisão do país de uma copa nacional, ou nulo se não for copa. Das copas só entram as partidas com ao menos
+    /// um time dessa liga: as fases preliminares e regionais, entre amadores, não têm estatísticas de jogador na fonte.
+    /// </summary>
+    public static int? TopLeagueOf(int cupId) => TopLeagueByCup.TryGetValue(cupId, out var league) ? league : null;
+
     public static bool IsSupported(int season) => season is >= FirstSeason and <= CurrentSeason;
 
     /// <param name="season">Ano de início da temporada (2023 = 2023/24).</param>

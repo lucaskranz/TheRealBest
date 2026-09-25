@@ -111,6 +111,7 @@ public class SeasonImporterTests
     [Fact]
     public async Task Import_CountsMatchesWithoutPlayerDataAndMissingBatchItems()
     {
+        ListFixtures(ApiFootballCompetitions.PremierLeague, 2023, Fixture("pl-1", 2023));
         ListFixtures(ApiFootballCompetitions.FaCup, 2023, Fixture("1", 2023), Fixture("2", 2023), Fixture("3", 2023));
         _provider
             .Setup(p => p.GetMatchReportsAsync(It.IsAny<IReadOnlyList<ExternalFixture>>(), It.IsAny<CancellationToken>()))
@@ -175,8 +176,36 @@ public class SeasonImporterTests
         _ingest.Verify(i => i.ExecuteAsync(It.IsAny<ExternalMatchReport>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Fact]
+    public async Task Import_DomesticCup_SkipsMatchesWithoutTopLeagueTeam()
+    {
+        // FA Cup: fases qualificatórias entre clubes semiamadores não têm dados de jogador na fonte
+        ListFixtures(ApiFootballCompetitions.PremierLeague, 2023, Fixture("pl-1", 2023));
+        ListFixtures(ApiFootballCompetitions.FaCup, 2023,
+            CupFixture("cup-amateur", homeId: "9001", awayId: "9002"),
+            CupFixture("cup-city", homeId: "9003", awayId: "50"));
+
+        var summary = await Importer().ImportAsync(new SeasonImportRequest(2023, ApiFootballCompetitions.FaCup));
+
+        var line = summary.Competitions.Should().ContainSingle().Subject;
+        line.Listed.Should().Be(2);
+        line.Finished.Should().Be(1);
+        _ingest.Verify(i => i.ExecuteAsync(It.Is<ExternalMatchReport>(r => r.Fixture.ExternalId == "cup-city"), It.IsAny<CancellationToken>()), Times.Once);
+        _ingest.Verify(i => i.ExecuteAsync(It.IsAny<ExternalMatchReport>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    private static ExternalFixture CupFixture(string id, string homeId, string awayId) =>
+        Fixture(id, 2023) with
+        {
+            Competition = new ExternalCompetition("45", "FA Cup", "England", CompetitionTier.DomesticCup, 2023),
+            HomeTeam = new ExternalTeam(homeId, "Home", string.Empty),
+            AwayTeam = new ExternalTeam(awayId, "Away", string.Empty),
+            RoundPhase = "3rd Round",
+            IsKnockout = true,
+        };
+
     private SeasonImporter Importer() =>
-        new(_provider.Object, _matches.Object, _ingest.Object, _recalculate.Object, NullLogger<SeasonImporter>.Instance);
+        new(_provider.Object, _matches.Object, _ingest.Object, _recalculate.Object, Mock.Of<IUnitOfWork>(), NullLogger<SeasonImporter>.Instance);
 
     private void ListFixtures(int leagueId, int apiSeason, params ExternalFixture[] fixtures) =>
         _provider

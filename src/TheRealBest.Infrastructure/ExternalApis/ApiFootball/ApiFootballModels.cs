@@ -110,11 +110,12 @@ public sealed record EventPerson(int? Id, string? Name);
 
 // /fixtures/lineups
 
+/// <param name="StartXI">Nulo quando a fonte não tem a escalação (ex.: fases preliminares de copas).</param>
 public sealed record LineupItem(
     TeamInfo Team,
     string? Formation,
-    IReadOnlyList<LineupSlot> StartXI,
-    IReadOnlyList<LineupSlot> Substitutes);
+    IReadOnlyList<LineupSlot>? StartXI,
+    IReadOnlyList<LineupSlot>? Substitutes);
 
 public sealed record LineupSlot(LineupPlayer Player);
 

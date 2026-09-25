@@ -149,6 +149,47 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
             .ToListAsync(cancellationToken))
         .ToHashSet();
 
+    public async Task<IReadOnlyList<Guid>> GetClubMatchIdsMissingEloAsync(int seasonYear, CancellationToken cancellationToken = default) =>
+        await context.Matches
+            .Where(m => m.Competition.SeasonYear == seasonYear
+                && m.Competition.Tier != CompetitionTier.WorldCup
+                && m.Competition.Tier != CompetitionTier.InternationalContinental
+                && (m.HomeEloRating == null || m.AwayEloRating == null))
+            .OrderBy(m => m.MatchDate)
+            .Select(m => m.Id)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Match>> GetForRescoringAsync(IReadOnlyCollection<Guid> matchIds, CancellationToken cancellationToken = default) =>
+        await context.Matches
+            .Include(m => m.Competition)
+            .Include(m => m.HomeTeam)
+            .Include(m => m.AwayTeam)
+            .Include(m => m.PlayerStats)
+            .Include(m => m.PerformanceScores)
+            .AsSplitQuery()
+            .Where(m => matchIds.Contains(m.Id))
+            .OrderBy(m => m.MatchDate)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<MatchImportAudit>> GetImportAuditAsync(
+        IReadOnlyCollection<string> externalApiIds,
+        CancellationToken cancellationToken = default) =>
+        await context.Matches
+            .Where(m => externalApiIds.Contains(m.ExternalApiId))
+            .Select(m => new MatchImportAudit(
+                m.ExternalApiId,
+                m.Competition.Tier != CompetitionTier.WorldCup && m.Competition.Tier != CompetitionTier.InternationalContinental,
+                m.HomeTeam.Name,
+                m.AwayTeam.Name,
+                m.HomeEloRating,
+                m.AwayEloRating,
+                m.PlayerStats.Count,
+                m.PlayerStats.Count(s => s.PositionPlayed == PlayerPosition.FB
+                    || s.PositionPlayed == PlayerPosition.CDM
+                    || s.PositionPlayed == PlayerPosition.CAM
+                    || s.PositionPlayed == PlayerPosition.W)))
+            .ToListAsync(cancellationToken);
+
     public async Task AddAsync(Match match, CancellationToken cancellationToken = default) =>
         await context.Matches.AddAsync(match, cancellationToken);
 

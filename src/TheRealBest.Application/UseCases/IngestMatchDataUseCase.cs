@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using TheRealBest.Application.DTOs;
 using TheRealBest.Application.Interfaces;
 using TheRealBest.Domain.Entities;
+using TheRealBest.Domain.Enums;
 using TheRealBest.Domain.Ingestion;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Domain.ValueObjects;
@@ -95,7 +96,7 @@ public sealed class IngestMatchDataUseCase(
         }
 
         // 6. Elo dos clubes na data do jogo (seleções não têm rating no ClubElo: multiplicador neutro)
-        if (match.HomeEloRating is null && match.AwayEloRating is null && IsClubCompetition(competition.Tier))
+        if (match.HomeEloRating is null && match.AwayEloRating is null && competition.Tier.IsClubCompetition())
         {
             var matchDate = DateOnly.FromDateTime(match.MatchDate);
             match.SetEloRatings(
@@ -162,9 +163,6 @@ public sealed class IngestMatchDataUseCase(
 
         return new IngestionResultDto(match.Id, fixture.ExternalId, playersProcessed, scoresCalculated);
     }
-
-    private static bool IsClubCompetition(Domain.Enums.CompetitionTier tier) =>
-        tier is not (Domain.Enums.CompetitionTier.WorldCup or Domain.Enums.CompetitionTier.InternationalContinental);
 
     private async Task<Team> EnsureTeamAsync(ExternalTeam external, CancellationToken cancellationToken)
     {

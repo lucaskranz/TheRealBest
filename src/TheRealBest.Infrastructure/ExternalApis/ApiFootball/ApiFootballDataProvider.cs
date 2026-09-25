@@ -1,6 +1,7 @@
 namespace TheRealBest.Infrastructure.ExternalApis.ApiFootball;
 
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TheRealBest.Domain.Ingestion;
 using TheRealBest.Domain.Interfaces;
@@ -10,7 +11,10 @@ using TheRealBest.Domain.Interfaces;
 /// Custo em requisições: 1 por listagem de partidas; 3 por relatório de partida (jogadores, eventos, escalações),
 /// ou 1 a cada <see cref="MaxFixturesPerBatch"/> partidas com <see cref="ApiFootballOptions.BatchFixtureDetails"/>.
 /// </summary>
-public sealed class ApiFootballDataProvider(IApiFootballApi api, IOptions<ApiFootballOptions> options) : IFootballDataProvider
+public sealed class ApiFootballDataProvider(
+    IApiFootballApi api,
+    IOptions<ApiFootballOptions> options,
+    ILogger<ApiFootballDataProvider> logger) : IFootballDataProvider
 {
     /// <summary>Limite de ids por requisição imposto pela API.</summary>
     public const int MaxFixturesPerBatch = 20;
@@ -77,9 +81,20 @@ public sealed class ApiFootballDataProvider(IApiFootballApi api, IOptions<ApiFoo
             var details = response.Response.ToDictionary(d => d.Fixture.Id.ToString(CultureInfo.InvariantCulture));
             foreach (var fixture in batch)
             {
-                if (details.TryGetValue(fixture.ExternalId, out var detail))
+                if (!details.TryGetValue(fixture.ExternalId, out var detail))
+                {
+                    continue;
+                }
+
+                try
                 {
                     result.Add(ApiFootballMapper.ToMatchReport(fixture, detail.Players ?? [], detail.Events ?? [], detail.Lineups ?? []));
+                }
+                catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or NullReferenceException or KeyNotFoundException)
+                {
+                    // Resposta fora do formato esperado: a partida fica pendente (fora do resultado) e o lote segue
+                    logger.LogError(ex, "Partida {FixtureId} ({Home} × {Away}) com dados inesperados na fonte; não foi importada.",
+                        fixture.ExternalId, fixture.HomeTeam.Name, fixture.AwayTeam.Name);
                 }
             }
         }

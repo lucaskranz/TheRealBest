@@ -28,7 +28,7 @@ public enum SeasonImportStop
 }
 
 /// <param name="Listed">Partidas da competição devolvidas pela API.</param>
-/// <param name="Finished">Encerradas e pertencentes à temporada.</param>
+/// <param name="Finished">Encerradas e pertencentes à temporada (nas copas nacionais, só as com time da primeira divisão).</param>
 /// <param name="AlreadyImported">Já estavam no banco antes desta execução.</param>
 /// <param name="WithoutPlayerData">Importadas, mas a fonte não tinha estatísticas de jogador (cobertura limitada).</param>
 /// <param name="NotReturned">Pedidas em lote e ausentes na resposta; ficam pendentes para a próxima execução.</param>
@@ -66,10 +66,13 @@ public sealed class SeasonImporter(
     IMatchRepository matchRepository,
     IIngestMatchDataUseCase ingestUseCase,
     IRecalculateSeasonRankingUseCase recalculateUseCase,
+    IUnitOfWork unitOfWork,
     ILogger<SeasonImporter> logger) : ISeasonImporter
 {
     /// <summary>Partidas buscadas e gravadas por rodada: o tamanho do lote da API.</summary>
     public const int ChunkSize = ApiFootballDataProvider.MaxFixturesPerBatch;
+
+    private readonly SeasonFixtureSelector _selector = new(dataProvider);
 
     public async Task<SeasonImportSummary> ImportAsync(SeasonImportRequest request, CancellationToken cancellationToken = default)
     {
@@ -150,8 +153,9 @@ public sealed class SeasonImporter(
         progress.Listed = listed.Count;
         progress.Name = listed.FirstOrDefault()?.Competition.Name ?? progress.Name;
 
-        // Torneios de seleções: só as partidas da temporada pedida (a Copa de 2026 começa em junho, fim de 2025/26)
-        var finished = listed.Where(f => f.IsFinished && f.Competition.SeasonYear == season).ToList();
+        // Torneios de seleções: só as partidas da temporada pedida (a Copa de 2026 começa em junho, fim de 2025/26).
+        // Copas nacionais: só as partidas com time da primeira divisão (as fases entre amadores não têm dados de jogador)
+        var finished = await _selector.SelectAsync(entry, season, listed, cancellationToken);
         progress.Finished = finished.Count;
 
         var existing = await matchRepository.GetExistingExternalIdsAsync(finished.Select(f => f.ExternalId).ToList(), cancellationToken);
@@ -182,6 +186,9 @@ public sealed class SeasonImporter(
 
                 importedHere++;
             }
+
+            // Cada partida já foi gravada: libera o rastreamento para o custo por partida não crescer ao longo da temporada
+            unitOfWork.ClearTracking();
 
             logger.LogInformation("{Competition}: {Done}/{Total} importadas.", progress.Name, importedHere, pending.Count);
         }

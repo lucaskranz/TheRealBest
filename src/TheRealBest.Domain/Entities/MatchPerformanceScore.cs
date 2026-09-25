@@ -71,4 +71,27 @@ public class MatchPerformanceScore : EntityBase
         CountsTowardsSeason = countsTowardsSeason;
         CalculatedAt = calculatedAt ?? DateTime.UtcNow;
     }
+
+    /// <summary>
+    /// Substitui a nota por um novo cálculo da mesma atuação (ex.: Elo do adversário preenchido depois da importação).
+    /// </summary>
+    public void ApplyReceipt(ValueObjects.MatchReceipt receipt, string actionBreakdownJson, string penaltyBreakdownJson)
+    {
+        PositionEvaluated = receipt.PositionEvaluated;
+        BaseScore = receipt.BaseScore;
+        ActionBreakdownJson = actionBreakdownJson;
+        PenaltyBreakdownJson = penaltyBreakdownJson;
+        SubtotalRaw = receipt.SubtotalRaw;
+        PositionBaseline = receipt.PositionBaseline;
+        TournamentMultiplier = receipt.ContextMultiplier.TournamentMultiplier;
+        OpponentMultiplier = receipt.ContextMultiplier.OpponentMultiplier;
+        ClutchMultiplier = receipt.ContextMultiplier.ClutchMultiplier;
+        ContextMultiplierCombined = receipt.ContextMultiplier.Combined;
+        MinutesFactor = receipt.MinutesFactor;
+        FinalMps = receipt.FinalMps;
+        AlgorithmVersion = receipt.AlgorithmVersion;
+        CountsTowardsSeason = receipt.CountsTowardsSeason;
+        CalculatedAt = receipt.CalculatedAt;
+        MarkUpdated();
+    }
 }

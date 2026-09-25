@@ -71,7 +71,7 @@ public static class PositionResolver
 
     private static IEnumerable<(int PlayerId, PlayerPosition Position)> ResolveStarters(LineupItem lineup)
     {
-        var slots = lineup.StartXI
+        var slots = (lineup.StartXI ?? [])
             .Select(s => (s.Player, Grid: ParseGrid(s.Player.Grid)))
             .ToList();
 

@@ -68,6 +68,25 @@ public class ClubEloProviderTests
     }
 
     [Fact]
+    public async Task GetElo_SourceDown_StopsRequestingAfterConsecutiveFailures()
+    {
+        // Cada data nova custaria uma requisição (e até 20 s de timeout) numa importação de milhares de partidas
+        var calls = 0;
+        var provider = CreateProvider(_ =>
+        {
+            calls++;
+            return new HttpResponseMessage(HttpStatusCode.BadGateway);
+        });
+
+        for (var day = 1; day <= 10; day++)
+        {
+            (await provider.GetEloAsync("Real Madrid", new DateOnly(2024, 5, day))).Should().BeNull();
+        }
+
+        calls.Should().Be(ClubEloProvider.MaxConsecutiveFailures);
+    }
+
+    [Fact]
     public void ParseCsv_UnexpectedFormat_ReturnsEmpty()
     {
         ClubEloProvider.ParseCsv("<html>502 Bad Gateway</html>").Should().BeEmpty();
