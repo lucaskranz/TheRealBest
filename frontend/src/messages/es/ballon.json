@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Vs. Balón de Oro {year} | The Real Best",
+    "description": "La clasificación oficial del Balón de Oro {year} junto al Fair Season Score de la temporada {season}."
+  },
+  "title": "Vs. Balón de Oro {year}",
+  "subtitle": "El voto del jurado junto a lo que dicen los datos partido a partido de la temporada {season}.",
+  "error": {
+    "title": "No se pudo cargar la comparación",
+    "description": "La API no respondió. Inténtalo de nuevo en unos instantes."
+  },
+  "summary": {
+    "ranked": "en nuestro ranking",
+    "notEligible": "por debajo del corte",
+    "noData": "sin partidos importados",
+    "of": "de {total} nominados"
+  },
+  "sampleNote": "Muestra limitada: el índice considera {eligible} jugadores elegibles, a partir de los partidos importados con el plan gratuito de API-Football. Por eso nuestra posición solo llega hasta {eligible} y varios nominados no alcanzan el corte de {matches} partidos y {minutes} minutos.",
+  "table": {
+    "caption": "Clasificación oficial del Balón de Oro {year} comparada con el Fair Season Score {season}",
+    "official": "Jurado",
+    "player": "Jugador",
+    "ours": "Índice",
+    "delta": "Diferencia",
+    "fss": "FSS",
+    "sample": "Muestra",
+    "sampleValue": "{matches} p · {minutes} min",
+    "status": {
+      "notEligible": "Bajo el corte",
+      "noData": "Datos insuficientes"
+    },
+    "deltaUp": "{count, plural, one {# puesto más arriba} other {# puestos más arriba}} en el índice",
+    "deltaDown": "{count, plural, one {# puesto más abajo} other {# puestos más abajo}} en el índice",
+    "deltaSame": "Mismo puesto"
+  },
+  "legend": {
+    "delta": "Diferencia = puesto del jurado − puesto en el índice. ▲ el índice valora más al jugador que el jurado; ▼ lo valora menos."
+  },
+  "unnominated": {
+    "title": "Fuera de la lista oficial",
+    "description": "Jugadores bien situados en el índice que no estaban entre los 30 nominados.",
+    "rank": "{rank}.º en el índice"
+  },
+  "source": "Fuente de la clasificación oficial: <link>{name}</link>."
+}

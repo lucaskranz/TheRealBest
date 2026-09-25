@@ -152,6 +152,8 @@ ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-
 - Retomável: partidas já importadas são puladas, e se a cota diária acabar basta rodar de novo após 00:00 UTC
 - Euro e Copa América de junho/julho entram na temporada de clubes que terminou (Euro 2024 → temporada 2023/24)
 - Após reimportar dados, o frontend pode mostrar a versão anterior por até 1 hora (cache de dados do Next, que sobrevive a novos builds). Para ver na hora: apague `frontend/.next/cache/fetch-cache`
+- **Comparação com a Bola de Ouro:** a classificação oficial fica em `Application/Comparison/BallonDorCatalog.cs`, com fonte citada e o ID externo de cada indicado. Indicados sem partidas importadas aparecem como "dados insuficientes" e os que não atingem o corte aparecem como "abaixo do corte". Nunca estimar nota
+- **Página do algoritmo:** nenhum número digitado no frontend. `FormulaDescriptorFactory` (API) lê os pesos, as linhas de base e os multiplicadores do motor e marca as ações que a fonte atual não alimenta (`ApiFootballMapper.UnavailableActions`, `StatsActionMapper.UnmappedActions`)
 - **Elo dos adversários:** buscado no ClubElo (`api.clubelo.com`, gratuito) na data de cada partida e gravado em `matches`. Seleções e falhas da fonte = multiplicador neutro. Partidas importadas sem Elo não são reprocessadas: para preenchê-lo, limpe as tabelas e rode `--seed` de novo (custo zero de cota graças ao cache)
 
 ---
@@ -178,7 +180,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 4C | Localização no Backend | ✅ Concluída | Middleware, .resx, ActionLabelResolver |
 | 4D | Frontend: Leaderboard + Filtros | ✅ Concluída | Página de ranking com filtros posicionais |
 | 4E | Frontend: Perfil do Jogador + Recibo | ✅ Concluída | Player page, MatchReceipt, radar chart |
-| 4F | Frontend: Vs Ballon d'Or + Fórmula | ⬜ Pendente | Páginas comparativa e livro de regras |
+| 4F | Frontend: Vs Ballon d'Or + Fórmula | ✅ Concluída | `/formula` (pesos, linhas de base e multiplicadores via `GET /api/v1/formula`, gerado das constantes do motor) e `/vs-ballon` (classificação oficial 2024 citada × FSS 2023/24 via `GET /api/v1/comparison/ballon-dor/2024`) |
 | 5A | Deploy Backend (Railway/Render) | ⬜ Pendente | Docker, CI/CD, variáveis de ambiente |
 | 5B | Deploy Frontend (Vercel) | ⬜ Pendente | Build, domínio, SEO multilíngue |
 

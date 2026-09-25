@@ -2,6 +2,7 @@ namespace TheRealBest.Infrastructure.ExternalApis.ApiFootball;
 
 using System.Globalization;
 using System.Text.Json;
+using TheRealBest.Domain.Enums;
 using TheRealBest.Domain.Ingestion;
 using TheRealBest.Domain.ValueObjects;
 
@@ -15,6 +16,19 @@ using TheRealBest.Domain.ValueObjects;
 public static class ApiFootballMapper
 {
     private static readonly HashSet<string> FinishedStatuses = ["FT", "AET", "PEN"];
+
+    /// <summary>Ações cujas estatísticas a API-Football não fornece: nesta fonte elas sempre valem zero.</summary>
+    public static IReadOnlySet<ActionType> UnavailableActions { get; } = new HashSet<ActionType>
+    {
+        ActionType.ExpectedAssists,
+        ActionType.BigChanceCreated,
+        ActionType.ExpectedGoalsOverperformance,
+        ActionType.ProgressivePass,
+        ActionType.AerialDuelWon,
+        ActionType.BallRecovery,
+        ActionType.ErrorLeadingToGoal,
+        ActionType.BigChanceMissed,
+    };
 
     public static ExternalFixture ToFixture(FixtureItem item) =>
         new(

@@ -8,6 +8,7 @@ public static class MinutesFactorCalculator
 {
     public const int FullFactorFromMinute = 60;
     public const int RegulationMinutes = 90;
+    public const int ExtraTimeDivisor = 180;
 
     public static decimal Calculate(int minutesPlayed)
     {
@@ -17,7 +18,7 @@ public static class MinutesFactorCalculator
         {
             < FullFactorFromMinute => minutesPlayed / (decimal)RegulationMinutes,
             <= RegulationMinutes => 1.0m,
-            _ => 1.0m + (minutesPlayed - RegulationMinutes) / 180m,
+            _ => 1.0m + (minutesPlayed - RegulationMinutes) / (decimal)ExtraTimeDivisor,
         };
 
         return ScoringMath.Round4(factor);

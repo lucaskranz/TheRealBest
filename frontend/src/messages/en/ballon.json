@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Vs. Ballon d'Or {year} | The Real Best",
+    "description": "The official {year} Ballon d'Or ranking side by side with the Fair Season Score of the {season} season."
+  },
+  "title": "Vs. Ballon d'Or {year}",
+  "subtitle": "The jury's vote side by side with what the match-by-match data of the {season} season says.",
+  "error": {
+    "title": "Could not load the comparison",
+    "description": "The API did not respond. Please try again in a moment."
+  },
+  "summary": {
+    "ranked": "in our ranking",
+    "notEligible": "below the cut",
+    "noData": "no matches imported",
+    "of": "of {total} nominees"
+  },
+  "sampleNote": "Limited sample: the index covers {eligible} eligible players, drawn from the matches imported on the free API-Football plan. That is why our rank only goes up to {eligible}, and several nominees fall short of the {matches}-match, {minutes}-minute cut.",
+  "table": {
+    "caption": "Official {year} Ballon d'Or ranking compared with the {season} Fair Season Score",
+    "official": "Jury",
+    "player": "Player",
+    "ours": "Index",
+    "delta": "Difference",
+    "fss": "FSS",
+    "sample": "Sample",
+    "sampleValue": "{matches} m · {minutes} min",
+    "status": {
+      "notEligible": "Below the cut",
+      "noData": "Insufficient data"
+    },
+    "deltaUp": "{count, plural, one {# place higher} other {# places higher}} in the index",
+    "deltaDown": "{count, plural, one {# place lower} other {# places lower}} in the index",
+    "deltaSame": "Same place"
+  },
+  "legend": {
+    "delta": "Difference = jury place − index place. ▲ the index rates the player higher than the jury; ▼ lower."
+  },
+  "unnominated": {
+    "title": "Not on the official list",
+    "description": "Players ranked high in the index who were not among the 30 nominees.",
+    "rank": "#{rank} in the index"
+  },
+  "source": "Official ranking source: <link>{name}</link>."
+}

@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Vs. Bola de Ouro {year} | The Real Best",
+    "description": "A classificação oficial da Bola de Ouro {year} lado a lado com o Fair Season Score da temporada {season}."
+  },
+  "title": "Vs. Bola de Ouro {year}",
+  "subtitle": "O voto do júri lado a lado com o que os dados jogo a jogo da temporada {season} dizem.",
+  "error": {
+    "title": "Não foi possível carregar a comparação",
+    "description": "A API não respondeu. Tente novamente em instantes."
+  },
+  "summary": {
+    "ranked": "no nosso ranking",
+    "notEligible": "abaixo do corte",
+    "noData": "sem partidas importadas",
+    "of": "de {total} indicados"
+  },
+  "sampleNote": "Amostra limitada: o índice considera {eligible} jogadores elegíveis, vindos das partidas importadas no plano gratuito da API-Football. Por isso a nossa colocação vai só até {eligible}, e vários indicados não atingem o corte de {matches} partidas e {minutes} minutos.",
+  "table": {
+    "caption": "Classificação oficial da Bola de Ouro {year} comparada ao Fair Season Score {season}",
+    "official": "Júri",
+    "player": "Jogador",
+    "ours": "Índice",
+    "delta": "Diferença",
+    "fss": "FSS",
+    "sample": "Amostra",
+    "sampleValue": "{matches} j · {minutes} min",
+    "status": {
+      "notEligible": "Abaixo do corte",
+      "noData": "Dados insuficientes"
+    },
+    "deltaUp": "{count, plural, one {# posição acima} other {# posições acima}} no índice",
+    "deltaDown": "{count, plural, one {# posição abaixo} other {# posições abaixo}} no índice",
+    "deltaSame": "Mesma colocação"
+  },
+  "legend": {
+    "delta": "Diferença = colocação do júri − colocação no índice. ▲ o índice valoriza mais o jogador que o júri; ▼ valoriza menos."
+  },
+  "unnominated": {
+    "title": "Fora da lista oficial",
+    "description": "Jogadores bem colocados no índice que não estavam entre os 30 indicados.",
+    "rank": "{rank}º no índice"
+  },
+  "source": "Fonte da classificação oficial: <link>{name}</link>."
+}

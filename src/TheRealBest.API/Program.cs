@@ -1,4 +1,5 @@
 ﻿using TheRealBest.API.BackgroundServices;
+using TheRealBest.API.Formula;
 using TheRealBest.API.Localization;
 using TheRealBest.API.Middleware;
 using TheRealBest.Application;
@@ -17,6 +18,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IScoringRulesProvider, ScoringRulesProvider>();
 builder.Services.AddSingleton<IScoringEngine, ScoringEngine>();
 builder.Services.AddSingleton<ITranslationService, ResxTranslationService>();
+builder.Services.AddScoped<FormulaDescriptorFactory>();
 
 // CORS for Frontend (Next.js)
 builder.Services.AddCors(options =>

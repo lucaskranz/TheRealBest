@@ -1,6 +1,107 @@
 {
+  "metadata": {
+    "title": "The algorithm | The Real Best",
+    "description": "Per-position weights, baselines and context multipliers of the Fair Player Index: the exact math behind every score."
+  },
   "title": "The algorithm and the rules",
-  "subtitle": "How the Fair Player Index turns every match into an auditable score.",
-  "mpsTitle": "Match Performance Score (MPS)",
-  "fssTitle": "Fair Season Score (FSS)"
+  "subtitle": "How the Fair Player Index turns every match into an auditable score. Every number on this page comes from the scoring engine currently in use.",
+  "version": "Algorithm v{version}",
+  "error": {
+    "title": "Could not load the algorithm",
+    "description": "The API did not respond. Please try again in a moment."
+  },
+  "steps": {
+    "title": "In three steps",
+    "actions": {
+      "title": "1. Match actions",
+      "description": "Each action has a different weight depending on the position. The position baseline is subtracted from the total, so an average performance is worth {base} in any role."
+    },
+    "context": {
+      "title": "2. Context",
+      "description": "The action balance is multiplied by the tournament weight, the opponent's strength and how open the game still was."
+    },
+    "season": {
+      "title": "3. Season",
+      "description": "Match scores become the Fair Season Score: a tournament-weighted average, adjusted for time on the pitch."
+    }
+  },
+  "mps": {
+    "title": "Match Performance Score (MPS)",
+    "equation": "MPS = {base} + (Σ actions − baseline × minutes factor) × W_tournament × W_opponent × W_clutch",
+    "clamp": "The result is capped between {min} and {max}.",
+    "volumeNote": "Volume actions (tackles, passes, duels…) are also scaled by the minutes factor. One-off events such as goals and cards count in full: a goal by a player who came on in the 80th minute is still a whole goal."
+  },
+  "weights": {
+    "title": "Weights by position",
+    "description": "Points each action adds (or removes) in each role. A dash means the action does not score in that position.",
+    "caption": "Weight matrix of algorithm v{version}",
+    "action": "Action",
+    "positive": "Positive actions",
+    "penalties": "Penalties",
+    "baseline": "Baseline (90 min)",
+    "baselineHint": "Average balance of a full performance in the position, measured on the real data imported.",
+    "sharedMatrix": "{position} uses the same weights as {owner}",
+    "noData": "no data",
+    "noDataLegend": "No data: the current source (API-Football) does not provide this statistic. The weight is in place but adds zero until another source is added.",
+    "volumeLegend": "Scaled by the minutes factor",
+    "decisiveLegend": "Decisive action",
+    "categories": {
+      "Finishing": "Finishing",
+      "Creation": "Creation",
+      "Possession": "Possession",
+      "Defending": "Defending",
+      "Duels": "Duels",
+      "Goalkeeping": "Goalkeeping",
+      "Discipline": "Discipline"
+    }
+  },
+  "multipliers": {
+    "title": "Context multipliers",
+    "description": "Applied only to the action balance, never to the base score. They multiply each other.",
+    "tournament": {
+      "title": "Tournament weight",
+      "worldCup": "World Cup",
+      "uclKnockout": "Champions League — knockout stage",
+      "continentalNationalTeams": "Euro and Copa América",
+      "uclLeaguePhase": "Champions League — league phase",
+      "topLeague": "Big five leagues",
+      "domesticCupLateStage": "Domestic cups — semi-final and final",
+      "other": "Other matches"
+    },
+    "opponent": {
+      "title": "Opponent strength",
+      "description": "Opponent's Elo rating on the match date (ClubElo).",
+      "top10": "Elo ≥ {elo} (Europe's top 10)",
+      "top30": "Elo ≥ {elo} (top 30)",
+      "midTable": "Elo ≥ {elo}",
+      "weak": "Elo below {elo}",
+      "unrated": "No rating (national teams or source unavailable)"
+    },
+    "clutch": {
+      "title": "Clutch factor",
+      "description": "Derived from the final score margin.",
+      "tight": "Draw or decided by up to {max} goal",
+      "open": "{min}-goal margin",
+      "junkTime": "Margin of {min} or more goals"
+    }
+  },
+  "minutes": {
+    "title": "Minutes factor",
+    "partial": "Under {full} minutes: minutes ÷ {regulation}.",
+    "full": "From {full} to {regulation} minutes: 1.0.",
+    "extraTime": "Extra time: 1 + (minutes − {regulation}) ÷ {divisor}.",
+    "cameo": "Players with fewer than {min} minutes only count towards the season if they made a decisive action (goal, assist…)."
+  },
+  "fss": {
+    "title": "Fair Season Score (FSS)",
+    "equation": "FSS = (Σ MPS × W_tournament ÷ Σ W_tournament) × presence factor",
+    "presence": "Presence factor = √(min(1, minutes ÷ {minutes})). Players with little game time have their score smoothed.",
+    "eligibility": "To enter the ranking: at least {matches} matches and {minutes} minutes in the season.",
+    "why": "An average, not a sum: playing more matches does not inflate the score. What counts is the level of each performance."
+  },
+  "audit": {
+    "title": "Check it yourself",
+    "description": "Every match of every player has a receipt with the full calculation, action by action.",
+    "cta": "Go to the ranking"
+  }
 }

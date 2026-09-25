@@ -8,6 +8,7 @@
   <data name="PlayerNotFound" xml:space="preserve"><value>Jugador {0} no encontrado.</value></data>
   <data name="ReceiptNotFound" xml:space="preserve"><value>Recibo del partido {0} para el jugador {1} no encontrado.</value></data>
   <data name="InvalidRequest" xml:space="preserve"><value>Solicitud no válida: revisa los parámetros enviados.</value></data>
+  <data name="BallonDorEditionNotFound" xml:space="preserve"><value>No hay clasificación oficial del Balón de Oro registrada para {0}.</value></data>
   <data name="ResourceNotFound" xml:space="preserve"><value>Recurso no encontrado.</value></data>
   <data name="InternalError" xml:space="preserve"><value>Se produjo un error interno al procesar la solicitud.</value></data>
 </root>

@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IGetMatchAuditReceiptUseCase, GetMatchAuditReceiptUseCase>();
         services.AddScoped<IGetMatchDetailUseCase, GetMatchDetailUseCase>();
         services.AddScoped<IGetPagedMatchesUseCase, GetPagedMatchesUseCase>();
+        services.AddScoped<IGetBallonDorComparisonUseCase, GetBallonDorComparisonUseCase>();
 
         return services;
     }

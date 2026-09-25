@@ -21,6 +21,15 @@ public static class StatsActionMapper
     /// <summary>Clean sheet só conta para quem jogou mais de 60 minutos.</summary>
     public const int CleanSheetMinMinutes = 60;
 
+    /// <summary>Ações com peso na especificação que o mapeamento ainda não produz (ver remarks).</summary>
+    public static IReadOnlySet<ActionType> UnmappedActions { get; } = new HashSet<ActionType>
+    {
+        ActionType.GoalsPrevented,
+        ActionType.HighClaim,
+        ActionType.ErrorLeadingToShot,
+        ActionType.Turnover,
+    };
+
     public static IReadOnlyDictionary<ActionType, decimal> Map(MatchPlayerStats stats)
     {
         var openPlayGoals = Math.Max(0, stats.Goals - stats.PenaltiesScored);

@@ -28,6 +28,15 @@ public sealed class RankingRepository(AppDbContext context) : IRankingRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<SeasonRanking>> GetByExternalPlayerIdsAsync(
+        int seasonYear,
+        IReadOnlyCollection<string> externalApiIds,
+        CancellationToken cancellationToken = default) =>
+        await context.SeasonRankings
+            .Include(r => r.Player)
+            .Where(r => r.SeasonYear == seasonYear && externalApiIds.Contains(r.Player.ExternalApiId))
+            .ToListAsync(cancellationToken);
+
     public async Task<int> CountRankingsAsync(PlayerRankingSpec spec, CancellationToken cancellationToken = default) =>
         await ApplyFilters(context.SeasonRankings, spec).CountAsync(cancellationToken);
 

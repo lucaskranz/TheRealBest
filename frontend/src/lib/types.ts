@@ -153,6 +153,89 @@ export interface MatchReceipt {
   penalties: AuditActionItem[];
 }
 
+/** Espelha API/Formula/FormulaDescriptor.cs: o algoritmo em vigor, gerado das constantes do motor. */
+export interface FormulaPosition {
+  code: PlayerPosition;
+  label: string;
+  baseline: number;
+  /** Posição cuja matriz de pesos é reutilizada (CM usa a de CDM). */
+  sharesMatrixWith: PlayerPosition | null;
+}
+
+export type ActionCategory = "Finishing" | "Creation" | "Possession" | "Defending" | "Duels" | "Goalkeeping" | "Discipline";
+
+export interface FormulaAction {
+  key: string;
+  label: string;
+  category: ActionCategory;
+  isPenalty: boolean;
+  scalesWithMinutes: boolean;
+  isDecisive: boolean;
+  /** Falso quando a fonte atual não fornece a estatística: o peso existe, mas hoje soma zero. */
+  hasDataSource: boolean;
+  weights: Partial<Record<PlayerPosition, number>>;
+}
+
+export type TournamentWeightKey =
+  | "worldCup"
+  | "uclKnockout"
+  | "continentalNationalTeams"
+  | "uclLeaguePhase"
+  | "topLeague"
+  | "domesticCupLateStage"
+  | "other";
+export type OpponentWeightKey = "top10" | "top30" | "midTable" | "weak" | "unrated";
+export type ClutchWeightKey = "tight" | "open" | "junkTime";
+
+export interface Formula {
+  algorithmVersion: number;
+  mps: { baseScore: number; minScore: number; maxScore: number };
+  minutes: { fullFactorFromMinute: number; regulationMinutes: number; extraTimeDivisor: number; minMinutesForSeason: number };
+  positions: FormulaPosition[];
+  actions: FormulaAction[];
+  tournamentWeights: { key: TournamentWeightKey; value: number }[];
+  opponentWeights: { key: OpponentWeightKey; minElo: number | null; value: number }[];
+  clutchWeights: { key: ClutchWeightKey; minMargin: number; maxMargin: number | null; value: number }[];
+  season: { fullPresenceMinutes: number; minMatchesForRanking: number; minMinutesForRanking: number };
+}
+
+export type ComparisonStatus = "ranked" | "notEligible" | "noData";
+
+export interface BallonDorEntry {
+  officialRank: number;
+  name: string;
+  club: string;
+  status: ComparisonStatus;
+  playerId: string | null;
+  photoUrl: string | null;
+  primaryPositionLabel: string | null;
+  ourRank: number | null;
+  /** Colocação oficial menos a nossa: positivo = o índice coloca o jogador mais alto que o júri. */
+  rankDelta: number | null;
+  fssScore: number | null;
+  totalMatches: number | null;
+  totalMinutes: number | null;
+}
+
+export interface UnnominatedPlayer {
+  playerId: string;
+  name: string;
+  photoUrl: string | null;
+  primaryPositionLabel: string;
+  ourRank: number;
+  fssScore: number;
+}
+
+export interface BallonDorComparison {
+  year: number;
+  seasonYear: number;
+  sourceName: string;
+  sourceUrl: string;
+  eligiblePlayers: number;
+  entries: BallonDorEntry[];
+  unnominated: UnnominatedPlayer[];
+}
+
 const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function isGuid(value: string): boolean {

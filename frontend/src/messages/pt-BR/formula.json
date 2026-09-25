@@ -1,6 +1,107 @@
 {
+  "metadata": {
+    "title": "O algoritmo | The Real Best",
+    "description": "Pesos por posição, linhas de base e multiplicadores de contexto do Fair Player Index: a conta exata por trás de cada nota."
+  },
   "title": "O algoritmo e as regras",
-  "subtitle": "Como o Fair Player Index transforma cada partida em uma nota auditável.",
-  "mpsTitle": "Match Performance Score (MPS)",
-  "fssTitle": "Fair Season Score (FSS)"
+  "subtitle": "Como o Fair Player Index transforma cada partida em uma nota auditável. Todos os números desta página vêm do motor de cálculo em vigor.",
+  "version": "Algoritmo v{version}",
+  "error": {
+    "title": "Não foi possível carregar o algoritmo",
+    "description": "A API não respondeu. Tente novamente em instantes."
+  },
+  "steps": {
+    "title": "Em três passos",
+    "actions": {
+      "title": "1. Ações da partida",
+      "description": "Cada ação vale um peso diferente conforme a posição. Do total, desconta-se a linha de base da posição: uma atuação média vale {base} em qualquer função."
+    },
+    "context": {
+      "title": "2. Contexto",
+      "description": "O saldo das ações é multiplicado pelo peso do torneio, pela força do adversário e pelo quanto o jogo estava em aberto."
+    },
+    "season": {
+      "title": "3. Temporada",
+      "description": "As notas de partida viram o Fair Season Score: uma média ponderada pelo torneio, ajustada pela presença em campo."
+    }
+  },
+  "mps": {
+    "title": "Match Performance Score (MPS)",
+    "equation": "MPS = {base} + (Σ ações − linha de base × fator de minutos) × W_torneio × W_adversário × W_decisivo",
+    "clamp": "O resultado é limitado entre {min} e {max}.",
+    "volumeNote": "Ações de volume (desarmes, passes, duelos…) também são proporcionais ao fator de minutos. Eventos pontuais, como gols e cartões, valem integralmente: um gol de quem entrou aos 80' é um gol inteiro."
+  },
+  "weights": {
+    "title": "Pesos por posição",
+    "description": "Pontos que cada ação soma (ou tira) em cada função. Um traço indica que a ação não pontua naquela posição.",
+    "caption": "Matriz de pesos do algoritmo v{version}",
+    "action": "Ação",
+    "positive": "Ações positivas",
+    "penalties": "Penalidades",
+    "baseline": "Linha de base (90 min)",
+    "baselineHint": "Saldo médio de uma atuação completa na posição, medido nos dados reais importados.",
+    "sharedMatrix": "{position} usa os mesmos pesos de {owner}",
+    "noData": "sem dados",
+    "noDataLegend": "Sem dados: a fonte atual (API-Football) não fornece essa estatística. O peso já existe, mas hoje soma zero até a entrada de outra fonte.",
+    "volumeLegend": "Proporcional ao fator de minutos",
+    "decisiveLegend": "Ação decisiva",
+    "categories": {
+      "Finishing": "Finalização",
+      "Creation": "Criação",
+      "Possession": "Posse",
+      "Defending": "Defesa",
+      "Duels": "Duelos",
+      "Goalkeeping": "Goleiro",
+      "Discipline": "Disciplina"
+    }
+  },
+  "multipliers": {
+    "title": "Multiplicadores de contexto",
+    "description": "Aplicados só sobre o saldo das ações, nunca sobre a nota base. Multiplicam-se entre si.",
+    "tournament": {
+      "title": "Peso do torneio",
+      "worldCup": "Copa do Mundo",
+      "uclKnockout": "Champions League — mata-mata",
+      "continentalNationalTeams": "Eurocopa e Copa América",
+      "uclLeaguePhase": "Champions League — fase de liga",
+      "topLeague": "Cinco grandes ligas",
+      "domesticCupLateStage": "Copas nacionais — semifinal e final",
+      "other": "Demais jogos"
+    },
+    "opponent": {
+      "title": "Força do adversário",
+      "description": "Rating Elo do adversário na data do jogo (ClubElo).",
+      "top10": "Elo ≥ {elo} (top 10 da Europa)",
+      "top30": "Elo ≥ {elo} (top 30)",
+      "midTable": "Elo ≥ {elo}",
+      "weak": "Elo abaixo de {elo}",
+      "unrated": "Sem rating (seleções ou fonte indisponível)"
+    },
+    "clutch": {
+      "title": "Fator decisivo",
+      "description": "Derivado da diferença no placar final.",
+      "tight": "Empate ou decidido por até {max} gol",
+      "open": "Diferença de {min} gols",
+      "junkTime": "Diferença de {min} ou mais gols"
+    }
+  },
+  "minutes": {
+    "title": "Fator de minutos",
+    "partial": "Menos de {full} minutos: minutos ÷ {regulation}.",
+    "full": "De {full} a {regulation} minutos: 1,0.",
+    "extraTime": "Prorrogação: 1 + (minutos − {regulation}) ÷ {divisor}.",
+    "cameo": "Quem joga menos de {min} minutos só entra na temporada se tiver uma ação decisiva (gol, assistência…)."
+  },
+  "fss": {
+    "title": "Fair Season Score (FSS)",
+    "equation": "FSS = (Σ MPS × W_torneio ÷ Σ W_torneio) × fator de presença",
+    "presence": "Fator de presença = √(min(1, minutos ÷ {minutes})). Quem joga pouco tem a nota suavizada.",
+    "eligibility": "Para entrar no ranking: pelo menos {matches} partidas e {minutes} minutos na temporada.",
+    "why": "Média, não soma: jogar mais partidas não infla a nota. O que conta é o nível de cada atuação."
+  },
+  "audit": {
+    "title": "Confira você mesmo",
+    "description": "Cada partida de cada jogador tem um recibo com a conta completa, ação por ação.",
+    "cta": "Ir para o ranking"
+  }
 }

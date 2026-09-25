@@ -8,6 +8,7 @@
   <data name="PlayerNotFound" xml:space="preserve"><value>Player {0} not found.</value></data>
   <data name="ReceiptNotFound" xml:space="preserve"><value>Receipt for match {0} and player {1} not found.</value></data>
   <data name="InvalidRequest" xml:space="preserve"><value>Invalid request: check the parameters sent.</value></data>
+  <data name="BallonDorEditionNotFound" xml:space="preserve"><value>No official Ballon d'Or ranking is available for {0}.</value></data>
   <data name="ResourceNotFound" xml:space="preserve"><value>Resource not found.</value></data>
   <data name="InternalError" xml:space="preserve"><value>An internal error occurred while processing the request.</value></data>
 </root>
