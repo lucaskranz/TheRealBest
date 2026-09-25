@@ -27,6 +27,21 @@ public sealed record TeamsInfo(TeamInfo Home, TeamInfo Away);
 
 public sealed record GoalsInfo(int? Home, int? Away);
 
+// /fixtures?ids=... (detalhe de várias partidas)
+
+/// <summary>
+/// Partida com os detalhes embutidos: os mesmos formatos de /fixtures/players, /fixtures/events e /fixtures/lineups.
+/// Listas ausentes (partida sem cobertura de jogadores) chegam nulas ou vazias.
+/// </summary>
+public sealed record FixtureDetailItem(
+    FixtureInfo Fixture,
+    LeagueInfo League,
+    TeamsInfo Teams,
+    GoalsInfo Goals,
+    IReadOnlyList<EventItem>? Events,
+    IReadOnlyList<LineupItem>? Lineups,
+    IReadOnlyList<FixturePlayersItem>? Players);
+
 // /fixtures/players
 
 public sealed record FixturePlayersItem(TeamInfo Team, IReadOnlyList<PlayerEntry> Players);

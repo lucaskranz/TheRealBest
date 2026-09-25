@@ -6,6 +6,8 @@ public interface IMatchRepository
 {
     Task<Match?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Match?> GetByExternalIdAsync(string externalApiId, CancellationToken cancellationToken = default);
+    /// <summary>Quais desses ids externos já têm partida gravada (com ou sem estatísticas de jogador).</summary>
+    Task<IReadOnlySet<string>> GetExistingExternalIdsAsync(IReadOnlyCollection<string> externalApiIds, CancellationToken cancellationToken = default);
     Task<Match?> GetWithStatsByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Match>> GetByCompetitionAndSeasonAsync(Guid competitionId, int seasonYear, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MatchPlayerStats>> GetPlayerStatsByPlayerAndSeasonAsync(Guid playerId, int seasonYear, CancellationToken cancellationToken = default);

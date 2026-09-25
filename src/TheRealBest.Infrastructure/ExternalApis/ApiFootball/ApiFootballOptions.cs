@@ -16,6 +16,12 @@ public sealed class ApiFootballOptions
     public int RequestsPerMinute { get; set; } = 10;
 
     /// <summary>
+    /// Busca os detalhes de até 20 partidas por requisição (parâmetro "ids", só nos planos pagos) em vez de 3 requisições
+    /// por partida. Ligar junto com a assinatura Pro.
+    /// </summary>
+    public bool BatchFixtureDetails { get; set; }
+
+    /// <summary>
     /// Guarda em disco as respostas de partidas encerradas (dados que não mudam mais). Recriar o banco ou repetir
     /// uma importação passa a custar zero requisições — essencial no plano Free (100/dia).
     /// </summary>

@@ -22,20 +22,20 @@ public sealed class IngestMatchDataUseCase(
     public async Task<IngestionResultDto> ExecuteAsync(ExternalMatchReport report, CancellationToken cancellationToken = default)
     {
         var fixture = report.Fixture;
-        logger.LogInformation("Iniciando ingestÃ£o da partida {FixtureId}: {Home} vs {Away}",
+        logger.LogDebug("Iniciando ingestão da partida {FixtureId}: {Home} vs {Away}",
             fixture.ExternalId, fixture.HomeTeam.Name, fixture.AwayTeam.Name);
 
-        // 1. Verificar se a partida jÃ¡ foi importada
+        // 1. Verificar se a partida já foi importada
         var existingByExtId = await matchRepository.GetByExternalIdAsync(fixture.ExternalId, cancellationToken);
 
         if (existingByExtId is not null && existingByExtId.PlayerStats.Count > 0)
         {
-            logger.LogInformation("Partida {FixtureId} jÃ¡ importada anteriormente com {Count} jogadores. Pulando.",
+            logger.LogInformation("Partida {FixtureId} já importada anteriormente com {Count} jogadores. Pulando.",
                 fixture.ExternalId, existingByExtId.PlayerStats.Count);
             return new IngestionResultDto(existingByExtId.Id, fixture.ExternalId, existingByExtId.PlayerStats.Count, existingByExtId.PlayerStats.Count, AlreadyExists: true);
         }
 
-        // 2. Garantir CompetiÃ§Ã£o
+        // 2. Garantir Competição
         var competition = await competitionRepository.GetByExternalIdAndSeasonAsync(fixture.Competition.ExternalId, fixture.Competition.SeasonYear, cancellationToken);
         if (competition is null)
         {
@@ -70,7 +70,14 @@ public sealed class IngestMatchDataUseCase(
         var homeTeam = await EnsureTeamAsync(fixture.HomeTeam, cancellationToken);
         var awayTeam = await EnsureTeamAsync(fixture.AwayTeam, cancellationToken);
 
-        // 4. Criar a partida
+        // 4. Garantir os jogadores antes da partida: cada cadastro salva, e a partida deve ser gravada de uma vez só
+        var players = new Dictionary<string, Player>();
+        foreach (var perf in report.Performances)
+        {
+            players[perf.Player.ExternalId] = await EnsurePlayerAsync(perf.Player, perf.Stats.Position, cancellationToken);
+        }
+
+        // 5. Criar a partida (gravada junto com estatísticas e notas: uma importação interrompida não deixa partida pela metade)
         var match = existingByExtId ?? new Match(
             fixture.ExternalId,
             competition.Id,
@@ -85,32 +92,29 @@ public sealed class IngestMatchDataUseCase(
         if (existingByExtId is null)
         {
             await matchRepository.AddAsync(match, cancellationToken);
-            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        // 5. Elo dos clubes na data do jogo (seleções não têm rating no ClubElo: multiplicador neutro)
+        // 6. Elo dos clubes na data do jogo (seleções não têm rating no ClubElo: multiplicador neutro)
         if (match.HomeEloRating is null && match.AwayEloRating is null && IsClubCompetition(competition.Tier))
         {
             var matchDate = DateOnly.FromDateTime(match.MatchDate);
             match.SetEloRatings(
                 await clubEloProvider.GetEloAsync(homeTeam.Name, matchDate, cancellationToken),
                 await clubEloProvider.GetEloAsync(awayTeam.Name, matchDate, cancellationToken));
-            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         int playersProcessed = 0;
         int scoresCalculated = 0;
 
-        // 6. Ingerir jogadores e estatÃ­sticas
+        // 7. Estatísticas e notas de cada jogador
         foreach (var perf in report.Performances)
         {
-            var player = await EnsurePlayerAsync(perf.Player, perf.Stats.Position, cancellationToken);
+            var player = players[perf.Player.ExternalId];
             var isHome = perf.TeamExternalId == fixture.HomeTeam.ExternalId;
             var playerTeamId = isHome ? homeTeam.Id : awayTeam.Id;
 
             var stats = MatchPlayerStats.FromStatLine(match.Id, player.Id, playerTeamId, perf.Stats);
             await matchRepository.AddPlayerStatsAsync(stats, cancellationToken);
-            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             var matchContext = new MatchContext(
                 competition.Tier,
@@ -153,7 +157,7 @@ public sealed class IngestMatchDataUseCase(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("IngestÃ£o concluÃ­da para partida {FixtureId}. Processados {Players} jogadores.",
+        logger.LogDebug("Ingestão concluída para partida {FixtureId}. Processados {Players} jogadores.",
             fixture.ExternalId, playersProcessed);
 
         return new IngestionResultDto(match.Id, fixture.ExternalId, playersProcessed, scoresCalculated);

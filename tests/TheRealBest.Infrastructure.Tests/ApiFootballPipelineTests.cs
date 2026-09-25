@@ -2,6 +2,7 @@ namespace TheRealBest.Infrastructure.Tests;
 
 using System.Net;
 using System.Text;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -95,7 +96,65 @@ public class ApiFootballPipelineTests
         server.Requests.Should().BeEmpty();
     }
 
-    private static ServiceProvider BuildServices(RecordedApi server, string apiKey = "test-key")
+    [Fact]
+    public async Task GetMatchReports_WithoutBatchMode_UsesThreeRequestsPerMatch()
+    {
+        var server = new RecordedApi(request => Json(Raw(UclFinal2023, request.RequestUri!.AbsolutePath.Split('/')[^1])));
+        using var provider = BuildServices(server);
+
+        var reports = await provider.GetRequiredService<IFootballDataProvider>().GetMatchReportsAsync([Fixture(UclFinal2023)]);
+
+        reports.Should().ContainSingle().Which.Performances.Should().HaveCount(29);
+        server.Requests.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public async Task GetMatchReports_BatchMode_UsesOneRequestAndMapsLikeTheSeparateEndpoints()
+    {
+        var server = new RecordedApi(_ => Json(BatchBody(UclFinal2023)));
+        using var provider = BuildServices(server, batch: true);
+
+        var reports = await provider.GetRequiredService<IFootballDataProvider>().GetMatchReportsAsync([Fixture(UclFinal2023)]);
+
+        server.Requests.Should().ContainSingle().Which.RequestUri!.PathAndQuery.Should().Be("/fixtures?ids=1027909");
+        reports.Should().ContainSingle().Which.Should().BeEquivalentTo(Report(UclFinal2023));
+    }
+
+    [Fact]
+    public async Task GetMatchReports_BatchMode_SplitsIntoRequestsOfTwentyAndSkipsMissingMatches()
+    {
+        var server = new RecordedApi(_ => Json("""{"errors":[],"results":0,"response":[]}"""));
+        using var provider = BuildServices(server, batch: true);
+        var fixtures = Enumerable.Range(1, 25).Select(i => Fixture(UclFinal2023) with { ExternalId = i.ToString() }).ToList();
+
+        var reports = await provider.GetRequiredService<IFootballDataProvider>().GetMatchReportsAsync(fixtures);
+
+        reports.Should().BeEmpty();
+        server.Requests.Select(r => r.RequestUri!.Query.Split('-').Length).Should().Equal(20, 5);
+    }
+
+    [Fact]
+    public async Task GetMatchReports_UnfinishedMatch_Throws()
+    {
+        using var provider = BuildServices(new RecordedApi(_ => Json("{}")), batch: true);
+        var fixture = Fixture(UclFinal2023) with { IsFinished = false };
+
+        var act = () => provider.GetRequiredService<IFootballDataProvider>().GetMatchReportsAsync([fixture]);
+
+        await act.Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    /// <summary>Resposta de /fixtures?ids montada com as respostas gravadas dos endpoints separados.</summary>
+    private static string BatchBody(string match)
+    {
+        var item = JsonNode.Parse(Raw(match, "fixtures"))!["response"]![0]!.DeepClone();
+        item["players"] = JsonNode.Parse(Raw(match, "players"))!["response"]!.DeepClone();
+        item["events"] = JsonNode.Parse(Raw(match, "events"))!["response"]!.DeepClone();
+        item["lineups"] = JsonNode.Parse(Raw(match, "lineups"))!["response"]!.DeepClone();
+        return new JsonObject { ["errors"] = new JsonArray(), ["results"] = 1, ["response"] = new JsonArray(item) }.ToJsonString();
+    }
+
+    private static ServiceProvider BuildServices(RecordedApi server, string apiKey = "test-key", bool batch = false)
     {
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -103,6 +162,7 @@ public class ApiFootballPipelineTests
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=unused",
                 ["ApiFootball:ApiKey"] = apiKey,
                 ["ApiFootball:RequestsPerMinute"] = "60000",
+                ["ApiFootball:BatchFixtureDetails"] = batch.ToString(),
             })
             .Build();
 

@@ -10,6 +10,7 @@ using Polly;
 using Refit;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure.Data;
+using TheRealBest.Infrastructure.Ingestion;
 using TheRealBest.Infrastructure.Data.Repositories;
 using TheRealBest.Infrastructure.Data.Seeds;
 using TheRealBest.Infrastructure.ExternalApis.ApiFootball;
@@ -31,6 +32,7 @@ public static class DependencyInjection
         services.AddApiFootball(configuration);
         services.AddClubElo(configuration);
         services.AddScoped<IRealDataSeeder, ApiFootballRealDataSeeder>();
+        services.AddScoped<ISeasonImporter, SeasonImporter>();
 
         return services;
     }

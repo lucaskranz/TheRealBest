@@ -140,6 +140,15 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
             .ToDictionary(g => g.Key, g => g.MaxBy(a => a.MatchDate)!.Team);
     }
 
+    public async Task<IReadOnlySet<string>> GetExistingExternalIdsAsync(
+        IReadOnlyCollection<string> externalApiIds,
+        CancellationToken cancellationToken = default) =>
+        (await context.Matches
+            .Where(m => externalApiIds.Contains(m.ExternalApiId))
+            .Select(m => m.ExternalApiId)
+            .ToListAsync(cancellationToken))
+        .ToHashSet();
+
     public async Task AddAsync(Match match, CancellationToken cancellationToken = default) =>
         await context.Matches.AddAsync(match, cancellationToken);
 

@@ -1,4 +1,5 @@
 ﻿using TheRealBest.API.BackgroundServices;
+using TheRealBest.API.Commands;
 using TheRealBest.API.Formula;
 using TheRealBest.API.Localization;
 using TheRealBest.API.Middleware;
@@ -6,6 +7,7 @@ using TheRealBest.Application;
 using TheRealBest.Domain.Interfaces;
 using TheRealBest.Infrastructure;
 using TheRealBest.Infrastructure.Data.Seeds;
+using TheRealBest.Infrastructure.Ingestion;
 using TheRealBest.Scoring;
 using TheRealBest.Scoring.Rules;
 
@@ -66,6 +68,24 @@ if (args.Contains("--seed"))
 {
     using var scope = app.Services.CreateScope();
     await scope.ServiceProvider.GetRequiredService<IRealDataSeeder>().SeedAsync();
+    return;
+}
+
+// Importação de uma temporada inteira (ou de uma competição dela). Retomável; consome cota da API.
+// Uso: dotnet run --project src/TheRealBest.API -- --import-season 2023 [--competition 9] [--limit 5]
+if (ImportSeasonCommand.IsRequested(args))
+{
+    var request = ImportSeasonCommand.Parse(args, out var error);
+    if (request is null)
+    {
+        Console.Error.WriteLine(error);
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    using var scope = app.Services.CreateScope();
+    var summary = await scope.ServiceProvider.GetRequiredService<ISeasonImporter>().ImportAsync(request);
+    Environment.ExitCode = summary.Stop is SeasonImportStop.SeasonNotInPlan ? 1 : 0;
     return;
 }
 
