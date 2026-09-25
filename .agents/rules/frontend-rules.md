@@ -29,13 +29,14 @@
 - Glassmorphism com backdrop-filter para cards elevados
 - Tipografia: Cabinet Grotesk (display, self-hosted via next/font/local — não existe no Google Fonts) + Inter (body, via next/font/google)
 - Micro-animações suaves (transitions, hover effects) em elementos interativos
+- Escala divergente de desempenho (MPS vs 50, pontos + e −): tokens --trb-above (azul) e --trb-below (vermelho), validados para daltonismo; nunca verde × vermelho. A cor só marca a polaridade: número e sinal ficam em cor de texto
 - Responsividade obrigatória (mobile-first approach)
 
 ## Componentes Chave
 - MatchReceipt: componente central que renderiza o extrato auditável de pontuação
 - LeaderboardTable: tabela de ranking com ordenação, filtros posicionais e busca
 - PlayerHero: header do perfil do jogador com avatar, stats e posição
-- RadarChart: gráfico de teia comparativo de atributos
+- AttributeBars: percentil por dimensão (finalização, criação, posse, defesa, duelos, disciplina; goleiro no lugar de finalização para GK) entre jogadores da mesma função tática. Substitui o radar previsto: para uma única série, barras são lidas com mais precisão (o radar distorce por área e pela ordem dos eixos)
 - LocaleSwitcher: seletor de idioma com bandeiras
 
 ## Data Fetching

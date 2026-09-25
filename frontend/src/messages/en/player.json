@@ -1,10 +1,52 @@
 {
-  "seasonSummary": "Season summary",
-  "overallRank": "Overall rank",
-  "positionRank": "Position rank",
-  "clutchIndex": "Clutch index",
-  "presenceFactor": "Presence factor",
-  "matchHistory": "Match history",
-  "topMatches": "Top performances",
-  "viewReceipt": "View breakdown"
+  "metadata": {
+    "title": "{name} — {season} season",
+    "description": "Season score, ranking position and the auditable breakdown of every match played by {name}."
+  },
+  "backToRanking": "Back to ranking",
+  "summary": {
+    "title": "{season} season",
+    "fss": "Season FSS",
+    "mpsAverage": "Avg. MPS",
+    "overallRank": "Overall rank",
+    "positionRank": "Among {position}",
+    "matches": "Matches",
+    "minutes": "Minutes",
+    "presenceFactor": "Presence factor",
+    "notEligible": "Not ranked yet: {matches} of {minMatches} matches and {minutes} of {minMinutes} minutes.",
+    "noRanking": "No rated matches this season."
+  },
+  "attributes": {
+    "title": "Profile by dimension",
+    "description": "Percentile among {peers} players in the same tactical role with at least {minutes} minutes. 100 = best in the group.",
+    "per90": "{value} pts per 90",
+    "fewPeers": "Too few players in the same tactical role to compare ({peers}); showing points per 90 only.",
+    "categories": {
+      "Finishing": "Finishing",
+      "Creation": "Creation",
+      "Possession": "Possession & dribbling",
+      "Defending": "Defending",
+      "Duels": "Duels",
+      "Goalkeeping": "Goalkeeping",
+      "Discipline": "Discipline"
+    }
+  },
+  "matches": {
+    "title": "Season matches",
+    "columns": {
+      "date": "Date",
+      "match": "Match",
+      "minutes": "Min",
+      "contributions": "G/A",
+      "mps": "MPS"
+    },
+    "viewReceipt": "View breakdown",
+    "notCounted": "Does not count for the ranking (under 20 min without a decisive action)",
+    "legend": "MPS: 50 is an average performance for the position; blue above, red below.",
+    "empty": "No matches imported this season."
+  },
+  "error": {
+    "title": "The player could not be loaded",
+    "description": "The data API did not respond. Please try again shortly."
+  }
 }

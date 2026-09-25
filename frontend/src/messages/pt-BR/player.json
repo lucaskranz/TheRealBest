@@ -1,10 +1,52 @@
 {
-  "seasonSummary": "Resumo da temporada",
-  "overallRank": "Posição geral",
-  "positionRank": "Posição na função",
-  "clutchIndex": "Índice decisivo",
-  "presenceFactor": "Fator presença",
-  "matchHistory": "Histórico de partidas",
-  "topMatches": "Melhores atuações",
-  "viewReceipt": "Ver extrato"
+  "metadata": {
+    "title": "{name} — temporada {season}",
+    "description": "Nota da temporada, posição no ranking e o extrato auditável de cada partida de {name}."
+  },
+  "backToRanking": "Voltar ao ranking",
+  "summary": {
+    "title": "Temporada {season}",
+    "fss": "FSS da temporada",
+    "mpsAverage": "MPS médio",
+    "overallRank": "Posição geral",
+    "positionRank": "Entre {position}",
+    "matches": "Jogos",
+    "minutes": "Minutos",
+    "presenceFactor": "Fator presença",
+    "notEligible": "Ainda fora do ranking: {matches} de {minMatches} partidas e {minutes} de {minMinutes} minutos.",
+    "noRanking": "Sem partidas avaliadas nesta temporada."
+  },
+  "attributes": {
+    "title": "Perfil por dimensão",
+    "description": "Percentil entre {peers} jogadores da mesma função tática com pelo menos {minutes} minutos. 100 = o melhor do grupo.",
+    "per90": "{value} pts por 90 min",
+    "fewPeers": "Poucos jogadores da mesma função tática para comparar ({peers}); mostrando só os pontos por 90 minutos.",
+    "categories": {
+      "Finishing": "Finalização",
+      "Creation": "Criação",
+      "Possession": "Posse e drible",
+      "Defending": "Defesa",
+      "Duels": "Duelos",
+      "Goalkeeping": "Goleiro",
+      "Discipline": "Disciplina"
+    }
+  },
+  "matches": {
+    "title": "Partidas da temporada",
+    "columns": {
+      "date": "Data",
+      "match": "Partida",
+      "minutes": "Min",
+      "contributions": "G/A",
+      "mps": "MPS"
+    },
+    "viewReceipt": "Ver extrato",
+    "notCounted": "Não conta para o ranking (menos de 20 min sem ação decisiva)",
+    "legend": "MPS: 50 é uma atuação média para a posição; azul acima, vermelho abaixo.",
+    "empty": "Nenhuma partida importada nesta temporada."
+  },
+  "error": {
+    "title": "Não foi possível carregar o jogador",
+    "description": "A API de dados não respondeu. Tente novamente em instantes."
+  }
 }

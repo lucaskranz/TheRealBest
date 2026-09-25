@@ -1,5 +1,7 @@
 namespace TheRealBest.Domain.ValueObjects;
 
+using TheRealBest.Domain.Enums;
+
 /// <summary>
 /// Item detalhado do extrato auditável de pontuação da partida.
 /// TotalPoints = Count × UnitWeight × MinutesFactor.
@@ -11,6 +13,7 @@ namespace TheRealBest.Domain.ValueObjects;
 /// <param name="TotalPoints">Pontos resultantes, já com o fator de minutos aplicado.</param>
 /// <param name="Minute">Minuto do lance, quando disponível.</param>
 /// <param name="MinutesFactor">Fator de minutos aplicado ao item (1.0 para ações decisivas, que não são proporcionalizadas).</param>
+/// <param name="Category">Dimensão de jogo da ação (finalização, criação, defesa...).</param>
 public sealed record ActionScoreItem(
     string ActionKey,
     string Label,
@@ -18,5 +21,6 @@ public sealed record ActionScoreItem(
     decimal UnitWeight,
     decimal TotalPoints,
     int? Minute = null,
-    decimal MinutesFactor = 1.0m
+    decimal MinutesFactor = 1.0m,
+    ActionCategory Category = ActionCategory.Unknown
 );

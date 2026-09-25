@@ -1,10 +1,52 @@
 {
-  "seasonSummary": "Resumen de la temporada",
-  "overallRank": "Posición general",
-  "positionRank": "Posición en su función",
-  "clutchIndex": "Índice decisivo",
-  "presenceFactor": "Factor de presencia",
-  "matchHistory": "Historial de partidos",
-  "topMatches": "Mejores actuaciones",
-  "viewReceipt": "Ver desglose"
+  "metadata": {
+    "title": "{name} — temporada {season}",
+    "description": "Nota de la temporada, posición en el ranking y el desglose auditable de cada partido de {name}."
+  },
+  "backToRanking": "Volver al ranking",
+  "summary": {
+    "title": "Temporada {season}",
+    "fss": "FSS de la temporada",
+    "mpsAverage": "MPS medio",
+    "overallRank": "Posición general",
+    "positionRank": "Entre {position}",
+    "matches": "Partidos",
+    "minutes": "Minutos",
+    "presenceFactor": "Factor de presencia",
+    "notEligible": "Aún fuera del ranking: {matches} de {minMatches} partidos y {minutes} de {minMinutes} minutos.",
+    "noRanking": "Sin partidos evaluados esta temporada."
+  },
+  "attributes": {
+    "title": "Perfil por dimensión",
+    "description": "Percentil entre {peers} jugadores de la misma función táctica con al menos {minutes} minutos. 100 = el mejor del grupo.",
+    "per90": "{value} pts por 90 min",
+    "fewPeers": "Pocos jugadores de la misma función táctica para comparar ({peers}); solo se muestran los puntos por 90 minutos.",
+    "categories": {
+      "Finishing": "Definición",
+      "Creation": "Creación",
+      "Possession": "Posesión y regate",
+      "Defending": "Defensa",
+      "Duels": "Duelos",
+      "Goalkeeping": "Portería",
+      "Discipline": "Disciplina"
+    }
+  },
+  "matches": {
+    "title": "Partidos de la temporada",
+    "columns": {
+      "date": "Fecha",
+      "match": "Partido",
+      "minutes": "Min",
+      "contributions": "G/A",
+      "mps": "MPS"
+    },
+    "viewReceipt": "Ver desglose",
+    "notCounted": "No cuenta para el ranking (menos de 20 min sin acción decisiva)",
+    "legend": "MPS: 50 es una actuación media para la posición; azul por encima, rojo por debajo.",
+    "empty": "Ningún partido importado esta temporada."
+  },
+  "error": {
+    "title": "No se pudo cargar el jugador",
+    "description": "La API de datos no respondió. Inténtalo de nuevo en unos instantes."
+  }
 }

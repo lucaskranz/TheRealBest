@@ -71,7 +71,8 @@ public sealed class GetMatchAuditReceiptUseCase(IMatchRepository matchRepository
                 UnitWeight: i.UnitWeight,
                 TotalPoints: i.TotalPoints,
                 Minute: i.Minute,
-                MinutesFactor: i.MinutesFactor
+                MinutesFactor: i.MinutesFactor,
+                Category: i.Category.ToString()
             )).ToList();
         }
         catch

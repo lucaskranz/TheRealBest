@@ -22,6 +22,9 @@
   --color-danger: var(--trb-danger);
   --color-danger-subtle: var(--trb-danger-subtle);
   --color-info: var(--trb-info);
+  --color-above: var(--trb-above);
+  --color-below: var(--trb-below);
+  --color-neutral-mark: var(--trb-neutral-mark);
 
   --color-main: var(--trb-text-main);
   --color-secondary: var(--trb-text-secondary);

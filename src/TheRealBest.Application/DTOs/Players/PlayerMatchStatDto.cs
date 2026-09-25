@@ -8,10 +8,14 @@ public sealed record PlayerMatchStatDto(
     string AwayTeamName,
     int? HomeScore,
     int? AwayScore,
+    string TeamName,
+    string PositionPlayed,
+    string PositionPlayedLabel,
     int MinutesPlayed,
     int Goals,
     int Assists,
     int YellowCards,
     int RedCards,
-    decimal? FinalMps
+    decimal? FinalMps,
+    bool CountsTowardsSeason
 );

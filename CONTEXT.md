@@ -151,6 +151,7 @@ ext-intl com roteamento por [locale] e detecção automática via cookie/Accept-
 - `dotnet run --project src/TheRealBest.API -- --seed` importa as partidas de `Infrastructure/Data/Seeds/RealMatchSelection.cs` (30 jogos do ciclo da Bola de Ouro 2024) e recalcula o ranking. Não roda automaticamente ao subir a API
 - Retomável: partidas já importadas são puladas, e se a cota diária acabar basta rodar de novo após 00:00 UTC
 - Euro e Copa América de junho/julho entram na temporada de clubes que terminou (Euro 2024 → temporada 2023/24)
+- Após reimportar dados, o frontend pode mostrar a versão anterior por até 1 hora (cache de dados do Next, que sobrevive a novos builds). Para ver na hora: apague `frontend/.next/cache/fetch-cache`
 - **Elo dos adversários:** buscado no ClubElo (`api.clubelo.com`, gratuito) na data de cada partida e gravado em `matches`. Seleções e falhas da fonte = multiplicador neutro. Partidas importadas sem Elo não são reprocessadas: para preenchê-lo, limpe as tabelas e rode `--seed` de novo (custo zero de cota graças ao cache)
 
 ---
@@ -176,7 +177,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 4B | Controllers REST (Audit + Matches) | ✅ Concluída | Recibo auditável, detalhamento de partida |
 | 4C | Localização no Backend | ✅ Concluída | Middleware, .resx, ActionLabelResolver |
 | 4D | Frontend: Leaderboard + Filtros | ✅ Concluída | Página de ranking com filtros posicionais |
-| 4E | Frontend: Perfil do Jogador + Recibo | ⬜ Pendente | Player page, MatchReceipt, radar chart |
+| 4E | Frontend: Perfil do Jogador + Recibo | ✅ Concluída | Player page, MatchReceipt, radar chart |
 | 4F | Frontend: Vs Ballon d'Or + Fórmula | ⬜ Pendente | Páginas comparativa e livro de regras |
 | 5A | Deploy Backend (Railway/Render) | ⬜ Pendente | Docker, CI/CD, variáveis de ambiente |
 | 5B | Deploy Frontend (Vercel) | ⬜ Pendente | Build, domínio, SEO multilíngue |

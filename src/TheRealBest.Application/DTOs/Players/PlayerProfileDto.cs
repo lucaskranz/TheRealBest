@@ -11,5 +11,6 @@ public sealed record PlayerProfileDto(
     string? PhotoUrl,
     DateOnly? DateOfBirth,
     SeasonRankingItemDto? SeasonRanking,
-    IReadOnlyList<PlayerMatchStatDto> RecentMatches
+    IReadOnlyList<PlayerMatchStatDto> RecentMatches,
+    IReadOnlyList<PlayerAttributeDto> Attributes
 );

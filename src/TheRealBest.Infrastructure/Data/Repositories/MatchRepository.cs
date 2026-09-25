@@ -48,6 +48,10 @@ public sealed class MatchRepository(AppDbContext context) : IMatchRepository
         await context.MatchPlayerStats
             .Include(mps => mps.Match)
                 .ThenInclude(m => m.Competition)
+            .Include(mps => mps.Match)
+                .ThenInclude(m => m.HomeTeam)
+            .Include(mps => mps.Match)
+                .ThenInclude(m => m.AwayTeam)
             .Include(mps => mps.Team)
             .Include(mps => mps.PerformanceScore)
             .Where(mps => mps.PlayerId == playerId && mps.Match.Competition.SeasonYear == seasonYear)

@@ -8,3 +8,8 @@ export function initials(name: string): string {
   const parts = name.trim().split(/\s+/);
   return (parts.length === 1 ? parts[0].slice(0, 2) : parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
+
+/** "Real Madrid 3 × 2 Barcelona" (sem placar: "Real Madrid × Barcelona"). */
+export function matchTitle(home: string, away: string, homeScore: number | null, awayScore: number | null): string {
+  return homeScore === null || awayScore === null ? `${home} × ${away}` : `${home} ${homeScore} × ${awayScore} ${away}`;
+}

@@ -26,6 +26,22 @@ public sealed class RecalculateSeasonRankingUseCase(
         }
 
         var playerGroups = scores.GroupBy(s => s.PlayerId).ToList();
+
+        // Posição principal = a mais jogada na temporada, ponderada por minutos (empate: a da partida mais recente)
+        foreach (var group in playerGroups)
+        {
+            var player = group.First().Player;
+            var mostPlayed = group
+                .GroupBy(s => s.MatchPlayerStats.PositionPlayed)
+                .OrderByDescending(g => g.Sum(s => s.MatchPlayerStats.MinutesPlayed))
+                .ThenByDescending(g => g.Max(s => s.Match.MatchDate))
+                .First().Key;
+
+            if (player.PrimaryPosition != mostPlayed)
+            {
+                player.UpdateProfile(player.Name, player.Nationality, player.PhotoUrl, mostPlayed);
+            }
+        }
         var rankingList = new List<SeasonRanking>();
 
         foreach (var group in playerGroups)

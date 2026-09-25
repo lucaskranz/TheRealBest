@@ -1,14 +1,47 @@
 {
+  "metadata": {
+    "title": "{player}: {match}",
+    "description": "Auditable breakdown of the score of {player} in {match}: every action, weight and multiplier."
+  },
+  "backToPlayer": "Back to {player}",
+  "title": "Match breakdown",
+  "details": {
+    "minutes": "{minutes} min played",
+    "position": "Rated as {position}"
+  },
   "baseScore": "Base score on kick-off",
   "actionsTitle": "Role-specific actions",
   "penaltiesTitle": "Deductions and errors",
   "contextTitle": "Context multipliers",
-  "minutesFactor": "Minutes played factor",
-  "finalScore": "Final audited score",
-  "algorithmVersion": "Algorithm v{version}",
+  "calculationTitle": "Calculation",
+  "columns": {
+    "action": "Action",
+    "count": "Qty.",
+    "weight": "Weight",
+    "points": "Points"
+  },
+  "minutesFactor": "scaled to minutes (× {factor})",
+  "minutesFactorHint": "Volume actions scale with minutes played; goals, cards and errors count in full.",
+  "noActions": "No scored actions.",
+  "noPenalties": "No deductions.",
+  "subtotal": "Sum of actions",
+  "positionBaseline": "Position baseline",
+  "positionBaselineHint": "What an average performance in the position adds up to, scaled to minutes: it separates above and below 50.",
   "multipliers": {
     "tournament": "Tournament: {name}",
     "opponent": "Opponent strength",
-    "clutch": "Clutch factor"
+    "clutch": "Clutch factor (scoreline)",
+    "combined": "Combined multiplier"
+  },
+  "finalScore": "Final audited score",
+  "clamped": "Result capped to the 0–100 scale.",
+  "countsTowardsSeason": {
+    "yes": "Counts towards the season ranking.",
+    "no": "Does not count for the ranking: under 20 minutes without a decisive action on the scoreline."
+  },
+  "algorithmVersion": "Algorithm v{version}",
+  "error": {
+    "title": "The breakdown could not be loaded",
+    "description": "The data API did not respond. Please try again shortly."
   }
 }

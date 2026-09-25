@@ -23,6 +23,9 @@ public class GetPlayerProfileUseCaseTests
             _matchRepositoryMock.Object,
             TestLabels.Create()
         );
+        _matchRepositoryMock
+            .Setup(r => r.GetSeasonScoresAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<MatchPerformanceScore>());
     }
 
     [Fact]

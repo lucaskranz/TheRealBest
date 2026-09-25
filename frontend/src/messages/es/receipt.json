@@ -1,14 +1,47 @@
 {
+  "metadata": {
+    "title": "{player}: {match}",
+    "description": "Desglose auditable de la nota de {player} en {match}: cada acción, peso y multiplicador."
+  },
+  "backToPlayer": "Volver a {player}",
+  "title": "Desglose del partido",
+  "details": {
+    "minutes": "{minutes} min en el campo",
+    "position": "Evaluado como {position}"
+  },
   "baseScore": "Nota base al saltar al campo",
   "actionsTitle": "Acciones propias de la función",
   "penaltiesTitle": "Deducciones y errores",
   "contextTitle": "Multiplicadores de contexto",
-  "minutesFactor": "Factor de minutos jugados",
-  "finalScore": "Puntuación final auditada",
-  "algorithmVersion": "Algoritmo v{version}",
+  "calculationTitle": "Cálculo",
+  "columns": {
+    "action": "Acción",
+    "count": "Cant.",
+    "weight": "Peso",
+    "points": "Puntos"
+  },
+  "minutesFactor": "proporcional a los minutos (× {factor})",
+  "minutesFactorHint": "Las acciones de volumen son proporcionales a los minutos jugados; goles, tarjetas y errores cuentan completos.",
+  "noActions": "Ninguna acción puntuada.",
+  "noPenalties": "Ninguna deducción.",
+  "subtotal": "Suma de acciones",
+  "positionBaseline": "Línea base de la posición",
+  "positionBaselineHint": "Lo que suma una actuación media en la posición, proporcional a los minutos: separa lo que está por encima y por debajo de 50.",
   "multipliers": {
     "tournament": "Torneo: {name}",
     "opponent": "Fuerza del rival",
-    "clutch": "Factor decisivo"
+    "clutch": "Factor decisivo (marcador)",
+    "combined": "Multiplicador combinado"
+  },
+  "finalScore": "Puntuación final auditada",
+  "clamped": "Resultado limitado a la escala de 0 a 100.",
+  "countsTowardsSeason": {
+    "yes": "Cuenta para el ranking de la temporada.",
+    "no": "No cuenta para el ranking: menos de 20 minutos sin acción decisiva en el marcador."
+  },
+  "algorithmVersion": "Algoritmo v{version}",
+  "error": {
+    "title": "No se pudo cargar el desglose",
+    "description": "La API de datos no respondió. Inténtalo de nuevo en unos instantes."
   }
 }

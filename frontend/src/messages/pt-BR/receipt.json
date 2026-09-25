@@ -1,14 +1,47 @@
 {
+  "metadata": {
+    "title": "{player}: {match}",
+    "description": "Extrato auditável da nota de {player} em {match}: cada ação, peso e multiplicador."
+  },
+  "backToPlayer": "Voltar para {player}",
+  "title": "Extrato da partida",
+  "details": {
+    "minutes": "{minutes} min em campo",
+    "position": "Avaliado como {position}"
+  },
   "baseScore": "Nota base ao entrar em campo",
   "actionsTitle": "Ações específicas da função",
   "penaltiesTitle": "Deduções e falhas",
   "contextTitle": "Multiplicadores de contexto",
-  "minutesFactor": "Fator de minutos jogados",
-  "finalScore": "Pontuação final auditada",
-  "algorithmVersion": "Algoritmo v{version}",
+  "calculationTitle": "Cálculo",
+  "columns": {
+    "action": "Ação",
+    "count": "Qtd.",
+    "weight": "Peso",
+    "points": "Pontos"
+  },
+  "minutesFactor": "proporcional aos minutos (× {factor})",
+  "minutesFactorHint": "Ações de volume são proporcionais aos minutos jogados; gols, cartões e erros valem inteiros.",
+  "noActions": "Nenhuma ação pontuada.",
+  "noPenalties": "Nenhuma dedução.",
+  "subtotal": "Soma das ações",
+  "positionBaseline": "Linha de base da posição",
+  "positionBaselineHint": "O que uma atuação média na posição soma, proporcional aos minutos: é o que separa acima e abaixo de 50.",
   "multipliers": {
     "tournament": "Torneio: {name}",
     "opponent": "Força do adversário",
-    "clutch": "Fator decisivo"
+    "clutch": "Fator decisivo (placar)",
+    "combined": "Multiplicador combinado"
+  },
+  "finalScore": "Pontuação final auditada",
+  "clamped": "Resultado limitado à escala de 0 a 100.",
+  "countsTowardsSeason": {
+    "yes": "Conta para o ranking da temporada.",
+    "no": "Não conta para o ranking: menos de 20 minutos sem ação decisiva no placar."
+  },
+  "algorithmVersion": "Algoritmo v{version}",
+  "error": {
+    "title": "Não foi possível carregar o extrato",
+    "description": "A API de dados não respondeu. Tente novamente em instantes."
   }
 }

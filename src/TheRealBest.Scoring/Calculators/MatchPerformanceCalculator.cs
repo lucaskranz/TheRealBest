@@ -61,7 +61,8 @@ public static class MatchPerformanceCalculator
                 count,
                 weight,
                 TotalPoints: ScoringMath.Round4(count * weight * itemFactor),
-                MinutesFactor: itemFactor);
+                MinutesFactor: itemFactor,
+                Category: action.Category);
 
             (action.IsPenalty ? penalties : actions).Add(item);
         }

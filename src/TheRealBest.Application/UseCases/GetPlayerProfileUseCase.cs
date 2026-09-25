@@ -5,6 +5,7 @@ using TheRealBest.Application.DTOs.Players;
 using TheRealBest.Application.DTOs.Ranking;
 using TheRealBest.Application.Interfaces;
 using TheRealBest.Application.Localization;
+using TheRealBest.Application.Players;
 using TheRealBest.Domain.Entities;
 using TheRealBest.Domain.Interfaces;
 
@@ -31,7 +32,7 @@ public sealed class GetPlayerProfileUseCase(
             .MaxBy(s => s.Match.MatchDate)?.Team;
         var rankingDto = ranking is not null ? MapRankingDto(ranking, player, latestClubTeam) : null;
 
-        var recentMatches = matchStats.Select(s => new PlayerMatchStatDto(
+        var recentMatches = matchStats.OrderByDescending(s => s.Match.MatchDate).Select(s => new PlayerMatchStatDto(
             MatchId: s.MatchId,
             MatchDate: s.Match.MatchDate,
             CompetitionName: s.Match.Competition.NameFor(SupportedLocales.Current),
@@ -39,13 +40,21 @@ public sealed class GetPlayerProfileUseCase(
             AwayTeamName: s.Match.AwayTeam.Name,
             HomeScore: s.Match.HomeScore,
             AwayScore: s.Match.AwayScore,
+            TeamName: s.Team?.Name ?? string.Empty,
+            PositionPlayed: s.PositionPlayed.ToString(),
+            PositionPlayedLabel: labels.PositionLabel(s.PositionPlayed.ToString(), SupportedLocales.Current),
             MinutesPlayed: s.MinutesPlayed,
             Goals: s.Goals,
             Assists: s.Assists,
             YellowCards: s.YellowCards,
             RedCards: s.RedCards,
-            FinalMps: s.PerformanceScore?.FinalMps
+            FinalMps: s.PerformanceScore?.FinalMps,
+            CountsTowardsSeason: s.PerformanceScore?.CountsTowardsSeason ?? false
         )).ToList();
+
+        // Radar: compara com todos os jogadores da temporada na mesma posição
+        var seasonScores = await matchRepository.GetSeasonScoresAsync(seasonYear, cancellationToken);
+        var attributes = PlayerAttributeCalculator.Calculate(player.Id, player.PrimaryPosition, seasonScores);
 
         return new PlayerProfileDto(
             Id: player.Id,
@@ -56,7 +65,8 @@ public sealed class GetPlayerProfileUseCase(
             PhotoUrl: player.PhotoUrl,
             DateOfBirth: player.DateOfBirth,
             SeasonRanking: rankingDto,
-            RecentMatches: recentMatches
+            RecentMatches: recentMatches,
+            Attributes: attributes
         );
     }
 

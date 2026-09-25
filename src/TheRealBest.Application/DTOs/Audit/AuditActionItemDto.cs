@@ -7,5 +7,6 @@ public sealed record AuditActionItemDto(
     decimal UnitWeight,
     decimal TotalPoints,
     int? Minute = null,
-    decimal MinutesFactor = 1.0m
+    decimal MinutesFactor = 1.0m,
+    string Category = "Unknown"
 );

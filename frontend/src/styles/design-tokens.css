@@ -35,6 +35,13 @@
   /* Informativo (dados neutros, links secundários) */
   --trb-info: #3b82f6;
 
+  /* Escala divergente de desempenho (acima × abaixo da média; ex.: MPS vs 50, pontos + e − do recibo).
+     Azul × vermelho, e não verde × vermelho: validado para daltonismo (ΔE 26,7) contra --trb-bg-surface.
+     A cor só marca a polaridade; o número e o sinal continuam em cor de texto. */
+  --trb-above: #3b82f6;
+  --trb-below: #ef4444;
+  --trb-neutral-mark: #4b5563;
+
   /* Texto */
   --trb-text-main: #f3f4f6;
   --trb-text-secondary: #9ca3af;
