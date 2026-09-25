@@ -242,6 +242,12 @@ Decisão do usuário: assinar o plano **Pro** (7.500 requisições/dia, 300/min)
   - **Custo:** ~300–700 partidas por liga nova e temporada, com lotes de 20 → poucas centenas de requisições por temporada
 - **5I:** ranking de cada competição em cada temporada, calculado só com as partidas daquela competição (usa `PlayerRankingSpec.CompetitionId`, já previsto). Sem custo de API: deriva dos dados já importados. Regras a definir **com o usuário**: corte de elegibilidade proporcional (ex.: % dos jogos disputados pelo time na competição, pois uma liga tem 34–38 rodadas e uma Copa do Mundo no máximo 7) e fator de presença proporcional à duração da competição. Dentro de uma competição o peso do torneio fica praticamente constante (exceto Champions: mata-mata × fase de liga). Frontend: seletor de competição ao lado do de temporada no ranking. Fazer depois da 5F.
 
+### Decisões do usuário para as próximas etapas (25/09/2026)
+- **5C:** clubes de fora da elite (adversários nas copas, clubes pequenos da Copa de Clubes) entram com Elo fixo de **1.400**, documentado em `/formula`
+- **5D:** só **primeiras divisões**, **uma liga por país**. Libertadores e Sul-Americana com peso **bem menor que a Champions** (valor a propor na 5D). Ainda em aberto: fórmula do peso das ligas (proposta: proporcional ao rating do Opta, Premier League = 1,10) e renovação do plano Pro (vence em 25/10/2026)
+- **5E:** **subir o corte de elegibilidade** com as temporadas completas (proposta: 20 partidas e 1.500 minutos; confirmar os números na 5E)
+- **5I:** corte por competição de **50% dos jogos do time** na competição
+
 ### Como Usar Este Roadmap
 1. Ao iniciar uma nova conversa, o agente DEVE ler este CONTEXT.md
 2. Identificar a próxima etapa com status ⬜ Pendente
