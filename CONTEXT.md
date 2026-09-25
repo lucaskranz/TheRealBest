@@ -187,6 +187,7 @@ O projeto está dividido em **etapas atômicas** que podem ser executadas indepe
 | 5D | Ranking Top 50 multi-temporada | ⬜ Pendente | Seletor de temporada, Top 50 por temporada, histórico de temporadas no perfil do jogador |
 | 5E | Temporada atual (2026/27) ao vivo | ⬜ Pendente | Atualização incremental semanal, ranking provisório com corte proporcional, variação desde a última rodada |
 | 5F | Vs. Bola de Ouro multi-edição | ⬜ Pendente | Edições 2023, 2024 e 2025 (e 2026 quando publicada), sempre com a classificação oficial citada |
+| 5G | Melhores de cada campeonato | ⬜ Pendente | Ranking por competição e temporada (ex.: Premier League 23/24, Copa do Mundo 2026), com corte e fator de presença proporcionais à competição |
 | 6A | Deploy Backend / Dados | ⬜ Pendente | Hospedagem gratuita; avaliar site estático gerado localmente vs. API no ar |
 | 6B | Deploy Frontend + atualização automática | ⬜ Pendente | Build, domínio, SEO multilíngue, rotina semanal (ex.: GitHub Actions) para a temporada atual |
 
@@ -215,6 +216,7 @@ Decisão do usuário: assinar o plano **Pro** (7.500 requisições/dia, 300/min)
 - **5D:** o ranking exibe o **Top 50** da temporada (o filtro por posição mostra o Top 50 da posição). A busca continua encontrando qualquer jogador elegível, e o perfil mostra a colocação mesmo fora do Top 50. Seletor de temporada (22/23 → 26/27) no ranking e no perfil; perfil com a evolução do jogador entre temporadas.
 - **5E:** atualização incremental (partidas encerradas desde a última execução) e recálculo do ranking. Enquanto poucos jogadores atingem o corte, mostrar um **ranking provisório** com corte proporcional às rodadas disputadas, identificado como tal. Exibir "atualizado em" e a variação de posição desde a atualização anterior.
 - **5F:** catálogos oficiais da Bola de Ouro 2023 (temporada 22/23), 2025 (24/25) e 2026 (25/26, só depois de publicada), com fonte citada como na edição 2024. Seletor de edição na página `/vs-ballon`.
+- **5G:** ranking de cada competição em cada temporada, calculado só com as partidas daquela competição (usa `PlayerRankingSpec.CompetitionId`, já previsto). Sem custo de API: deriva dos dados já importados. Regras a definir **com o usuário**: corte de elegibilidade proporcional (ex.: % dos jogos disputados pelo time na competição, pois uma liga tem 34–38 rodadas e uma Copa do Mundo no máximo 7) e fator de presença proporcional à duração da competição. Dentro de uma competição o peso do torneio fica praticamente constante (exceto Champions: mata-mata × fase de liga). Frontend: seletor de competição ao lado do de temporada no ranking. Fazer depois da 5D.
 
 ### Como Usar Este Roadmap
 1. Ao iniciar uma nova conversa, o agente DEVE ler este CONTEXT.md
