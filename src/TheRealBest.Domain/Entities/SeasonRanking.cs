@@ -58,6 +58,31 @@ public class SeasonRanking : EntityBase
         RecalculatedAt = DateTime.UtcNow;
     }
 
+    /// <summary>
+    /// Atualiza este registro com um recálculo da mesma temporada, preservando identidade (Id) e CreatedAt.
+    /// </summary>
+    public void RecalculateFrom(SeasonRanking recalculated)
+    {
+        if (recalculated.PlayerId != PlayerId || recalculated.SeasonYear != SeasonYear)
+        {
+            throw new ArgumentException("Recalculated ranking belongs to another player or season.", nameof(recalculated));
+        }
+
+        TotalMatches = recalculated.TotalMatches;
+        TotalMinutes = recalculated.TotalMinutes;
+        MpsAverage = recalculated.MpsAverage;
+        MpsSumWeighted = recalculated.MpsSumWeighted;
+        PresenceFactor = recalculated.PresenceFactor;
+        FssScore = recalculated.FssScore;
+        OverallRank = recalculated.OverallRank;
+        PositionRank = recalculated.PositionRank;
+        ClutchIndex = recalculated.ClutchIndex;
+        IsRankingEligible = recalculated.IsRankingEligible;
+        Top5MatchesJson = recalculated.Top5MatchesJson;
+        RecalculatedAt = recalculated.RecalculatedAt;
+        MarkUpdated();
+    }
+
     public void UpdateRanks(int overallRank, int positionRank)
     {
         OverallRank = overallRank;

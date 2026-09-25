@@ -70,7 +70,7 @@ public sealed class RankingRepository(AppDbContext context) : IRankingRepository
         }
         else
         {
-            context.Entry(existing).CurrentValues.SetValues(ranking);
+            existing.RecalculateFrom(ranking);
         }
 
         await context.SaveChangesAsync(cancellationToken);
@@ -94,7 +94,7 @@ public sealed class RankingRepository(AppDbContext context) : IRankingRepository
         {
             if (existingMap.TryGetValue((ranking.PlayerId, ranking.SeasonYear), out var existing))
             {
-                context.Entry(existing).CurrentValues.SetValues(ranking);
+                existing.RecalculateFrom(ranking);
             }
             else
             {
