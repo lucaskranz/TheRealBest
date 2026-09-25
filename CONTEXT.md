@@ -244,7 +244,7 @@ Decisão do usuário: assinar o plano **Pro** (7.500 requisições/dia, 300/min)
 
 ### Decisões do usuário para as próximas etapas (25/09/2026)
 - **5C:** clubes de fora da elite (adversários nas copas, clubes pequenos da Copa de Clubes) entram com Elo fixo de **1.400**, documentado em `/formula`
-- **5D:** só **primeiras divisões**, **uma liga por país**. Libertadores e Sul-Americana com peso **bem menor que a Champions** (valor a propor na 5D). Ainda em aberto: fórmula do peso das ligas (proposta: proporcional ao rating do Opta, Premier League = 1,10) e renovação do plano Pro (vence em 25/10/2026)
+- **5D:** só **primeiras divisões**, **uma liga por país**. Libertadores e Sul-Americana com peso **bem menor que a Champions** (valor a propor na 5D). Peso das ligas **proporcional ao rating médio do Opta, com a Premier League em 1,10** (aprovado). Plano Pro (vence em 25/10/2026): o usuário garante que o prazo é suficiente
 - **5E:** **subir o corte de elegibilidade** com as temporadas completas (proposta: 20 partidas e 1.500 minutos; confirmar os números na 5E)
 - **5I:** corte por competição de **50% dos jogos do time** na competição
 
